@@ -5,6 +5,7 @@ import 'package:rounder_application/layout/auth/presentation/auth_cubit.dart';
 import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/resident_dashboard_cubit.dart';
+import 'link_home_screen.dart';
 
 class ResidentHomeScreen extends StatefulWidget {
   const ResidentHomeScreen({super.key});
@@ -45,6 +46,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
       FilledButton(onPressed:()=>context.read<ResidentDashboardCubit>().load(),child:Text(AppLocaleKey.retry.tr())),
     ])));
     final d=(state as DashboardReady).data;
+          if(!d.hasHome)return const LinkHomeScreen();
     return RefreshIndicator(onRefresh:()=>context.read<ResidentDashboardCubit>().load(),child:ListView(padding:const EdgeInsets.fromLTRB(20,8,20,28),children:[
       Text(AppLocaleKey.hello.tr(namedArgs:{'name':d.residentName}),style:const TextStyle(fontSize:24,fontWeight:FontWeight.w800,color:AppColors.ink)),
       const SizedBox(height:5),Text(AppLocaleKey.homeOverview.tr(),style:const TextStyle(color:AppColors.muted)),
