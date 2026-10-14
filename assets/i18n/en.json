@@ -49,5 +49,11 @@
   "book_now": "Book now",
   "booking_created": "Booking request sent",
   "booking_failed": "Could not create the booking. Try again.",
-  "link_home_first": "Link your home before booking"
+  "link_home_first": "Link your home before booking",
+  "link_your_home": "Link your home",
+  "link_home_help": "Enter the property code and unit number provided by your property manager.",
+  "property_code": "Property code",
+  "unit_number": "Unit number",
+  "link_home": "Link home",
+  "home_link_failed": "Could not link this home. Check the code and try again."
 }
