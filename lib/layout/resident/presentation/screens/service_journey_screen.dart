@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
+import 'emergency_request_screen.dart';
 
 /// Screen-only service journey. Values and actions are local prototype state
 /// so the complete Figma flow can be reviewed before API integration.
@@ -102,7 +103,13 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   Widget _choice(int value,String key,IconData icon)=>ChoiceChip(
     avatar:Icon(icon,size:17,color:mode==value?AppColors.orange:AppColors.petrol),
-    label:Text(key.tr()),selected:mode==value,onSelected:(_)=>setState(()=>mode=value),
+    label:Text(key.tr()),selected:mode==value,onSelected:(_){
+      if(value==2){
+        Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>const EmergencyRequestScreen()));
+        return;
+      }
+      setState(()=>mode=value);
+    },
     selectedColor:AppColors.mint,backgroundColor:Colors.white);
 
   Widget _selectPill(String key,IconData icon)=>Padding(padding:const EdgeInsets.only(bottom:8),child:OutlinedButton.icon(
