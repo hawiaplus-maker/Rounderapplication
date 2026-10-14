@@ -7,4 +7,9 @@ abstract final class AppLocaleKey {
   static const language='language', arabic='arabic', english='english', urdu='urdu', loading='loading';
   static const home='home', services='services', community='community', account='account';
   static const currencyEgp='currency_egp', loginRequired='login_required';
+  static const welcome='welcome', createAccount='create_account', fullName='full_name', phone='phone';
+  static const email='email', password='password', confirmPassword='confirm_password', signIn='sign_in';
+  static const haveAccount='have_account', requiredField='required_field', emailInvalid='email_invalid';
+  static const passwordRule='password_rule', passwordMismatch='password_mismatch', phoneFormat='phone_format';
+  static const checkFields='check_fields', connectionError='connection_error', authFailed='auth_failed', signOut='sign_out';
 }
