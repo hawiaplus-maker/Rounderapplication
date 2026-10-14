@@ -213,4 +213,25 @@ abstract final class AppLocaleKey {
   static const trackOrder='track_order';
   static const activeOrderOne='active_order_one';
   static const activeOrderTwo='active_order_two';
+  static const emergencyTitle='emergency_title';
+  static const emergencyIntro='emergency_intro';
+  static const emergencyType='emergency_type';
+  static const emergencyContact='emergency_contact';
+  static const emergencyLocation='emergency_location';
+  static const emergencyDetails='emergency_details';
+  static const confirmEmergency='confirm_emergency';
+  static const sendEmergency='send_emergency';
+  static const emergencyReceived='emergency_received';
+  static const emergencyReference='emergency_reference';
+  static const emergencyClose='emergency_close';
+  static const emergencyTypeFire='emergency_type_fire';
+  static const emergencyTypeMedical='emergency_type_medical';
+  static const emergencyTypeGas='emergency_type_gas';
+  static const emergencyTypeElectrical='emergency_type_electrical';
+  static const emergencyTypeWater='emergency_type_water';
+  static const emergencyTypeElevator='emergency_type_elevator';
+  static const emergencyTypeSecurity='emergency_type_security';
+  static const emergencyRequired='emergency_required';
+  static const invalidPhone='invalid_phone';
+  static const emergencySafety='emergency_safety';
 }
