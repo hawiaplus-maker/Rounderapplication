@@ -1,0 +1,24 @@
+name: rounder_application
+description: Rounder resident app
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  easy_localization: ^3.0.8
+  flutter_bloc: ^9.1.1
+  dio: ^5.11.1
+  get_it: ^9.3.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/i18n/
+    - assets/images/
