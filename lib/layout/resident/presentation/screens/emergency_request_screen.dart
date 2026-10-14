@@ -21,7 +21,7 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
   static const _types = <(String, IconData)>[
     (AppLocaleKey.emergencyTypeFire, Icons.local_fire_department_outlined),
     (AppLocaleKey.emergencyTypeMedical, Icons.medical_services_outlined),
-    (AppLocaleKey.emergencyTypeGas, Icons.propane_tank_outlined),
+    (AppLocaleKey.emergencyTypeGas, Icons.local_gas_station_outlined),
     (AppLocaleKey.emergencyTypeElectrical, Icons.electrical_services_outlined),
     (AppLocaleKey.emergencyTypeWater, Icons.water_damage_outlined),
     (AppLocaleKey.emergencyTypeElevator, Icons.elevator_outlined),
@@ -38,7 +38,7 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: AppColors.background,
+    backgroundColor: AppColors.canvas,
     appBar: AppBar(
       title: Text(AppLocaleKey.emergencyTitle.tr()),
       leading: IconButton(onPressed: () => Navigator.maybePop(context), icon: const Icon(Icons.arrow_back), tooltip: AppLocaleKey.back.tr()),
