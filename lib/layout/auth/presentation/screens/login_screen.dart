@@ -5,7 +5,6 @@ import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../auth_cubit.dart';
-import '../../../resident/presentation/screens/resident_welcome_flow.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -125,13 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? AppLocaleKey.haveAccount.tr()
                           : AppLocaleKey.createAccount.tr()),
                     ),
-                    if (!creating)
-                      TextButton.icon(
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => const ResidentWelcomeFlow())),
-                        icon: const Icon(Icons.auto_awesome_outlined),
-                        label: Text(AppLocaleKey.exploreRounder.tr()),
-                      ),
                     TextButton(
                       onPressed: chooseLanguage,
                       child: Text('🌐  ${AppLocaleKey.language.tr()}'),
