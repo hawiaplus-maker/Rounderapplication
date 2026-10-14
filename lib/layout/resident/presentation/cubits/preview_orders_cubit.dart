@@ -29,6 +29,12 @@ class PreviewOrdersCubit extends Cubit<List<PreviewOrder>> {
     return order;
   }
 
+  void update(String reference, String statusKey, {double? amount}) {
+    emit(List.unmodifiable(state.map((o) => o.reference != reference || o.statusKey == AppLocaleKey.requestCancelled ? o :
+      PreviewOrder(reference:o.reference,serviceKey:o.serviceKey,providerKey:o.providerKey,
+        scheduledAt:o.scheduledAt,amount:amount??o.amount,locationKey:o.locationKey,statusKey:statusKey,notes:o.notes))));
+  }
+
   void cancel(String reference) {
     emit(List.unmodifiable(state.map((o) => o.reference == reference ? o.cancelled() : o)));
   }

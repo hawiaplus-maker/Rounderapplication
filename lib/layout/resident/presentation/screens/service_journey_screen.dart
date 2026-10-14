@@ -9,13 +9,14 @@ import '../cubits/preview_orders_cubit.dart';
 /// Screen-only service journey. Values and actions are local prototype state
 /// so the complete Figma flow can be reviewed before API integration.
 class ServiceJourneyScreen extends StatefulWidget {
-  const ServiceJourneyScreen({super.key, this.startOnTracking=false});
-  final bool startOnTracking;
+  const ServiceJourneyScreen({super.key, this.startOnTracking=false, this.startOnInvoice=false, this.order});
+  final bool startOnTracking, startOnInvoice;
+  final PreviewOrder? order;
   @override State<ServiceJourneyScreen> createState() => _ServiceJourneyScreenState();
 }
 enum _Journey { catalog, detail, schedule, providers, review, waiting, tracking, additional, files, invoice, payment, rating, warranty, followup }
 class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
-  late _Journey page=widget.startOnTracking?_Journey.tracking:_Journey.catalog, previous=_Journey.catalog;
+  late _Journey page=widget.startOnInvoice?_Journey.invoice:widget.startOnTracking?_Journey.tracking:_Journey.catalog, previous=_Journey.catalog;
   String service=AppLocaleKey.plumbing, issueType=AppLocaleKey.notSure;
   String selectedProvider=AppLocaleKey.providerOne, location=AppLocaleKey.myUnit;
   double basePrice=150;
@@ -59,6 +60,25 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       orderReference=order.reference;
     }
     go(_Journey.waiting);
+  }
+  @override void initState(){
+    super.initState();
+    final order=widget.order;
+    if(order!=null){
+      service=order.serviceKey;selectedProvider=order.providerKey;basePrice=order.amount;
+      selectedDate=order.scheduledAt;selectedTime=TimeOfDay.fromDateTime(order.scheduledAt);
+      location=order.locationKey;orderReference=order.reference;issue.text=order.notes;
+      if(order.statusKey==AppLocaleKey.serviceComplete)stage=3;
+    }
+  }
+  void _activatePreview(){
+    if(orderReference!=null)sl<PreviewOrdersCubit>().update(orderReference!,AppLocaleKey.orderActive);
+    go(_Journey.tracking);
+  }
+  void _advancePreview(){
+    setState(()=>stage++);
+    if(stage>=3&&orderReference!=null)sl<PreviewOrdersCubit>().update(orderReference!,AppLocaleKey.serviceComplete,
+      amount:basePrice+(acceptedAdditional?50:0));
   }
   @override void dispose(){query.dispose();issue.dispose();notes.dispose();super.dispose();}
   @override Widget build(BuildContext context)=>Container(
@@ -206,7 +226,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       if(orderReference!=null)sl<PreviewOrdersCubit>().cancel(orderReference!);
       _toast(AppLocaleKey.requestCancelled.tr());go(_Journey.catalog);
     }),
-    _next(AppLocaleKey.providerAccepted,()=>go(_Journey.tracking)),
+    _next(AppLocaleKey.providerAccepted,_activatePreview),
   ]);
 
   Widget _tracking()=>_subPage(stage<2?AppLocaleKey.technicianOnWay:AppLocaleKey.serviceInProgress,[
@@ -224,7 +244,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         const SizedBox(width:8),Expanded(child:_action(AppLocaleKey.callTechnician,Icons.call_outlined,()=>_showPicker(AppLocaleKey.callTechnician)))])]),
     _action(AppLocaleKey.serviceFiles,Icons.photo_library_outlined,()=>go(_Journey.files)),
     _action(AppLocaleKey.addWork,Icons.add_circle_outline,()=>go(_Journey.additional)),
-    if(stage<3)_next(AppLocaleKey.serviceInProgress,()=>setState(()=>stage++)),
+    if(stage<3)_next(AppLocaleKey.serviceInProgress,_advancePreview),
     if(stage>=3)_next(AppLocaleKey.serviceReport,()=>go(_Journey.invoice)),
   ]);
 

@@ -80,10 +80,11 @@ class OrdersPrototypeScreen extends StatelessWidget {
 }
 
 class _OrderData {
-  const _OrderData(this.titleKey, this.reference, this.statusKey, this.icon, this.amount, this.scheduledAt, this.locationKey);
+  const _OrderData(this.titleKey, this.reference, this.statusKey, this.icon, this.amount, this.scheduledAt, this.locationKey, this.preview);
   factory _OrderData.fromPreview(PreviewOrder order) => _OrderData(
     order.serviceKey, order.reference, order.statusKey, Icons.home_repair_service_outlined,
-    order.amount.toStringAsFixed(2), order.scheduledAt, order.locationKey);
+    order.amount.toStringAsFixed(2), order.scheduledAt, order.locationKey, order);
+  final PreviewOrder preview;
   final DateTime scheduledAt;
   final String locationKey;
   final String titleKey;
@@ -201,7 +202,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ]),
       FilledButton.icon(
         onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-          builder: (_) => const Scaffold(body: SafeArea(child: ServiceJourneyScreen(startOnTracking: true))))),
+          builder: (_) => Scaffold(body: SafeArea(child: ServiceJourneyScreen(startOnTracking: true, order: widget.data.preview))))),
         icon: const Icon(Icons.location_searching_rounded),
         label: Text(AppLocaleKey.trackOrder.tr()),
         style: FilledButton.styleFrom(backgroundColor: AppColors.orange, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(52)),
@@ -209,7 +210,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       const SizedBox(height: 8),
       OutlinedButton.icon(
         onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-          builder: (_) => const Scaffold(body: SafeArea(child: ServiceJourneyScreen(startOnTracking: true))))),
+          builder: (_) => Scaffold(body: SafeArea(child: ServiceJourneyScreen(startOnInvoice: true, order: widget.data.preview))))),
         icon: const Icon(Icons.receipt_long_outlined),
         label: Text(AppLocaleKey.invoice.tr()),
         style: OutlinedButton.styleFrom(foregroundColor: AppColors.petrol, minimumSize: const Size.fromHeight(50)),
