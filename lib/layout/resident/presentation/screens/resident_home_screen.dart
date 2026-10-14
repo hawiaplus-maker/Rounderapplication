@@ -342,7 +342,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
         child: FilledButton.tonal(
           onPressed: () => setState(() => _tab = 3),
           style: FilledButton.styleFrom(backgroundColor: AppColors.mint, foregroundColor: AppColors.petrol),
-          child: Text(AppLocaleKey.viewRating.tr(), maxLines: 1, overflow: TextOverflow.ellipsis),
+          child: Text(AppLocaleKey.propertyHealth.tr(), maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
       ),
     ]),
