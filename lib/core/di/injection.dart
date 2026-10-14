@@ -7,7 +7,9 @@ import '../network/dio_consumer.dart';
 import '../../layout/auth/data/auth_repository.dart';
 import '../../layout/auth/presentation/auth_cubit.dart';
 import '../../layout/resident/data/repositories/resident_repository.dart';
+import '../../layout/resident/data/repositories/services_repository.dart';
 import '../../layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
+import '../../layout/resident/presentation/cubit/services_cubit.dart';
 final sl=GetIt.instance;
 const tokenStorage=FlutterSecureStorage();
 void configureDependencies(){
@@ -21,5 +23,7 @@ void configureDependencies(){
  sl.registerLazySingleton(()=>AuthRepository(sl<ApiConsumer>(),tokenStorage));
  sl.registerFactory(()=>AuthCubit(sl<AuthRepository>()));
  sl.registerLazySingleton(()=>ResidentRepository(sl<ApiConsumer>()));
+ sl.registerLazySingleton(()=>ServicesRepository(sl<ApiConsumer>()));
  sl.registerFactory(()=>ResidentDashboardCubit(sl<ResidentRepository>()));
+ sl.registerFactory(()=>ServicesCubit(sl<ServicesRepository>()));
 }
