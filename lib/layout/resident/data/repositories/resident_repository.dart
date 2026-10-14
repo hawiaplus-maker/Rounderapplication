@@ -3,6 +3,7 @@ import '../../../../core/network/api_consumer.dart';
 import '../models/resident_dashboard.dart';
 class ResidentRepository {
   ResidentRepository(this.api); final ApiConsumer api;
+  Future<void> linkHome({required String propertyCode,required String unitLabel}) async { await api.post('/resident/homes/link',data:{'property_code':propertyCode,'unit_label':unitLabel}); }
   Future<ResidentDashboard> getDashboard() async {
     final r=await api.get<Map<String,dynamic>>('/resident/dashboard');
     final body=r.data??<String,dynamic>{}, data=body['data'];
