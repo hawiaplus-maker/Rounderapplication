@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import '../../../../core/network/api_consumer.dart';
 import '../models/service_option.dart';
 class ServicesRepository {
