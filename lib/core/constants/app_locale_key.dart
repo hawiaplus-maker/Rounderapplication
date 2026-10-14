@@ -13,5 +13,7 @@ abstract final class AppLocaleKey {
   static const passwordRule='password_rule', passwordMismatch='password_mismatch', phoneFormat='phone_format';
   static const checkFields='check_fields', connectionError='connection_error', authFailed='auth_failed', signOut='sign_out';
   static const serviceCatalog='service_catalog', noServices='no_services', bookNow='book_now';
+  static const linkYourHome='link_your_home', linkHomeHelp='link_home_help', propertyCode='property_code';
+  static const unitNumber='unit_number', linkHome='link_home', homeLinkFailed='home_link_failed';
   static const bookingCreated='booking_created', bookingFailed='booking_failed', linkHomeFirst='link_home_first';
 }
