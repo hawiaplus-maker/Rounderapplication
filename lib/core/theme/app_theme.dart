@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 abstract final class AppColors {
-  static const petrol=Color(0xFF073D43), orange=Color(0xFFFF782E), sand=Color(0xFFF4DFBF);
-  static const mint=Color(0xFFE8F3F0), ink=Color(0xFF17343A), muted=Color(0xFF75868A), canvas=Color(0xFFF7F9F8);
+  static const petrol=Color(0xFF073B43), orange=Color(0xFFFF7A1A), sand=Color(0xFFFFF9EF);
+  static const mint=Color(0xFFDDF3EE), ink=Color(0xFF17343A), muted=Color(0xFF75868A), canvas=Color(0xFFF7F9F8);
 }
 abstract final class AppTheme {
   static ThemeData get light=>ThemeData(useMaterial3:true,scaffoldBackgroundColor:AppColors.canvas,

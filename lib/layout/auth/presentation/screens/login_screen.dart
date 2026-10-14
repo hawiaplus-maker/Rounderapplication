@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_locale_key.dart';
+import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../auth_cubit.dart';
 
@@ -45,10 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Icon(Icons.apartment_rounded, color: AppColors.orange, size: 55),
+                    Image.asset(AppImages.rounderLogo, height: 78, fit: BoxFit.contain),
                     const SizedBox(height: 12),
-                    const Text('rounder', textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: AppColors.petrol)),
                     const SizedBox(height: 8),
                     Text(creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.welcome.tr(),
                         textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
