@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/layout/auth/presentation/auth_cubit.dart';
 import '../../../../core/constants/app_images.dart';
@@ -173,11 +174,14 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
             const SizedBox(height: 10),
             _homeSelector(data.homeName),
             const SizedBox(height: 12),
-            Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Expanded(child: _balanceCard(data.associationBalance)),
-              const SizedBox(width: 12),
-              Expanded(child: _healthCard(data.propertyHealthPercent)),
-            ]),
+            SizedBox(
+              height: 232,
+              child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Expanded(child: _balanceCard(data.associationBalance)),
+                const SizedBox(width: 12),
+                Expanded(child: _healthCard(data.propertyHealthPercent)),
+              ]),
+            ),
             const SizedBox(height: 18),
             _sectionHeading(AppLocaleKey.upcomingService, AppLocaleKey.orders, () => setState(() => _tab = 2)),
             const SizedBox(height: 8),
