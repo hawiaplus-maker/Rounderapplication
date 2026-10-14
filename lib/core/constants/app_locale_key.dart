@@ -133,4 +133,5 @@ abstract final class AppLocaleKey {
   static const cleaningCampaign='cleaning_campaign';
   static const septemberDues='september_dues';
   static const pastCleaningPayment='past_cleaning_payment';
+  static const contactUse='contact_use';
 }
