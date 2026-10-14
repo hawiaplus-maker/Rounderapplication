@@ -1,9 +1,9 @@
 name: rounder_application
-description: Rounder resident app
+description: Rounder resident application.
 publish_to: none
 version: 0.1.0+1
 environment:
-  sdk: ">=3.4.0 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 dependencies:
   flutter:
     sdk: flutter
@@ -13,6 +13,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   dio: ^5.11.1
   get_it: ^9.3.0
+  flutter_secure_storage: ^11.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
