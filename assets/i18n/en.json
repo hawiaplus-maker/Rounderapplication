@@ -313,5 +313,15 @@
   "next": "Next",
   "start_using_rounder": "Start using Rounder",
   "close": "Close",
-  "explore_rounder": "Explore Rounder"
+  "explore_rounder": "Explore Rounder",
+  "change_phone": "Change phone number",
+  "enter_new_phone": "Enter your new phone number",
+  "send_code": "Send verification code",
+  "verification_code": "Verification code",
+  "phone_otp_hint": "Enter the 6-digit code sent to {{phone}}",
+  "verify_phone": "Confirm new number",
+  "phone_updated": "Phone number updated on this device",
+  "invalid_verification_code": "Enter a valid 6-digit verification code",
+  "add_unit": "Add residence",
+  "primary_unit": "Primary unit"
 }
