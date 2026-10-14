@@ -4,7 +4,7 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 
 void main() {
   test('brand tokens and centralized locale keys are configured', () {
-    expect(AppColors.petrol.value, 0xFF073D43);
+    expect(AppColors.petrol.toARGB32(), 0xFF073B43);
     expect(AppLocaleKey.home, 'home');
     expect(AppLocaleKey.urdu, 'urdu');
   });
