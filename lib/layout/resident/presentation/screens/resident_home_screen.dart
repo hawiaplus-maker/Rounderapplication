@@ -23,7 +23,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
     final labels=[AppLocaleKey.home,AppLocaleKey.services,AppLocaleKey.community,AppLocaleKey.account];
     return Scaffold(
       appBar:AppBar(title:const Text('rounder',style:TextStyle(fontSize:25,fontWeight:FontWeight.w900,color:AppColors.petrol)),actions:[IconButton(onPressed:chooseLanguage,tooltip:AppLocaleKey.language.tr(),icon:const Icon(Icons.language))]),
-      body:tab==0?dashboard():tab==3?accountPanel():Center(child:Text(labels[tab].tr(),style:Theme.of(context).textTheme.headlineSmall)),
+      body:tab==0?dashboard():tab==1?const ServicesScreen():tab==3?accountPanel():Center(child:Text(labels[tab].tr(),style:Theme.of(context).textTheme.headlineSmall)),
       bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(i)=>setState(()=>tab=i),destinations:[
         NavigationDestination(icon:const Icon(Icons.home_outlined),selectedIcon:const Icon(Icons.home),label:AppLocaleKey.home.tr()),
         NavigationDestination(icon:const Icon(Icons.grid_view_outlined),label:AppLocaleKey.services.tr()),
@@ -61,7 +61,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
     Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(AppLocaleKey.myHome.tr(),style:const TextStyle(color:Colors.white70)),const SizedBox(height:4),Text(home.isEmpty?'—':home,style:const TextStyle(color:Colors.white,fontSize:18,fontWeight:FontWeight.w700))])),
     const Icon(Icons.chevron_right,color:Colors.white),
   ]));
-  Widget action(IconData icon,String text,Color color)=>InkWell(onTap:()=>ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(text))),borderRadius:BorderRadius.circular(18),child:Container(height:105,padding:const EdgeInsets.all(16),decoration:BoxDecoration(color:color,borderRadius:BorderRadius.circular(18)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Icon(icon,color:AppColors.petrol),Text(text,style:const TextStyle(fontWeight:FontWeight.w700))])));
+  Widget action(IconData icon,String text,Color color,VoidCallback onTap)=>InkWell(onTap:onTap,borderRadius:BorderRadius.circular(18),child:Container(height:105,padding:const EdgeInsets.all(16),decoration:BoxDecoration(color:color,borderRadius:BorderRadius.circular(18)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[Icon(icon,color:AppColors.petrol),Text(text,style:const TextStyle(fontWeight:FontWeight.w700))])));
   Widget metric(String label,String value,IconData icon)=>Card(child:Padding(padding:const EdgeInsets.all(16),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(icon,color:AppColors.orange),const SizedBox(height:12),Text(label,style:const TextStyle(fontSize:12,color:AppColors.muted)),const SizedBox(height:6),Text(value,style:const TextStyle(fontSize:17,fontWeight:FontWeight.w800))])));
   Widget info(String title,String value,String subtitle,IconData icon)=>Card(child:ListTile(leading:CircleAvatar(backgroundColor:AppColors.mint,child:Icon(icon,color:AppColors.petrol)),title:Text(title),subtitle:Text(subtitle.isEmpty?value:'$value\n$subtitle'),isThreeLine:subtitle.isNotEmpty,trailing:const Icon(Icons.chevron_right)));
 }
