@@ -313,5 +313,15 @@
   "next": "اگلا",
   "start_using_rounder": "راؤنڈر استعمال کریں",
   "close": "بند کریں",
-  "explore_rounder": "راؤنڈر دریافت کریں"
+  "explore_rounder": "راؤنڈر دریافت کریں",
+  "change_phone": "موبائل نمبر تبدیل کریں",
+  "enter_new_phone": "اپنا نیا موبائل نمبر درج کریں",
+  "send_code": "تصدیقی کوڈ بھیجیں",
+  "verification_code": "تصدیقی کوڈ",
+  "phone_otp_hint": "{{phone}} پر بھیجا گیا 6 ہندسوں کا کوڈ درج کریں",
+  "verify_phone": "نئے نمبر کی تصدیق کریں",
+  "phone_updated": "موبائل نمبر اس ڈیوائس پر اپ ڈیٹ ہوگیا",
+  "invalid_verification_code": "درست 6 ہندسوں کا تصدیقی کوڈ درج کریں",
+  "add_unit": "رہائش شامل کریں",
+  "primary_unit": "بنیادی یونٹ"
 }
