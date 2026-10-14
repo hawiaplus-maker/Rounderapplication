@@ -15,5 +15,8 @@ abstract final class AppLocaleKey {
   static const serviceCatalog='service_catalog', noServices='no_services', bookNow='book_now';
   static const linkYourHome='link_your_home', linkHomeHelp='link_home_help', propertyCode='property_code';
   static const unitNumber='unit_number', linkHome='link_home', homeLinkFailed='home_link_failed';
+  static const myBookings='my_bookings', noBookings='no_bookings', cancelBooking='cancel_booking';
+  static const cancelConfirm='cancel_confirm', keepBooking='keep_booking', residentCancelled='resident_cancelled';
+  static const bookingCancelled='booking_cancelled';
   static const bookingCreated='booking_created', bookingFailed='booking_failed', linkHomeFirst='link_home_first';
 }
