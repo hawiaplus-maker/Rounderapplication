@@ -12,13 +12,13 @@ class BookingsScreen extends StatelessWidget {
 }
 class _BookingsBody extends StatelessWidget {
  const _BookingsBody();
- @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:Text(AppLocaleKey.myBookings.tr())),body:BlocBuilder<BookingsCubit,BookingsState>(builder:(context,state){
+ @override Widget build(BuildContext context)=>BlocBuilder<BookingsCubit,BookingsState>(builder:(context,state){
   if(state is BookingsLoading)return const Center(child:CircularProgressIndicator());
   if(state is BookingsFailure)return Center(child:TextButton(onPressed:()=>context.read<BookingsCubit>().load(),child:Text(AppLocaleKey.retry.tr())));
   final items=(state as BookingsReady).items;
   if(items.isEmpty)return Center(child:Text(AppLocaleKey.noBookings.tr()));
-  return ListView(padding:const EdgeInsets.all(16),children:items.map((item)=>_BookingTile(item:item)).toList());
- }));
+  return ListView(padding:const EdgeInsets.all(16),children:[Text(AppLocaleKey.myBookings.tr(),style:const TextStyle(fontSize:21,fontWeight:FontWeight.w800,color:AppColors.petrol)),const SizedBox(height:12),...items.map((item)=>_BookingTile(item:item))]);
+ });
 }
 class _BookingTile extends StatelessWidget{
  const _BookingTile({required this.item});final BookingItem item;
