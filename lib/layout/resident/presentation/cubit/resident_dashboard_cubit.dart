@@ -6,6 +6,13 @@ class DashboardLoading extends ResidentDashboardState {}
 class DashboardReady extends ResidentDashboardState { DashboardReady(this.data); final ResidentDashboard data; }
 class DashboardFailed extends ResidentDashboardState { DashboardFailed(this.key); final String key; }
 class ResidentDashboardCubit extends Cubit<ResidentDashboardState> {
-  ResidentDashboardCubit(this.repo):super(DashboardLoading()); final ResidentRepository repo;
-  Future<void> load() async { emit(DashboardLoading()); try { emit(DashboardReady(await repo.getDashboard())); } catch(e) { emit(DashboardFailed(repo.errorKey(e))); } }
+  ResidentDashboardCubit(this.repo):isPreview=false,super(DashboardLoading());
+  ResidentDashboardCubit.preview(this.repo):isPreview=true,super(DashboardReady(const ResidentDashboard(hasHome:true)));
+  final ResidentRepository repo;
+  final bool isPreview;
+
+  void previewHome(String label) {
+    if(isPreview)emit(DashboardReady(ResidentDashboard(homeName:label,hasHome:true)));
+  }
+  Future<void> load() async { if(isPreview)return; emit(DashboardLoading()); try { emit(DashboardReady(await repo.getDashboard())); } catch(e) { emit(DashboardFailed(repo.errorKey(e))); } }
 }

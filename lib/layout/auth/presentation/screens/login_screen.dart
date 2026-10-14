@@ -5,6 +5,11 @@ import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../auth_cubit.dart';
+import '../../../../core/di/injection.dart';
+import '../../../resident/data/repositories/resident_repository.dart';
+import '../../../resident/presentation/cubit/resident_dashboard_cubit.dart';
+import '../../../resident/presentation/screens/resident_home_screen.dart';
+import '../../../resident/presentation/screens/resident_welcome_flow.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -124,6 +129,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? AppLocaleKey.haveAccount.tr()
                           : AppLocaleKey.createAccount.tr()),
                     ),
+                    OutlinedButton(
+                      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                        builder: (_) => BlocProvider(
+                          create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
+                          child: const ResidentHomeScreen()))),
+                      child: Text(AppLocaleKey.exploreRounder.tr())),
+                    Text(AppLocaleKey.prototypeData.tr(), textAlign: TextAlign.center),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                        builder: (_) => const ResidentWelcomeFlow())),
+                      child: Text(AppLocaleKey.welcomeSteps.tr())),
                     TextButton(
                       onPressed: chooseLanguage,
                       child: Text('🌐  ${AppLocaleKey.language.tr()}'),

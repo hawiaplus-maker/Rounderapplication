@@ -1,5 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection.dart';
+import '../cubits/preview_orders_cubit.dart';
 import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'service_journey_screen.dart';
@@ -10,7 +13,9 @@ class OrdersPrototypeScreen extends StatelessWidget {
   const OrdersPrototypeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => DefaultTabController(
+  Widget build(BuildContext context) => BlocBuilder<PreviewOrdersCubit, List<PreviewOrder>>(
+    bloc: sl<PreviewOrdersCubit>(),
+    builder: (context, orders) => DefaultTabController(
     length: 4,
     child: Column(children: [
       Padding(
@@ -42,23 +47,13 @@ class OrdersPrototypeScreen extends StatelessWidget {
         ],
       ),
       Expanded(child: TabBarView(children: [
-        _list([
-          _OrderData(AppLocaleKey.activeOrderOne, 'RD-2048', AppLocaleKey.orderActive, Icons.plumbing_outlined, '380'),
-          _OrderData(AppLocaleKey.activeOrderTwo, 'RD-2050', AppLocaleKey.orderScheduled, Icons.cleaning_services_outlined, '150'),
-          _OrderData(AppLocaleKey.activeOrderOne, 'RD-1984', AppLocaleKey.serviceComplete, Icons.check_circle_outline, '220'),
-        ]),
-        _list([
-          _OrderData(AppLocaleKey.activeOrderOne, 'RD-2048', AppLocaleKey.orderActive, Icons.plumbing_outlined, '380'),
-        ]),
-        _list([
-          _OrderData(AppLocaleKey.activeOrderTwo, 'RD-2050', AppLocaleKey.orderScheduled, Icons.cleaning_services_outlined, '150'),
-        ]),
-        _list([
-          _OrderData(AppLocaleKey.activeOrderOne, 'RD-1984', AppLocaleKey.serviceComplete, Icons.check_circle_outline, '220'),
-        ]),
+        _list(orders.map(_OrderData.fromPreview).toList()),
+        _list(orders.where((o)=>o.statusKey==AppLocaleKey.orderActive).map(_OrderData.fromPreview).toList()),
+        _list(orders.where((o)=>o.statusKey==AppLocaleKey.orderScheduled).map(_OrderData.fromPreview).toList()),
+        _list(orders.where((o)=>o.statusKey==AppLocaleKey.serviceComplete||o.statusKey==AppLocaleKey.requestCancelled).map(_OrderData.fromPreview).toList()),
       ])),
     ]),
-  );
+  ));
 
   Widget _list(List<_OrderData> orders) {
     if (orders.isEmpty) {
@@ -85,7 +80,12 @@ class OrdersPrototypeScreen extends StatelessWidget {
 }
 
 class _OrderData {
-  const _OrderData(this.titleKey, this.reference, this.statusKey, this.icon, this.amount);
+  const _OrderData(this.titleKey, this.reference, this.statusKey, this.icon, this.amount, this.scheduledAt, this.locationKey);
+  factory _OrderData.fromPreview(PreviewOrder order) => _OrderData(
+    order.serviceKey, order.reference, order.statusKey, Icons.home_repair_service_outlined,
+    order.amount.toStringAsFixed(2), order.scheduledAt, order.locationKey);
+  final DateTime scheduledAt;
+  final String locationKey;
   final String titleKey;
   final String reference;
   final String statusKey;
@@ -116,7 +116,7 @@ class _OrderCard extends StatelessWidget {
               Text(data.titleKey.tr(), textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.petrol)),
               const SizedBox(height: 4),
-              Text(AppLocaleKey.unitTitle.tr() + ' • ' + AppLocaleKey.currentUnit.tr(),
+              Text(data.locationKey.tr(),
                 textAlign: TextAlign.right, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
             ])),
             const Icon(Icons.chevron_left, color: AppColors.petrol),
@@ -186,8 +186,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         ]),
         const Divider(height: 24),
         _row(AppLocaleKey.orderStatus.tr(), widget.data.statusKey.tr()),
-        _row(AppLocaleKey.orderPlace.tr(), AppLocaleKey.unitTitle.tr() + ' • ' + AppLocaleKey.currentUnit.tr()),
-        _row(AppLocaleKey.orderDate.tr(), AppLocaleKey.preferredDate.tr()),
+        _row(AppLocaleKey.orderPlace.tr(), widget.data.locationKey.tr()),
+        _row(AppLocaleKey.orderDate.tr(), DateFormat.yMd(context.locale.toString()).add_jm().format(widget.data.scheduledAt)),
         _row(AppLocaleKey.orderAmount.tr(), widget.data.amount + ' ' + AppLocaleKey.currencySar.tr()),
       ]),
       _panel([
@@ -214,7 +214,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         label: Text(AppLocaleKey.invoice.tr()),
         style: OutlinedButton.styleFrom(foregroundColor: AppColors.petrol, minimumSize: const Size.fromHeight(50)),
       ),
-      if (widget.data.statusKey != AppLocaleKey.serviceComplete) ...[
+      if (widget.data.statusKey != AppLocaleKey.serviceComplete && widget.data.statusKey != AppLocaleKey.requestCancelled) ...[
         const SizedBox(height: 8),
         TextButton(
           onPressed: _confirmCancel,
@@ -273,6 +273,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         ],
       ),
     );
-    if (approved == true && mounted) setState(() => _cancelled = true);
+    if (approved == true && mounted) {
+      sl<PreviewOrdersCubit>().cancel(widget.data.reference);
+      setState(() => _cancelled = true);
+    }
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'emergency_request_screen.dart';
+import '../../../../core/di/injection.dart';
+import '../cubits/preview_orders_cubit.dart';
 
 /// Screen-only service journey. Values and actions are local prototype state
 /// so the complete Figma flow can be reviewed before API integration.
@@ -14,12 +16,50 @@ class ServiceJourneyScreen extends StatefulWidget {
 enum _Journey { catalog, detail, schedule, providers, review, waiting, tracking, additional, files, invoice, payment, rating, warranty, followup }
 class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   late _Journey page=widget.startOnTracking?_Journey.tracking:_Journey.catalog, previous=_Journey.catalog;
-  String service='plumbing';
+  String service=AppLocaleKey.plumbing, issueType=AppLocaleKey.notSure;
+  String selectedProvider=AppLocaleKey.providerOne, location=AppLocaleKey.myUnit;
+  double basePrice=150;
+  DateTime? selectedDate;
+  TimeOfDay selectedTime=const TimeOfDay(hour:9,minute:0);
+  String? orderReference;
+  final List<_Journey> _history=[];
+  String get _dateLabel => selectedDate == null ? AppLocaleKey.preferredDate.tr()
+    : DateFormat.yMMMd(context.locale.toString()).format(selectedDate!);
+  String get _timeLabel => selectedTime.format(context);
+  String get _amountLabel => (basePrice+(acceptedAdditional?50:0)).toStringAsFixed(2);
+
   int mode=0, stage=0, stars=0;
   bool acceptedAdditional=false;
   final query=TextEditingController(), issue=TextEditingController(), notes=TextEditingController();
-  void go(_Journey next){setState(() { previous=page; page=next; });}
-  void back(){setState(()=>page=previous);}
+  void go(_Journey next){setState(() { _history.add(page); previous=page; page=next; });}
+  void back(){setState(() { page=_history.isEmpty?_Journey.catalog:_history.removeLast(); });}
+  Future<void> _pickDate() async {
+    final now=DateTime.now();
+    final value=await showDatePicker(context:context, initialDate:selectedDate??now.add(const Duration(days:1)),
+      firstDate:DateTime(now.year,now.month,now.day),lastDate:now.add(const Duration(days:365)));
+    if(value!=null&&mounted)setState(()=>selectedDate=value);
+  }
+  Future<void> _pickTime() async {
+    final value=await showTimePicker(context:context,initialTime:selectedTime);
+    if(value!=null&&mounted)setState(()=>selectedTime=value);
+  }
+  void _continueSchedule(){
+    if(mode==0 && selectedDate==null){_toast(AppLocaleKey.checkFields.tr());return;}
+    final date=selectedDate??DateTime.now();
+    final schedule=mode==1?DateTime.now().add(const Duration(hours:3)):DateTime(date.year,date.month,date.day,selectedTime.hour,selectedTime.minute);
+    if(!schedule.isAfter(DateTime.now())){_toast(AppLocaleKey.checkFields.tr());return;}
+    go(_Journey.providers);
+  }
+  void _submitPreview(){
+    if(orderReference==null){
+      final date=selectedDate??DateTime.now();
+      final scheduledAt=mode==1?DateTime.now().add(const Duration(hours:3)):DateTime(date.year,date.month,date.day,selectedTime.hour,selectedTime.minute);
+      final order=sl<PreviewOrdersCubit>().create(serviceKey:service,providerKey:selectedProvider,
+        scheduledAt:scheduledAt,amount:basePrice,locationKey:location,notes:issue.text.trim());
+      orderReference=order.reference;
+    }
+    go(_Journey.waiting);
+  }
   @override void dispose(){query.dispose();issue.dispose();notes.dispose();super.dispose();}
   @override Widget build(BuildContext context)=>Container(
     decoration:const BoxDecoration(gradient:LinearGradient(begin:Alignment.topCenter,end:Alignment.bottomCenter,
@@ -40,7 +80,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   Widget _catalog()=>ListView(key:const ValueKey('service-catalog'),padding:EdgeInsets.zero,children:[
     _header(AppLocaleKey.catalogTitle),
     Padding(padding:const EdgeInsets.fromLTRB(20,8,20,12),child:Text(AppLocaleKey.greetingAli.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:27,fontWeight:FontWeight.w800))),
-    Padding(padding:const EdgeInsets.symmetric(horizontal:20),child:TextField(controller:query,textAlign:TextAlign.right,
+    Padding(padding:const EdgeInsets.symmetric(horizontal:20),child:TextField(controller:query,onChanged:(_)=>setState((){}),textAlign:TextAlign.right,
       decoration:InputDecoration(hintText:AppLocaleKey.searchHint.tr(),prefixIcon:const Icon(Icons.search),
         filled:true,fillColor:Colors.white,border:OutlineInputBorder(borderRadius:BorderRadius.circular(18),borderSide:BorderSide.none)))),
     const SizedBox(height:18),
@@ -59,7 +99,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       Icon(icon,color:AppColors.orange,size:27),const SizedBox(height:12),
       Text(title.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:18,fontWeight:FontWeight.w800,color:AppColors.petrol)),
       const Divider(),
-      ...choices.map((key)=>TextButton(onPressed:()=>setState(() { service=key; page=_Journey.detail; previous=_Journey.catalog; }),
+      ...choices.where((key)=>key.tr().toLowerCase().contains(query.text.trim().toLowerCase())).map((key)=>TextButton(onPressed:(){
+        setState(() { service=key; orderReference=null; acceptedAdditional=false; });
+        go(_Journey.detail);
+      },
         child:Align(alignment:Alignment.centerRight,child:Text(key.tr(),style:const TextStyle(color:AppColors.petrol))))),
     ]));
 
@@ -74,10 +117,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     _panel([
       Text(AppLocaleKey.issueType.tr(),textAlign:TextAlign.right,style:const TextStyle(fontWeight:FontWeight.w800,color:AppColors.petrol)),
       Wrap(spacing:8,runSpacing:6,children:[AppLocaleKey.waterLeak,AppLocaleKey.drainBlock,AppLocaleKey.installation,AppLocaleKey.notSure].map((key)=>
-        ChoiceChip(label:Text(key.tr()),selected:service==key,onSelected:(_)=>setState(()=>service=key))).toList()),
+        ChoiceChip(label:Text(key.tr()),selected:issueType==key,onSelected:(_)=>setState(()=>issueType=key))).toList()),
     ]),
     _action(AppLocaleKey.addPhotos,Icons.add_a_photo_outlined,()=>go(_Journey.files)),
-    _next(AppLocaleKey.nextProviders,()=>go(_Journey.schedule)),
+    _next(AppLocaleKey.nextProviders,(){ if(issue.text.trim().length<5){_toast(AppLocaleKey.requiredField.tr());return;} go(_Journey.schedule); }),
   ]);
 
   Widget _schedule()=>_subPage(AppLocaleKey.whenService,[
@@ -98,7 +141,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       Row(children:[Expanded(child:_selectPill(AppLocaleKey.preferredDate,Icons.calendar_today)),const SizedBox(width:8),Expanded(child:_selectPill(AppLocaleKey.morning,Icons.access_time))]),
       Text(AppLocaleKey.providerTiming.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted,fontSize:11)),
     ]),
-    _next(AppLocaleKey.nextProviders,()=>go(_Journey.providers)),
+    _next(AppLocaleKey.nextProviders,_continueSchedule),
   ]);
 
   Widget _choice(int value,String key,IconData icon)=>ChoiceChip(
@@ -113,7 +156,13 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     selectedColor:AppColors.mint,backgroundColor:Colors.white);
 
   Widget _selectPill(String key,IconData icon)=>Padding(padding:const EdgeInsets.only(bottom:8),child:OutlinedButton.icon(
-    onPressed:()=>_showPicker(key),icon:Icon(icon,color:AppColors.petrol),label:Text(key.tr()),
+    onPressed:(){
+      if(key==AppLocaleKey.preferredDate){_pickDate();return;}
+      if(key==AppLocaleKey.morning){_pickTime();return;}
+      if(key==AppLocaleKey.myUnit||key==AppLocaleKey.sharedFacilities){setState(()=>location=key);return;}
+      _showPicker(key);
+    },icon:Icon((key==location)?Icons.check_circle:icon,color:AppColors.petrol),
+    label:Text(key==AppLocaleKey.preferredDate?_dateLabel:key==AppLocaleKey.morning?_timeLabel:key.tr()),
     style:OutlinedButton.styleFrom(foregroundColor:AppColors.petrol,alignment:Alignment.centerRight,side:const BorderSide(color:AppColors.mint))));
 
   Widget _providers()=>_subPage(AppLocaleKey.availableProviders,[
@@ -131,7 +180,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     const SizedBox(height:8),
     Row(children:[
       Expanded(child:OutlinedButton(onPressed:()=>_showPicker(AppLocaleKey.companyProfile),child:Text(AppLocaleKey.viewCompany.tr()))),
-      const SizedBox(width:8),Expanded(child:FilledButton(onPressed:()=>go(_Journey.review),style:FilledButton.styleFrom(backgroundColor:AppColors.orange),child:Text(AppLocaleKey.selectProvider.tr()))),
+      const SizedBox(width:8),Expanded(child:FilledButton(onPressed:(){setState((){selectedProvider=name;basePrice=double.parse(price);});go(_Journey.review);},style:FilledButton.styleFrom(backgroundColor:AppColors.orange),child:Text(AppLocaleKey.selectProvider.tr()))),
     ]),
   ]);
 
@@ -140,25 +189,29 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       Text(service.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:20,fontWeight:FontWeight.w800,color:AppColors.petrol)),
       Text(issue.text.isEmpty?AppLocaleKey.problemHint.tr():issue.text,textAlign:TextAlign.right),
       const Divider(height:24),
-      _kv(AppLocaleKey.providerOne,AppLocaleKey.preferredDate.tr()+' • '+AppLocaleKey.morning.tr()),
-      _kv(AppLocaleKey.basePrice,'150 '+AppLocaleKey.currencySar.tr()),
-      _kv(AppLocaleKey.total,'150 '+AppLocaleKey.currencySar.tr()),
+      _kv(selectedProvider,'$_dateLabel • $_timeLabel'),
+      _kv(AppLocaleKey.orderPlace,location.tr()),
+      _kv(AppLocaleKey.basePrice,'${basePrice.toStringAsFixed(2)} ${AppLocaleKey.currencySar.tr()}'),
+      _kv(AppLocaleKey.total,'$_amountLabel ${AppLocaleKey.currencySar.tr()}'),
     ]),
     _action(AppLocaleKey.serviceSummary,Icons.receipt_long_outlined,()=>_showPicker(AppLocaleKey.serviceSummary)),
-    _next(AppLocaleKey.submitRequest,()=>go(_Journey.waiting)),
+    _next(AppLocaleKey.submitRequest,_submitPreview),
   ]);
 
   Widget _waiting()=>_subPage(AppLocaleKey.waitingProvider,[
     _panel([const Icon(Icons.hourglass_top_rounded,size:42,color:AppColors.orange),
       Text(AppLocaleKey.waitingProvider.tr(),textAlign:TextAlign.center,style:const TextStyle(fontSize:20,fontWeight:FontWeight.w800,color:AppColors.petrol)),
       Text(AppLocaleKey.requestSent.tr(),textAlign:TextAlign.center,style:const TextStyle(color:AppColors.muted))]),
-    _action(AppLocaleKey.cancel,Icons.close,()=>_showPicker(AppLocaleKey.requestCancelled)),
+    _action(AppLocaleKey.cancel,Icons.close,(){
+      if(orderReference!=null)sl<PreviewOrdersCubit>().cancel(orderReference!);
+      _toast(AppLocaleKey.requestCancelled.tr());go(_Journey.catalog);
+    }),
     _next(AppLocaleKey.providerAccepted,()=>go(_Journey.tracking)),
   ]);
 
   Widget _tracking()=>_subPage(stage<2?AppLocaleKey.technicianOnWay:AppLocaleKey.serviceInProgress,[
     _panel([
-      Text(AppLocaleKey.orderReference.tr()+' • RD–2048',textAlign:TextAlign.right,style:const TextStyle(color:Colors.white70)),
+      Text(AppLocaleKey.orderReference.tr()+' • '+(orderReference??'—'),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white70)),
       Text((stage==0?AppLocaleKey.providerAccepted:stage==1?AppLocaleKey.technicianOnWay:stage==2?AppLocaleKey.serviceInProgress:AppLocaleKey.serviceComplete).tr(),
         textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:24,fontWeight:FontWeight.w800)),
       const SizedBox(height:14),
@@ -166,7 +219,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       const SizedBox(height:10),
       Text(AppLocaleKey.providerTiming.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white)),
     ],glass:true),
-    _panel([Text(AppLocaleKey.providerOne.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:18,fontWeight:FontWeight.w800,color:AppColors.petrol)),
+    _panel([Text(selectedProvider.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:18,fontWeight:FontWeight.w800,color:AppColors.petrol)),
       Row(children:[Expanded(child:_action(AppLocaleKey.chat,Icons.chat_bubble_outline,()=>_showPicker(AppLocaleKey.chat))),
         const SizedBox(width:8),Expanded(child:_action(AppLocaleKey.callTechnician,Icons.call_outlined,()=>_showPicker(AppLocaleKey.callTechnician)))])]),
     _action(AppLocaleKey.serviceFiles,Icons.photo_library_outlined,()=>go(_Journey.files)),
@@ -198,11 +251,11 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   Widget _invoice()=>_subPage(AppLocaleKey.invoice,[
     _panel([
-      Text(AppLocaleKey.orderReference.tr()+' • RD–2048',textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted)),
+      Text(AppLocaleKey.orderReference.tr()+' • '+(orderReference??'—'),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted)),
       Text(AppLocaleKey.serviceComplete.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.petrol,fontSize:20,fontWeight:FontWeight.w800)),
-      _kv(AppLocaleKey.basePrice,'150 '+AppLocaleKey.currencySar.tr()),
+      _kv(AppLocaleKey.basePrice,'${basePrice.toStringAsFixed(2)} ${AppLocaleKey.currencySar.tr()}'),
       if(acceptedAdditional)_kv(AppLocaleKey.addWork,'50 '+AppLocaleKey.currencySar.tr()),
-      const Divider(),_kv(AppLocaleKey.total,acceptedAdditional?'200 '+AppLocaleKey.currencySar.tr():'150 '+AppLocaleKey.currencySar.tr()),
+      const Divider(),_kv(AppLocaleKey.total,'$_amountLabel ${AppLocaleKey.currencySar.tr()}'),
       Text(AppLocaleKey.warranty.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted)),
     ]),
     _next(AppLocaleKey.confirmReceipt,()=>go(_Journey.rating)),
@@ -212,7 +265,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   Widget _payment()=>_subPage(AppLocaleKey.payNow,[
     _panel([Text(AppLocaleKey.invoice.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:20,fontWeight:FontWeight.w800,color:AppColors.petrol)),
-      _kv(AppLocaleKey.total,'150 '+AppLocaleKey.currencySar.tr()),
+      _kv(AppLocaleKey.total,'$_amountLabel ${AppLocaleKey.currencySar.tr()}'),
       _action(AppLocaleKey.paymentComplete,Icons.credit_card,()=>setState(()=>page=_Journey.rating))]),
     _next(AppLocaleKey.paymentComplete,()=>go(_Journey.rating)),
   ]);
@@ -220,12 +273,12 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   Widget _rating()=>_subPage(AppLocaleKey.rateExperience,[
     _panel([
       Text(AppLocaleKey.ratingPrompt.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:22,fontWeight:FontWeight.w800,color:AppColors.petrol)),
-      Text(AppLocaleKey.providerOne.tr(),textAlign:TextAlign.right),
+      Text(selectedProvider.tr(),textAlign:TextAlign.right),
       const SizedBox(height:12),
       Row(mainAxisAlignment:MainAxisAlignment.center,children:List.generate(5,(i)=>IconButton(
         onPressed:()=>setState(()=>stars=i+1),icon:Icon(Icons.star_rounded,color:i<stars?AppColors.orange:AppColors.muted,size:33)))),
       TextField(controller:notes,maxLines:3,textAlign:TextAlign.right,decoration:InputDecoration(hintText:AppLocaleKey.ratingNote.tr())),
-      const SizedBox(height:8),_action(AppLocaleKey.sendRating,Icons.send_outlined,()=>go(_Journey.warranty)),
+      const SizedBox(height:8),_action(AppLocaleKey.sendRating,Icons.send_outlined,(){if(stars==0){_toast(AppLocaleKey.requiredField.tr());return;}go(_Journey.warranty);}),
       TextButton(onPressed:()=>go(_Journey.warranty),child:Text(AppLocaleKey.later.tr())),
     ]),
   ]);

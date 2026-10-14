@@ -1,4 +1,6 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/resident_dashboard_cubit.dart';
 import 'package:flutter/material.dart';
 import 'resident_welcome_flow.dart';
 import 'link_home_screen.dart';
@@ -61,7 +63,10 @@ class _AccountFlowState extends State<AccountFlow> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => PopScope(
+    canPop: page == _Page.profile,
+    onPopInvokedWithResult: (didPop, result) { if(!didPop)goBack(); },
+    child: Container(
     decoration: const BoxDecoration(gradient: LinearGradient(
       begin: Alignment.topCenter, end: Alignment.bottomCenter,
       stops: [0, .25, .52, .72, 1],
@@ -82,6 +87,7 @@ class _AccountFlowState extends State<AccountFlow> {
           open(_Page.edit);
         })]),
       },
+    ),
     ),
   );
 
@@ -126,7 +132,11 @@ class _AccountFlowState extends State<AccountFlow> {
       Text(AppLocaleKey.linkedHomes.tr(), style: const TextStyle(color: AppColors.muted)),
       const Divider(height: 24),
       Row(children: [
-        FilledButton(onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const LinkHomeScreen())),
+        FilledButton(onPressed: () {
+          final dashboard=context.read<ResidentDashboardCubit>();
+          Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => BlocProvider.value(
+            value:dashboard,child:Scaffold(appBar:AppBar(),body:const SafeArea(child:LinkHomeScreen())))));
+        },
           style: FilledButton.styleFrom(backgroundColor: AppColors.orange, foregroundColor: Colors.white),
           child: Text(AppLocaleKey.manage.tr())),
         const Spacer(),

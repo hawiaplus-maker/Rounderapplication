@@ -12,9 +12,11 @@ import '../../layout/resident/data/repositories/bookings_repository.dart';
 import '../../layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
 import '../../layout/resident/presentation/cubit/services_cubit.dart';
 import '../../layout/resident/presentation/cubit/bookings_cubit.dart';
+import '../../layout/resident/presentation/cubits/preview_orders_cubit.dart';
 final sl=GetIt.instance;
 const tokenStorage=FlutterSecureStorage();
 void configureDependencies(){
+ sl.registerLazySingleton(()=>PreviewOrdersCubit());
  final dio=Dio(BaseOptions(baseUrl:const String.fromEnvironment('API_BASE_URL',defaultValue:'https://api.rounder.app/api/v1'),connectTimeout:const Duration(seconds:15),receiveTimeout:const Duration(seconds:20),headers:{'Accept':'application/json'}));
  dio.interceptors.add(InterceptorsWrapper(onRequest:(options,handler)async{
   options.headers['Accept-Language']=Intl.getCurrentLocale().split('_').first;
