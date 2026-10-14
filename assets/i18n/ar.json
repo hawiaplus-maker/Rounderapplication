@@ -323,5 +323,14 @@
   "phone_updated": "تم تحديث رقم الجوال على هذا الجهاز",
   "invalid_verification_code": "أدخل رمز تحقق صحيحًا من 6 أرقام",
   "add_unit": "إضافة وحدة سكنية",
-  "primary_unit": "الوحدة الأساسية"
+  "primary_unit": "الوحدة الأساسية",
+  "all_orders": "الكل",
+  "order_details": "تفاصيل الطلب",
+  "order_status": "حالة الطلب",
+  "order_place": "المكان",
+  "order_date": "الموعد",
+  "order_amount": "المبلغ",
+  "order_progress": "مراحل الطلب",
+  "cancel_order_title": "إلغاء الطلب",
+  "cancel_order_question": "هل تريد إلغاء هذا الطلب؟"
 }
