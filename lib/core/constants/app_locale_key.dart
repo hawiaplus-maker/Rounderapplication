@@ -252,4 +252,8 @@ abstract final class AppLocaleKey {
   static const giftServiceCredit='gift_service_credit', giftCreditDesc='gift_credit_desc';
   static const giftCleaning='gift_cleaning', giftCleaningDesc='gift_cleaning_desc';
   static const selectGift='select_gift', giftSaved='gift_saved', continueLater='continue_later', skip='skip', next='next', startUsingRounder='start_using_rounder', close='close';
+
+  static const changePhone='change_phone', enterNewPhone='enter_new_phone', sendCode='send_code', verificationCode='verification_code';
+  static const phoneOtpHint='phone_otp_hint', verifyPhone='verify_phone', phoneUpdated='phone_updated', invalidVerificationCode='invalid_verification_code';
+  static const addUnit='add_unit', primaryUnit='primary_unit';
 }
