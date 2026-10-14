@@ -239,4 +239,16 @@ abstract final class AppLocaleKey {
   static const providerTwoMeta='provider_two_meta';
   static const arrivalInThreeHours='arrival_in_three_hours';
   static const days30='days30';
+
+  static const introTitleServices='intro_title_services', introBodyServices='intro_body_services';
+  static const introTitleAli='intro_title_ali', introBodyAli='intro_body_ali';
+  static const introTitleQuality='intro_title_quality', introBodyQuality='intro_body_quality';
+  static const welcomeSteps='welcome_steps', welcomeGiftTitle='welcome_gift_title';
+  static const completeProfile='complete_profile', saveResidence='save_residence', pickWelcomeGift='pick_welcome_gift';
+  static const taskComplete='task_complete', taskAction='task_action', chooseWelcomeGiftTitle='choose_welcome_gift_title';
+  static const chooseWelcomeGiftBody='choose_welcome_gift_body', giftDetails='gift_details', giftTerms='gift_terms';
+  static const giftHomeCare='gift_home_care', giftHomeCareDesc='gift_home_care_desc';
+  static const giftServiceCredit='gift_service_credit', giftCreditDesc='gift_credit_desc';
+  static const giftCleaning='gift_cleaning', giftCleaningDesc='gift_cleaning_desc';
+  static const selectGift='select_gift', giftSaved='gift_saved', continueLater='continue_later', skip='skip', next='next', startUsingRounder='start_using_rounder', close='close';
 }
