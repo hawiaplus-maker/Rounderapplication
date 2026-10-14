@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rounder_application/layout/auth/presentation/auth_cubit.dart';
 import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/resident_dashboard_cubit.dart';
