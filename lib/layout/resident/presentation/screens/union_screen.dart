@@ -59,7 +59,7 @@ class _UnionScreenState extends State<UnionScreen> {
     _panel([
       Row(children:[const Icon(Icons.account_balance_wallet_outlined,color:Colors.white),const Spacer(),Text(AppLocaleKey.availableBalance.tr(),style:const TextStyle(color:Colors.white70))]),
       const SizedBox(height:12),
-      Text('٢٥٬٠٠٠ ' + AppLocaleKey.currencySar.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:28,fontWeight:FontWeight.w800)),
+      Text('25,000 ' + AppLocaleKey.currencySar.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:28,fontWeight:FontWeight.w800)),
       const Divider(color:Colors.white54),
       TextButton.icon(onPressed:()=>open(_Section.finances),icon:const Icon(Icons.chevron_left,color:Colors.white),label:Text(AppLocaleKey.financialDetails.tr(),style:const TextStyle(color:Colors.white))),
     ],glass:true),
@@ -70,7 +70,7 @@ class _UnionScreenState extends State<UnionScreen> {
         FilledButton(onPressed:()=>open(_Section.dues),style:FilledButton.styleFrom(backgroundColor:AppColors.orange,foregroundColor:Colors.white),child:Text(AppLocaleKey.pay.tr())),
         const Spacer(),
         Column(crossAxisAlignment:CrossAxisAlignment.end,children:[
-          Text('٣٠٠ ' + AppLocaleKey.currencySar.tr(),style:const TextStyle(fontSize:20,fontWeight:FontWeight.w800,color:AppColors.petrol)),
+          Text('300 ' + AppLocaleKey.currencySar.tr(),style:const TextStyle(fontSize:20,fontWeight:FontWeight.w800,color:AppColors.petrol)),
           Text(AppLocaleKey.dueDate.tr(),style:const TextStyle(color:AppColors.muted,fontSize:12)),
         ]),
       ]),
@@ -99,10 +99,10 @@ class _UnionScreenState extends State<UnionScreen> {
   Widget _finances() => _subPage(AppLocaleKey.associationFinance,[
     _panel([
       Text(AppLocaleKey.availableBalance.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white70)),
-      Text('٢٥٬٠٠٠ ' + AppLocaleKey.currencySar.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:28,fontWeight:FontWeight.w800)),
+      Text('25,000 ' + AppLocaleKey.currencySar.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:28,fontWeight:FontWeight.w800)),
       const SizedBox(height:8),
       Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children:[
-        _stat(AppLocaleKey.cleaning,'١٬٠٠٠',AppColors.petrol),_stat(AppLocaleKey.maintenance,'٢٬٥٠٠',AppColors.orange),_stat(AppLocaleKey.utilities,'٢٬٥٠٠',AppColors.mint),
+        _stat(AppLocaleKey.cleaning,'1,000',AppColors.petrol),_stat(AppLocaleKey.maintenance,'2,500',AppColors.orange),_stat(AppLocaleKey.utilities,'2,500',AppColors.mint),
       ]),
     ],glass:true),
     _panel([
@@ -110,9 +110,9 @@ class _UnionScreenState extends State<UnionScreen> {
       const SizedBox(height:8),
       const LinearProgressIndicator(value:.7,minHeight:12,color:AppColors.petrol,backgroundColor:AppColors.mint),
       const SizedBox(height:12),
-      _line(AppLocaleKey.cleaning,'٣٬٥٠٠ ' + AppLocaleKey.currencySar.tr()),
-      _line(AppLocaleKey.maintenance,'٢٬٥٠٠ ' + AppLocaleKey.currencySar.tr()),
-      _line(AppLocaleKey.utilities,'١٬٠٠٠ ' + AppLocaleKey.currencySar.tr()),
+      _line(AppLocaleKey.cleaning,'3,500 ' + AppLocaleKey.currencySar.tr()),
+      _line(AppLocaleKey.maintenance,'2,500 ' + AppLocaleKey.currencySar.tr()),
+      _line(AppLocaleKey.utilities,'1,000 ' + AppLocaleKey.currencySar.tr()),
     ]),
     _panel([Text(AppLocaleKey.paymentHistory.tr(),textAlign:TextAlign.right,style:const TextStyle(fontWeight:FontWeight.w800,color:AppColors.petrol)),_line(AppLocaleKey.cleaning,AppLocaleKey.pastCleaningPayment.tr())]),
     Padding(padding:const EdgeInsets.symmetric(horizontal:20),child:FilledButton(onPressed:()=>_toast(AppLocaleKey.comingSoon.tr()),style:FilledButton.styleFrom(backgroundColor:AppColors.orange),child:Text(AppLocaleKey.financialDetails.tr()))),
@@ -121,7 +121,7 @@ class _UnionScreenState extends State<UnionScreen> {
   Widget _dues() => _subPage(AppLocaleKey.myDues,[
     _panel([
       Text(AppLocaleKey.dueAmount.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white70)),
-      Text('٣٠٠ ' + AppLocaleKey.currencySar.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:30,fontWeight:FontWeight.w800)),
+      Text('300 ' + AppLocaleKey.currencySar.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white,fontSize:30,fontWeight:FontWeight.w800)),
       Text(AppLocaleKey.dueDate.tr(),textAlign:TextAlign.right,style:const TextStyle(color:Colors.white70)),
     ],glass:true),
     SegmentedButton<bool>(segments:[
@@ -129,7 +129,7 @@ class _UnionScreenState extends State<UnionScreen> {
       ButtonSegment(value:true,label:Text(AppLocaleKey.pending.tr())),
     ],selected:{true},onSelectionChanged:(_){ }),
     const SizedBox(height:12),
-    _panel([_line(AppLocaleKey.unitTitle,'٣٠٠ ' + AppLocaleKey.currencySar.tr()),Text(AppLocaleKey.currentUnit.tr() + ' • ' + AppLocaleKey.septemberDues.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted))]),
+    _panel([_line(AppLocaleKey.unitTitle,'300 ' + AppLocaleKey.currencySar.tr()),Text(AppLocaleKey.currentUnit.tr() + ' • ' + AppLocaleKey.septemberDues.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted))]),
     Padding(padding:const EdgeInsets.symmetric(horizontal:20),child:FilledButton(onPressed:()=>_toast(AppLocaleKey.comingSoon.tr()),style:FilledButton.styleFrom(backgroundColor:AppColors.orange),child:Text(AppLocaleKey.pay.tr()))),
     Padding(padding:const EdgeInsets.all(20),child:Text(AppLocaleKey.prototypeData.tr(),textAlign:TextAlign.center,style:const TextStyle(color:AppColors.muted,fontSize:11))),
   ]);
