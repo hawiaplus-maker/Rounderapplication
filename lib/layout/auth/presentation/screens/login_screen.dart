@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                     _field(email, AppLocaleKey.email.tr(), icon: Icons.email_outlined,
                         keyboard: TextInputType.emailAddress,
-                        validator: (value) => value == null || value.trim().length > 254 || !RegExp(r'^[^\\s@]+@[^\\s@]+\\.[^\\s@]+
+                        validator: (value) => value == null || value.trim().length > 254 || !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim())
                             ? AppLocaleKey.emailInvalid.tr()
                             : null),
                     const SizedBox(height: 12),
