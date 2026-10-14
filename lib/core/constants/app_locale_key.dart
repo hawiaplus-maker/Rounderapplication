@@ -206,4 +206,11 @@ abstract final class AppLocaleKey {
   static const sendRating='send_rating';
   static const later='later';
   static const followUp='follow_up';
+  static const orderHistory='order_history';
+  static const noOrdersYet='no_orders_yet';
+  static const orderActive='order_active';
+  static const orderScheduled='order_scheduled';
+  static const trackOrder='track_order';
+  static const activeOrderOne='active_order_one';
+  static const activeOrderTwo='active_order_two';
 }
