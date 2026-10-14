@@ -238,5 +238,5 @@ abstract final class AppLocaleKey {
   static const providerOneMeta='provider_one_meta';
   static const providerTwoMeta='provider_two_meta';
   static const arrivalInThreeHours='arrival_in_three_hours';
-  static const days30='days_30';
+  static const days30='days30';
 }
