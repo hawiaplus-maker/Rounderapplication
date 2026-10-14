@@ -282,5 +282,6 @@
   "emergency_type_security": "Urgent security issue",
   "emergency_required": "Complete the emergency details and confirmation",
   "invalid_phone": "Enter an international number such as +9665xxxxxxxx",
-  "emergency_safety": "This request is tracked separately from standard service bookings in the admin dashboard."
+  "emergency_safety": "This request is tracked separately from standard service bookings in the admin dashboard.",
+  "Save": "Save"
 }
