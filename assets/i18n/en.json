@@ -323,5 +323,14 @@
   "phone_updated": "Phone number updated on this device",
   "invalid_verification_code": "Enter a valid 6-digit verification code",
   "add_unit": "Add residence",
-  "primary_unit": "Primary unit"
+  "primary_unit": "Primary unit",
+  "all_orders": "All",
+  "order_details": "Order details",
+  "order_status": "Status",
+  "order_place": "Location",
+  "order_date": "Appointment",
+  "order_amount": "Amount",
+  "order_progress": "Request progress",
+  "cancel_order_title": "Cancel request",
+  "cancel_order_question": "Do you want to cancel this request?"
 }
