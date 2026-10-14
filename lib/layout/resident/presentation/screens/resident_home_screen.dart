@@ -52,7 +52,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
       const SizedBox(height:5),Text(AppLocaleKey.homeOverview.tr(),style:const TextStyle(color:AppColors.muted)),
       const SizedBox(height:20),homeCard(d.homeName),const SizedBox(height:22),
       Text(AppLocaleKey.quickActions.tr(),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w700)),const SizedBox(height:12),
-      Row(children:[Expanded(child:action(Icons.handyman_outlined,AppLocaleKey.bookService.tr(),AppColors.mint)),const SizedBox(width:10),Expanded(child:action(Icons.campaign_outlined,AppLocaleKey.emergency.tr(),const Color(0xFFFFEEE5)))]),
+      Row(children:[Expanded(child:action(Icons.handyman_outlined,AppLocaleKey.bookService.tr(),AppColors.mint,()=>setState(()=>tab=1))),const SizedBox(width:10),Expanded(child:action(Icons.campaign_outlined,AppLocaleKey.emergency.tr(),const Color(0xFFFFEEE5),()=>ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(AppLocaleKey.emergency.tr())))))]),
       const SizedBox(height:22),Text(AppLocaleKey.association.tr(),style:const TextStyle(fontSize:18,fontWeight:FontWeight.w700)),const SizedBox(height:12),
       Row(children:[Expanded(child:metric(AppLocaleKey.associationBalance.tr(),'${d.associationBalance.toStringAsFixed(0)} ${AppLocaleKey.currencyEgp.tr()}',Icons.account_balance_wallet_outlined)),const SizedBox(width:10),Expanded(child:metric(AppLocaleKey.propertyHealth.tr(),'${d.propertyHealthPercent}%',Icons.health_and_safety_outlined))]),
       const SizedBox(height:18),info(AppLocaleKey.upcomingService.tr(),d.upcomingService?.title??AppLocaleKey.noUpcomingService.tr(),d.upcomingService?.subtitle??'',Icons.calendar_month_outlined),
