@@ -103,7 +103,7 @@ class _AccountFlowState extends State<AccountFlow> {
         const Spacer(),
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Text(AppLocaleKey.unitTitle.tr(), style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.petrol)),
-          Text(AppLocaleKey.currentUnit.tr() + ' • ١٢٠٤', style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+          Text(AppLocaleKey.currentUnit.tr() + ' • '+AppLocaleKey.flatNumber.tr(), style: const TextStyle(color: AppColors.muted, fontSize: 12)),
         ]),
       ]),
       const SizedBox(height: 6),
