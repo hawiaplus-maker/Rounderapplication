@@ -313,5 +313,15 @@
   "next": "التالي",
   "start_using_rounder": "ابدأ استخدام راوندر",
   "close": "إغلاق",
-  "explore_rounder": "اكتشف راوندر"
+  "explore_rounder": "اكتشف راوندر",
+  "change_phone": "تغيير رقم الجوال",
+  "enter_new_phone": "أدخل رقم الجوال الجديد",
+  "send_code": "إرسال رمز التحقق",
+  "verification_code": "رمز التحقق",
+  "phone_otp_hint": "أدخل الرمز المكوّن من 6 أرقام المرسل إلى {{phone}}",
+  "verify_phone": "تأكيد الرقم الجديد",
+  "phone_updated": "تم تحديث رقم الجوال على هذا الجهاز",
+  "invalid_verification_code": "أدخل رمز تحقق صحيحًا من 6 أرقام",
+  "add_unit": "إضافة وحدة سكنية",
+  "primary_unit": "الوحدة الأساسية"
 }
