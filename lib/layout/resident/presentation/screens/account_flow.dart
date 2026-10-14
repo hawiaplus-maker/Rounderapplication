@@ -359,7 +359,7 @@ class _AccountFlowState extends State<AccountFlow> {
       SizedBox(width: double.infinity, child: FilledButton(
         onPressed: () {
           final value = newPhoneController.text.trim();
-          if (!RegExp(r'^\\+[1-9][0-9]{7,14}
+          if (!RegExp(r'^\+[1-9][0-9]{7,14}
     key: ValueKey(key), padding: EdgeInsets.zero,
     children: [
       _header(key, showBack: true),
