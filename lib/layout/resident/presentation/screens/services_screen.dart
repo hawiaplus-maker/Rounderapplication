@@ -6,6 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/di/injection.dart';
 import '../cubit/resident_dashboard_cubit.dart';
 import '../cubit/services_cubit.dart';
+import 'bookings_screen.dart';
 import '../../data/models/service_option.dart';
 class ServicesScreen extends StatelessWidget {
  const ServicesScreen({super.key});
@@ -18,7 +19,7 @@ class _ServicesBody extends StatelessWidget {
   if(state is ServicesFailure)return Center(child:Column(mainAxisSize:MainAxisSize.min,children:[Text(state.key.tr()),TextButton(onPressed:()=>context.read<ServicesCubit>().load(),child:Text(AppLocaleKey.retry.tr()))]));
   final services=(state as ServicesReady).services;
   if(services.isEmpty)return Center(child:Text(AppLocaleKey.noServices.tr()));
-  return ListView(padding:const EdgeInsets.all(16),children:[Text(AppLocaleKey.serviceCatalog.tr(),style:const TextStyle(fontSize:22,fontWeight:FontWeight.w800,color:AppColors.petrol)),const SizedBox(height:14),
+  return ListView(padding:const EdgeInsets.all(16),children:[Row(children:[Expanded(child:Text(AppLocaleKey.serviceCatalog.tr(),style:const TextStyle(fontSize:22,fontWeight:FontWeight.w800,color:AppColors.petrol))),TextButton(onPressed:()=>Navigator.of(context).push(MaterialPageRoute<void>(builder:(_)=>const BookingsScreen())),child:Text(AppLocaleKey.myBookings.tr()))]),const SizedBox(height:14),
    ...services.map((service)=>_ServiceCard(service:service))]);
  });
 }
