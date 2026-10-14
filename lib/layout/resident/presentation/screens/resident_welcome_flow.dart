@@ -127,9 +127,9 @@ class _ResidentWelcomeFlowState extends State<ResidentWelcomeFlow> {
       const SizedBox(height: 32),
       Text(AppLocaleKey.welcomeSteps.tr(), textAlign: TextAlign.right, style: const TextStyle(color: Colors.white70)),
       const SizedBox(height: 8),
-      Text(introTitles[_slide].tr(), textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 30, height: 1.25, fontWeight: FontWeight.w900)),
+      Text(_introTitles[_slide].tr(), textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 30, height: 1.25, fontWeight: FontWeight.w900)),
       const SizedBox(height: 12),
-      Text(introBodies[_slide].tr(), textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.7)),
+      Text(_introBodies[_slide].tr(), textAlign: TextAlign.right, style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.7)),
       const SizedBox(height: 28),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
