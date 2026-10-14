@@ -323,5 +323,14 @@
   "phone_updated": "موبائل نمبر اس ڈیوائس پر اپ ڈیٹ ہوگیا",
   "invalid_verification_code": "درست 6 ہندسوں کا تصدیقی کوڈ درج کریں",
   "add_unit": "رہائش شامل کریں",
-  "primary_unit": "بنیادی یونٹ"
+  "primary_unit": "بنیادی یونٹ",
+  "all_orders": "تمام",
+  "order_details": "آرڈر کی تفصیل",
+  "order_status": "حیثیت",
+  "order_place": "مقام",
+  "order_date": "وقت",
+  "order_amount": "رقم",
+  "order_progress": "درخواست کی پیش رفت",
+  "cancel_order_title": "درخواست منسوخ کریں",
+  "cancel_order_question": "کیا آپ یہ درخواست منسوخ کرنا چاہتے ہیں؟"
 }
