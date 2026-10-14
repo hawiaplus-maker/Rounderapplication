@@ -1,0 +1,33 @@
+name: Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "lib/**"
+      - "assets/**"
+      - "pubspec.yaml"
+      - ".github/workflows/android-apk.yml"
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android host
+        run: flutter create --platforms=android --org com.rounder.app .
+      - name: Install packages
+        run: flutter pub get
+      - name: Analyze Dart
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+      - name: Build release APK
+        run: flutter build apk --release --dart-define=API_BASE_URL=${{ vars.API_BASE_URL || 'https://api.rounder.app/api/v1' }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rounder-resident-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
