@@ -135,7 +135,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       const Divider(height:24),
       _kv(AppLocaleKey.providerOne,AppLocaleKey.preferredDate.tr()+' • '+AppLocaleKey.morning.tr()),
       _kv(AppLocaleKey.basePrice,'150 '+AppLocaleKey.currencySar.tr()),
-      _kv(AppLocaleKey.total,'١٥٠ '+AppLocaleKey.currencySar.tr()),
+      _kv(AppLocaleKey.total,'150 '+AppLocaleKey.currencySar.tr()),
     ]),
     _action(AppLocaleKey.serviceSummary,Icons.receipt_long_outlined,()=>_showPicker(AppLocaleKey.serviceSummary)),
     _next(AppLocaleKey.submitRequest,()=>go(_Journey.waiting)),
@@ -193,9 +193,9 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     _panel([
       Text(AppLocaleKey.orderReference.tr()+' • RD–2048',textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted)),
       Text(AppLocaleKey.serviceComplete.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.petrol,fontSize:20,fontWeight:FontWeight.w800)),
-      _kv(AppLocaleKey.basePrice,'١٥٠ '+AppLocaleKey.currencySar.tr()),
-      if(acceptedAdditional)_kv(AppLocaleKey.addWork,'٥٠ '+AppLocaleKey.currencySar.tr()),
-      const Divider(),_kv(AppLocaleKey.total,acceptedAdditional?'200 '+AppLocaleKey.currencySar.tr():'١٥٠ '+AppLocaleKey.currencySar.tr()),
+      _kv(AppLocaleKey.basePrice,'150 '+AppLocaleKey.currencySar.tr()),
+      if(acceptedAdditional)_kv(AppLocaleKey.addWork,'50 '+AppLocaleKey.currencySar.tr()),
+      const Divider(),_kv(AppLocaleKey.total,acceptedAdditional?'200 '+AppLocaleKey.currencySar.tr():'150 '+AppLocaleKey.currencySar.tr()),
       Text(AppLocaleKey.warranty.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted)),
     ]),
     _next(AppLocaleKey.confirmReceipt,()=>go(_Journey.rating)),
@@ -205,7 +205,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   Widget _payment()=>_subPage(AppLocaleKey.payNow,[
     _panel([Text(AppLocaleKey.invoice.tr(),textAlign:TextAlign.right,style:const TextStyle(fontSize:20,fontWeight:FontWeight.w800,color:AppColors.petrol)),
-      _kv(AppLocaleKey.total,'١٥٠ '+AppLocaleKey.currencySar.tr()),
+      _kv(AppLocaleKey.total,'150 '+AppLocaleKey.currencySar.tr()),
       _action(AppLocaleKey.paymentComplete,Icons.credit_card,()=>setState(()=>page=_Journey.rating))]),
     _next(AppLocaleKey.paymentComplete,()=>go(_Journey.rating)),
   ]);
