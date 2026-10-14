@@ -259,4 +259,16 @@ abstract final class AppLocaleKey {
 
   static const allOrders='all_orders', orderDetails='order_details', orderStatus='order_status', orderPlace='order_place', orderDate='order_date', orderAmount='order_amount', orderProgress='order_progress';
   static const cancelOrderTitle='cancel_order_title', cancelOrderQuestion='cancel_order_question';
+  static const newPhoneIntro = 'new_phone_intro';
+  static const enterCodeForNumber = 'enter_code_for_number';
+  static const currentPhoneUnchanged = 'current_phone_unchanged';
+  static const phoneSaveHint = 'phone_save_hint';
+  static const previewVerification = 'preview_verification';
+  static const resendCode = 'resend_code';
+  static const resendAfter = 'resend_after';
+  static const codeExpired = 'code_expired';
+  static const discardChangesTitle = 'discard_changes_title';
+  static const unsavedChanges = 'unsaved_changes';
+  static const keepEditing = 'keep_editing';
+  static const discardChanges = 'discard_changes';
 }

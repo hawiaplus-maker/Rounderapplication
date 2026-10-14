@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'resident_welcome_flow.dart';
 import 'link_home_screen.dart';
+import '../widgets/phone_change_panel.dart';
+import '../widgets/discard_profile_dialog.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -15,7 +17,7 @@ class AccountFlow extends StatefulWidget {
   @override State<AccountFlow> createState() => _AccountFlowState();
 }
 
-enum _Page { profile, edit, settings, notifications, privacy, help, gifts }
+enum _Page { profile, edit, settings, notifications, privacy, help, gifts, phone }
 
 class _AccountFlowState extends State<AccountFlow> {
   _Page page = _Page.profile;
@@ -44,7 +46,19 @@ class _AccountFlowState extends State<AccountFlow> {
   }
 
   void open(_Page value) => setState(() => page = value);
-  void goBack() => open(_Page.profile);
+  bool get _dirty => nameController.text.trim() != name ||
+    emailController.text.trim() != email || phoneController.text.trim() != phone;
+
+  Future<void> goBack() async {
+    if (page == _Page.phone) { open(_Page.edit); return; }
+    if (page == _Page.edit && _dirty) {
+      if (!await confirmDiscardProfile(context) || !mounted) return;
+      nameController.text = name;
+      emailController.text = email;
+      phoneController.text = phone;
+    }
+    if (mounted) open(_Page.profile);
+  }
 
   @override
   Widget build(BuildContext context) => Container(
@@ -63,6 +77,10 @@ class _AccountFlowState extends State<AccountFlow> {
         _Page.privacy => _privacy(),
         _Page.help => _help(),
         _Page.gifts => _gifts(),
+        _Page.phone => _subPage(AppLocaleKey.changePhone, [PhoneChangePanel(onVerified: (value) {
+          phoneController.text = value;
+          open(_Page.edit);
+        })]),
       },
     ),
   );
@@ -171,7 +189,10 @@ class _AccountFlowState extends State<AccountFlow> {
     _panel([
       _input(AppLocaleKey.fullName, nameController, keyboard: TextInputType.name),
       const SizedBox(height: 14),
-      _input(AppLocaleKey.phoneNumber, phoneController, keyboard: TextInputType.phone),
+      ListTile(contentPadding: EdgeInsets.zero,
+        title: Text(AppLocaleKey.phoneNumber.tr()),
+        subtitle: Text(phoneController.text, textDirection: TextDirection.ltr),
+        trailing: TextButton(onPressed: () => open(_Page.phone), child: Text(AppLocaleKey.changePhone.tr()))),
       const SizedBox(height: 14),
       _input(AppLocaleKey.emailAddress, emailController, keyboard: TextInputType.emailAddress),
       const SizedBox(height: 4),
@@ -182,6 +203,11 @@ class _AccountFlowState extends State<AccountFlow> {
       style: FilledButton.styleFrom(backgroundColor: AppColors.orange, foregroundColor: Colors.white, padding: const EdgeInsets.all(15)),
       onPressed: () {
         if (nameController.text.trim().length < 2) { _toast(AppLocaleKey.requiredField.tr()); return; }
+        final candidateEmail = emailController.text.trim();
+        if (candidateEmail.isNotEmpty &&
+            (candidateEmail.length > 254 || !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(candidateEmail))) {
+          _toast(AppLocaleKey.emailInvalid.tr()); return;
+        }
         setState(() { name=nameController.text.trim(); phone=phoneController.text.trim(); email=emailController.text.trim(); page=_Page.profile; });
         _toast(AppLocaleKey.profileSaved.tr());
       },
@@ -219,7 +245,7 @@ class _AccountFlowState extends State<AccountFlow> {
     ]),
     const SizedBox(height: 10),
     if (filter == 0 || filter == 1) _notification(AppLocaleKey.notificationOfferTitle, AppLocaleKey.notificationOfferBody, Icons.request_quote_outlined),
-    if (filter == 0 || filter == 2) _notification(AppLocaleKey.notificationReportTitle, AppLocaleKey.notificationReportBody, Icons.fact_check_outlined),
+    if (filter == 0 || (filter == 2 && !read)) _notification(AppLocaleKey.notificationReportTitle, AppLocaleKey.notificationReportBody, Icons.fact_check_outlined),
     if (filter == 2 && read) _panel([Text(AppLocaleKey.emptyNotifications.tr(), textAlign: TextAlign.center)]),
   ]);
 

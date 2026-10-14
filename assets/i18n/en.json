@@ -332,5 +332,17 @@
   "order_amount": "Amount",
   "order_progress": "Request progress",
   "cancel_order_title": "Cancel request",
-  "cancel_order_question": "Do you want to cancel this request?"
+  "cancel_order_question": "Do you want to cancel this request?",
+  "new_phone_intro": "We verify your new mobile number.",
+  "enter_code_for_number": "Enter the verification code for",
+  "current_phone_unchanged": "Your current number stays unchanged",
+  "phone_save_hint": "After verification, return to your details to save the change.",
+  "preview_verification": "Local preview: no SMS is sent. Test code: {code}",
+  "resend_code": "Resend code",
+  "resend_after": "Resend after {seconds} seconds",
+  "code_expired": "The code expired or too many attempts were made. Request a new code.",
+  "discard_changes_title": "Leave your changes?",
+  "unsaved_changes": "You have changes that are not saved yet.",
+  "keep_editing": "Keep editing",
+  "discard_changes": "Discard changes"
 }

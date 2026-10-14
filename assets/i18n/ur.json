@@ -332,5 +332,17 @@
   "order_amount": "رقم",
   "order_progress": "درخواست کی پیش رفت",
   "cancel_order_title": "درخواست منسوخ کریں",
-  "cancel_order_question": "کیا آپ یہ درخواست منسوخ کرنا چاہتے ہیں؟"
+  "cancel_order_question": "کیا آپ یہ درخواست منسوخ کرنا چاہتے ہیں؟",
+  "new_phone_intro": "اپنے نئے موبائل نمبر کی تصدیق کریں۔",
+  "enter_code_for_number": "اس نمبر کا تصدیقی کوڈ درج کریں",
+  "current_phone_unchanged": "آپ کا موجودہ نمبر تبدیل نہیں ہوگا",
+  "phone_save_hint": "تصدیق کے بعد تبدیلی محفوظ کرنے کے لیے اپنی تفصیلات پر واپس جائیں۔",
+  "preview_verification": "مقامی پیش نظارہ: SMS نہیں بھیجا جاتا۔ آزمائشی کوڈ: {code}",
+  "resend_code": "کوڈ دوبارہ بھیجیں",
+  "resend_after": "{seconds} سیکنڈ بعد دوبارہ بھیجیں",
+  "code_expired": "کوڈ کی مدت ختم ہوگئی یا کوششیں زیادہ ہوگئیں۔ نیا کوڈ حاصل کریں۔",
+  "discard_changes_title": "تبدیلیاں چھوڑنا چاہتے ہیں؟",
+  "unsaved_changes": "آپ کی تبدیلیاں ابھی محفوظ نہیں ہوئیں۔",
+  "keep_editing": "ترمیم جاری رکھیں",
+  "discard_changes": "تبدیلیاں مسترد کریں"
 }

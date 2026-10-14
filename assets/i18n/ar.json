@@ -332,5 +332,17 @@
   "order_amount": "المبلغ",
   "order_progress": "مراحل الطلب",
   "cancel_order_title": "إلغاء الطلب",
-  "cancel_order_question": "هل تريد إلغاء هذا الطلب؟"
+  "cancel_order_question": "هل تريد إلغاء هذا الطلب؟",
+  "new_phone_intro": "نرسل رمز تحقق إلى رقمك الجديد.",
+  "enter_code_for_number": "أدخل رمز التحقق الخاص بالرقم",
+  "current_phone_unchanged": "رقمك الحالي يبقى كما هو",
+  "phone_save_hint": "بعد التأكيد ترجع لبياناتك لإكمال الحفظ.",
+  "preview_verification": "معاينة محلية: لا تُرسل رسالة SMS. رمز التجربة: {code}",
+  "resend_code": "إعادة إرسال الرمز",
+  "resend_after": "إعادة الإرسال بعد {seconds} ثانية",
+  "code_expired": "انتهت صلاحية الرمز أو تجاوزت المحاولات. اطلب رمزًا جديدًا.",
+  "discard_changes_title": "تبغى تترك التعديلات؟",
+  "unsaved_changes": "عندك تغييرات ما حفظتها بعد.",
+  "keep_editing": "مواصلة التعديل",
+  "discard_changes": "تجاهل التغييرات"
 }
