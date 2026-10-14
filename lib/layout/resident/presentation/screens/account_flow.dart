@@ -9,7 +9,9 @@ import '../../../../core/theme/app_theme.dart';
 /// Resident account screens from Figma. This prototype uses local state only
 /// and deliberately does not call the API.
 class AccountFlow extends StatefulWidget {
-  const AccountFlow({super.key});
+  const AccountFlow({super.key, this.residentName = '', this.homeName = ''});
+  final String residentName;
+  final String homeName;
   @override State<AccountFlow> createState() => _AccountFlowState();
 }
 
@@ -28,6 +30,13 @@ class _AccountFlowState extends State<AccountFlow> {
   final nameController = TextEditingController();
   final phoneController = TextEditingController(text: '+966 5X XXX XXXX');
   final emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    name = widget.residentName;
+    nameController.text = name;
+  }
 
   @override
   void dispose() {
@@ -112,7 +121,7 @@ class _AccountFlowState extends State<AccountFlow> {
           child: Text(AppLocaleKey.manage.tr())),
         const Spacer(),
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text(AppLocaleKey.unitTitle.tr(), style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.petrol)),
+          Text(widget.homeName.isEmpty ? AppLocaleKey.unitTitle.tr() : widget.homeName, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.petrol)),
           Text(AppLocaleKey.currentUnit.tr() + ' • '+AppLocaleKey.flatNumber.tr(), style: const TextStyle(color: AppColors.muted, fontSize: 12)),
         ]),
       ]),
@@ -320,7 +329,7 @@ class _AccountFlowState extends State<AccountFlow> {
         Text(AppLocaleKey.linkedHomes.tr(), style: const TextStyle(color: AppColors.petrol, fontSize: 19, fontWeight: FontWeight.w800)),
       ]),
       const SizedBox(height: 10),
-      Text(AppLocaleKey.unitTitle.tr(), textAlign: TextAlign.right, style: const TextStyle(color: AppColors.petrol, fontSize: 17, fontWeight: FontWeight.w800)),
+      Text(widget.homeName.isEmpty ? AppLocaleKey.unitTitle.tr() : widget.homeName, textAlign: TextAlign.right, style: const TextStyle(color: AppColors.petrol, fontSize: 17, fontWeight: FontWeight.w800)),
       Text(AppLocaleKey.currentUnit.tr() + ' • ' + AppLocaleKey.flatNumber.tr(), textAlign: TextAlign.right, style: const TextStyle(color: AppColors.muted)),
       const Divider(height: 24),
       Row(children: [
