@@ -12,4 +12,6 @@ abstract final class AppLocaleKey {
   static const haveAccount='have_account', requiredField='required_field', emailInvalid='email_invalid';
   static const passwordRule='password_rule', passwordMismatch='password_mismatch', phoneFormat='phone_format';
   static const checkFields='check_fields', connectionError='connection_error', authFailed='auth_failed', signOut='sign_out';
+  static const serviceCatalog='service_catalog', noServices='no_services', bookNow='book_now';
+  static const bookingCreated='booking_created', bookingFailed='booking_failed', linkHomeFirst='link_home_first';
 }
