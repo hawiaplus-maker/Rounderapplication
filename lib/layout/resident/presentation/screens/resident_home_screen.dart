@@ -23,7 +23,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
     final labels=[AppLocaleKey.home,AppLocaleKey.services,AppLocaleKey.community,AppLocaleKey.account];
     return Scaffold(
       appBar:AppBar(title:const Text('rounder',style:TextStyle(fontSize:25,fontWeight:FontWeight.w900,color:AppColors.petrol)),actions:[IconButton(onPressed:chooseLanguage,tooltip:AppLocaleKey.language.tr(),icon:const Icon(Icons.language))]),
-      body:tab==0?dashboard():Center(child:Text(labels[tab].tr(),style:Theme.of(context).textTheme.headlineSmall)),
+      body:tab==0?dashboard():tab==3?accountPanel():Center(child:Text(labels[tab].tr(),style:Theme.of(context).textTheme.headlineSmall)),
       bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(i)=>setState(()=>tab=i),destinations:[
         NavigationDestination(icon:const Icon(Icons.home_outlined),selectedIcon:const Icon(Icons.home),label:AppLocaleKey.home.tr()),
         NavigationDestination(icon:const Icon(Icons.grid_view_outlined),label:AppLocaleKey.services.tr()),
@@ -32,6 +32,11 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
       ]),
     );
   }
+  Widget accountPanel()=>Center(child:Column(mainAxisSize:MainAxisSize.min,children:[
+    const CircleAvatar(radius:34,backgroundColor:AppColors.mint,child:Icon(Icons.person_outline,color:AppColors.petrol,size:34)),
+    const SizedBox(height:16),Text(AppLocaleKey.account.tr(),style:const TextStyle(fontSize:20,fontWeight:FontWeight.w700)),
+    const SizedBox(height:16),OutlinedButton.icon(onPressed:()=>context.read<AuthCubit>().signOut(),icon:const Icon(Icons.logout),label:Text(AppLocaleKey.signOut.tr())),
+  ]));
   Widget dashboard()=>BlocBuilder<ResidentDashboardCubit,ResidentDashboardState>(builder:(context,state){
     if(state is DashboardLoading)return const Center(child:CircularProgressIndicator());
     if(state is DashboardFailed)return Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[
