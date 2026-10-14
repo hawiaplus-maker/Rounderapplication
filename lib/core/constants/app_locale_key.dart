@@ -240,6 +240,7 @@ abstract final class AppLocaleKey {
   static const arrivalInThreeHours='arrival_in_three_hours';
   static const days30='days30';
 
+  static const exploreRounder='explore_rounder';
   static const introTitleServices='intro_title_services', introBodyServices='intro_body_services';
   static const introTitleAli='intro_title_ali', introBodyAli='intro_body_ali';
   static const introTitleQuality='intro_title_quality', introBodyQuality='intro_body_quality';
