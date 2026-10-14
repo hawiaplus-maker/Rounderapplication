@@ -256,4 +256,7 @@ abstract final class AppLocaleKey {
   static const changePhone='change_phone', enterNewPhone='enter_new_phone', sendCode='send_code', verificationCode='verification_code';
   static const phoneOtpHint='phone_otp_hint', verifyPhone='verify_phone', phoneUpdated='phone_updated', invalidVerificationCode='invalid_verification_code';
   static const addUnit='add_unit', primaryUnit='primary_unit';
+
+  static const allOrders='all_orders', orderDetails='order_details', orderStatus='order_status', orderPlace='order_place', orderDate='order_date', orderAmount='order_amount', orderProgress='order_progress';
+  static const cancelOrderTitle='cancel_order_title', cancelOrderQuestion='cancel_order_question';
 }
