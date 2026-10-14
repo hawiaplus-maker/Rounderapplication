@@ -6,6 +6,7 @@ import '../../../../core/constants/app_locale_key.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/resident_dashboard_cubit.dart';
 import 'link_home_screen.dart';
+import 'services_screen.dart';
 
 class ResidentHomeScreen extends StatefulWidget {
   const ResidentHomeScreen({super.key});
