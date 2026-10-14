@@ -7,6 +7,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../cubit/resident_dashboard_cubit.dart';
 import 'link_home_screen.dart';
 import 'account_flow.dart';
+import 'bookings_screen.dart';
+import 'union_screen.dart';
 import 'services_screen.dart';
 
 class ResidentHomeScreen extends StatefulWidget {
@@ -24,14 +26,15 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
     if(locale!=null&&mounted) context.setLocale(locale);
   }
   @override Widget build(BuildContext context){
-    final labels=[AppLocaleKey.home,AppLocaleKey.services,AppLocaleKey.community,AppLocaleKey.account];
+    final labels=[AppLocaleKey.home,AppLocaleKey.services,AppLocaleKey.orders,AppLocaleKey.unionTab,AppLocaleKey.account];
     return Scaffold(
       appBar:AppBar(title:const Text('rounder',style:TextStyle(fontSize:25,fontWeight:FontWeight.w900,color:AppColors.petrol)),actions:[IconButton(onPressed:chooseLanguage,tooltip:AppLocaleKey.language.tr(),icon:const Icon(Icons.language))]),
-      body:tab==0?dashboard():tab==1?const ServicesScreen():tab==3?const AccountFlow():Center(child:Text(labels[tab].tr(),style:Theme.of(context).textTheme.headlineSmall)),
+      body:tab==0?dashboard():tab==1?const ServicesScreen():tab==2?const BookingsScreen():tab==3?const UnionScreen():const AccountFlow(),
       bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(i)=>setState(()=>tab=i),destinations:[
         NavigationDestination(icon:const Icon(Icons.home_outlined),selectedIcon:const Icon(Icons.home),label:AppLocaleKey.home.tr()),
         NavigationDestination(icon:const Icon(Icons.grid_view_outlined),label:AppLocaleKey.services.tr()),
-        NavigationDestination(icon:const Icon(Icons.groups_outlined),label:AppLocaleKey.community.tr()),
+        NavigationDestination(icon:const Icon(Icons.receipt_long_outlined),label:AppLocaleKey.orders.tr()),
+        NavigationDestination(icon:const Icon(Icons.apartment_outlined),selectedIcon:const Icon(Icons.apartment),label:AppLocaleKey.unionTab.tr()),
         NavigationDestination(icon:const Icon(Icons.person_outline),label:AppLocaleKey.account.tr()),
       ]),
     );
