@@ -55,5 +55,12 @@
   "property_code": "Property code",
   "unit_number": "Unit number",
   "link_home": "Link home",
-  "home_link_failed": "Could not link this home. Check the code and try again."
+  "home_link_failed": "Could not link this home. Check the code and try again.",
+  "my_bookings": "My bookings",
+  "no_bookings": "You have no bookings yet",
+  "cancel_booking": "Cancel booking",
+  "cancel_confirm": "Do you want to cancel this booking?",
+  "keep_booking": "Keep booking",
+  "resident_cancelled": "Cancelled by resident",
+  "booking_cancelled": "Booking cancelled"
 }
