@@ -63,8 +63,11 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
       const ServiceJourneyScreen(),
       const OrdersPrototypeScreen(),
       const UnionScreen(),
-      const AccountFlow(),
+      AccountFlow(residentName: residentName, homeName: homeName),
     ];
+    final dashboardState = context.watch<ResidentDashboardCubit>().state;
+    final residentName = dashboardState is DashboardReady ? dashboardState.data.residentName : '';
+    final homeName = dashboardState is DashboardReady ? dashboardState.data.homeName : '';
     final labels = <String>[
       AppLocaleKey.home,
       AppLocaleKey.services,
