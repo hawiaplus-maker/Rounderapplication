@@ -234,4 +234,9 @@ abstract final class AppLocaleKey {
   static const emergencyRequired='emergency_required';
   static const invalidPhone='invalid_phone';
   static const emergencySafety='emergency_safety';
+  static const flatNumber='flat_number';
+  static const providerOneMeta='provider_one_meta';
+  static const providerTwoMeta='provider_two_meta';
+  static const arrivalInThreeHours='arrival_in_three_hours';
+  static const days30='days_30';
 }
