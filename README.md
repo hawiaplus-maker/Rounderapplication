@@ -1,25 +1,36 @@
 # Rounder Resident App
 
-Flutter mobile application for the Rounder resident experience.
+Flutter resident app for the Rounder design at [Figma · Resident App](https://www.figma.com/design/MvOZdYEkaWILN1VEd5Ka2d/Untitled?node-id=11-2).
 
-## Product scope
+## Current implementation
+The current working slice covers resident sign-up/sign-in, secure Sanctum token storage, home linking by property code, a live resident dashboard, localized services, service booking, booking history and cancellation. These data flows call the separate Laravel API in [RounderAdmin](https://github.com/khaledmohsen954/RounderAdmin).
 
-The application follows the **02 - Resident App** page in the Rounder Figma file. Its flows cover onboarding and authentication, residence linking, services and bookings, order tracking, owners' association, payments, rewards, profile and aftercare.
+This is the first delivery slice from the full Figma Resident App page. See [implementation guide](docs/IMPLEMENTATION_GUIDE.md) for what is wired and which design journeys still need implementation.
 
 ## Architecture
-
-- Feature-first structure under `lib/layout`.
-- Shared app services, networking, localization, routes, theme, and reusable widgets under `lib/core`.
-- Cubit state management, repositories, models, and dependency injection.
-- The Flutter app is a client of the separate Laravel REST API in [RounderAdmin](https://github.com/khaledmohsen954/RounderAdmin).
+- Feature-first UI/data/state layers under `lib/layout`.
+- Shared services, API client, localization keys, image paths, dependency injection and theme under `lib/core`.
+- Cubits expose loading, ready and error states; repositories map API responses to UI models.
+- Dio sends the saved locale in `Accept-Language` and a secure Sanctum bearer token after sign-in.
 
 ## Localization and assets
+- Arabic is the initial locale; English and Urdu are selectable at runtime and saved.
+- UI string IDs live in `AppLocaleKey`; JSON values live in `assets/i18n/{ar,en,ur}.json`.
+- Asset paths are centralized in `AppImages`; add approved design exports under `assets/images`.
 
-- Arabic is the initial locale; English and Urdu are supported.
-- Translation keys live in `AppLocaleKey`; locale data lives under `i18n/`.
-- Asset paths are centralized in `AppImages`; local design assets live under `assets/`.
-- Locale changes are runtime-selectable and persisted.
+## Build
+The Android Actions workflow generates the Flutter Android host, analyzes Dart, runs tests, builds a release APK and uploads it as an artifact. Set `API_BASE_URL` as a repository Actions variable or supply it locally:
+`flutter run --dart-define=API_BASE_URL=https://your-host/api/v1`
 
-## Project status
-
-The repository is being initialized from the approved Figma design. The Figma QA boards marked as simulations or outside the app are implementation notes, not resident-facing screens.
+## Main directories
+```
+lib/
+  core/                 # API, DI, routing, theme, locale and asset catalogs
+  layout/auth/          # resident sign-in and registration
+  layout/resident/
+    data/               # dashboard, homes, services and booking models/repos
+    presentation/       # dashboard/services/bookings Cubits and screens
+assets/i18n/             # ar, en, ur translations
+assets/images/           # approved Rounder image exports
+docs/                    # implementation and Figma flow guide
+```
