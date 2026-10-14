@@ -55,5 +55,12 @@
   "property_code": "رمز العقار",
   "unit_number": "رقم الوحدة",
   "link_home": "ربط المنزل",
-  "home_link_failed": "تعذر ربط المنزل. تحقق من الرمز وحاول مجددًا"
+  "home_link_failed": "تعذر ربط المنزل. تحقق من الرمز وحاول مجددًا",
+  "my_bookings": "حجوزاتي",
+  "no_bookings": "لا توجد حجوزات بعد",
+  "cancel_booking": "إلغاء الحجز",
+  "cancel_confirm": "هل تريد إلغاء هذا الحجز؟",
+  "keep_booking": "الاحتفاظ بالحجز",
+  "resident_cancelled": "إلغاء بطلب من الساكن",
+  "booking_cancelled": "تم إلغاء الحجز"
 }
