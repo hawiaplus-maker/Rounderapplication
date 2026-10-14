@@ -43,5 +43,11 @@
   "check_fields": "Check the entered details and try again",
   "connection_error": "Could not connect to the server",
   "auth_failed": "Could not sign in with those details",
-  "sign_out": "Sign out"
+  "sign_out": "Sign out",
+  "service_catalog": "Service catalog",
+  "no_services": "No services are available right now",
+  "book_now": "Book now",
+  "booking_created": "Booking request sent",
+  "booking_failed": "Could not create the booking. Try again.",
+  "link_home_first": "Link your home before booking"
 }
