@@ -7,9 +7,9 @@ import '../../../../core/theme/app_theme.dart';
 import '../cubit/resident_dashboard_cubit.dart';
 import 'link_home_screen.dart';
 import 'account_flow.dart';
-import 'bookings_screen.dart';
+import 'orders_prototype_screen.dart';
 import 'union_screen.dart';
-import 'services_screen.dart';
+import 'service_journey_screen.dart';
 
 class ResidentHomeScreen extends StatefulWidget {
   const ResidentHomeScreen({super.key});
@@ -29,7 +29,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
     final labels=[AppLocaleKey.home,AppLocaleKey.services,AppLocaleKey.orders,AppLocaleKey.unionTab,AppLocaleKey.account];
     return Scaffold(
       appBar:AppBar(title:const Text('rounder',style:TextStyle(fontSize:25,fontWeight:FontWeight.w900,color:AppColors.petrol)),actions:[IconButton(onPressed:chooseLanguage,tooltip:AppLocaleKey.language.tr(),icon:const Icon(Icons.language))]),
-      body:tab==0?dashboard():tab==1?const ServicesScreen():tab==2?const BookingsScreen():tab==3?const UnionScreen():const AccountFlow(),
+      body:tab==0?dashboard():tab==1?const ServiceJourneyScreen():tab==2?const OrdersPrototypeScreen():tab==3?const UnionScreen():const AccountFlow(),
       bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(i)=>setState(()=>tab=i),destinations:[
         NavigationDestination(icon:const Icon(Icons.home_outlined),selectedIcon:const Icon(Icons.home),label:AppLocaleKey.home.tr()),
         NavigationDestination(icon:const Icon(Icons.grid_view_outlined),label:AppLocaleKey.services.tr()),
