@@ -1,11 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rounder_application/layout/auth/data/auth_repository.dart';
-sealed class AuthState {}
-class AuthChecking extends AuthState {}
-class Unauthenticated extends AuthState {}
-class Authenticated extends AuthState {}
-class AuthFailure extends AuthState {AuthFailure(this.messageKey);final String messageKey;}
+import 'package:rounder_application/layout/global/features/auth/data/repo/auth_repo.dart';
+part 'auth_state.dart';
+
 class AuthCubit extends Cubit<AuthState> {
  AuthCubit(this.repo):super(AuthChecking());final AuthRepository repo;
  Future<void> restoreSession() async {emit(AuthChecking());emit(await repo.hasSession()?Authenticated():Unauthenticated());}

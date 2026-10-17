@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
-import 'package:rounder_application/layout/auth/presentation/auth_cubit.dart';
-import 'package:rounder_application/layout/auth/presentation/screens/login_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screen/login_screen.dart';
 import 'package:rounder_application/layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/resident_home_screen.dart';
 class RounderApp extends StatelessWidget {
