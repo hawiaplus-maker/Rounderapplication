@@ -20,13 +20,16 @@ jobs:
       - name: Run Flutter tests
         run: flutter test
       - name: Generate temporary Android host
+        if: ${{ !startsWith(github.event.head_commit.message, 'docs(') }}
         run: |
           flutter create --platforms=android --org com.rounder.app .
           git restore pubspec.yaml
           flutter pub get
       - name: Build debug APK
+        if: ${{ !startsWith(github.event.head_commit.message, 'docs(') }}
         run: flutter build apk --debug
       - uses: actions/upload-artifact@v4
+        if: ${{ !startsWith(github.event.head_commit.message, 'docs(') }}
         with:
           name: rounder-restructured-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk

@@ -8,6 +8,8 @@ The current working slice covers resident sign-up/sign-in, secure Sanctum token 
 This is the first delivery slice from the full Figma Resident App page. See [implementation guide](docs/IMPLEMENTATION_GUIDE.md) for what is wired and which design journeys still need implementation.
 
 ## Architecture
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the current feature layout, preserved contracts and scope exceptions, and [validation report](docs/RESTRUCTURE_VALIDATION.md) for phase-by-phase evidence.
+
 - Feature-first UI/data/state layers under `lib/layout`.
 - Shared services, API client, localization keys, image paths, dependency injection and theme under `lib/core`.
 - Cubits expose loading, ready and error states; repositories map API responses to UI models.
@@ -23,14 +25,11 @@ The Android Actions workflow generates the Flutter Android host, analyzes Dart, 
 `flutter run --dart-define=API_BASE_URL=https://your-host/api/v1`
 
 ## Main directories
-```
-lib/
-  core/                 # API, DI, routing, theme, locale and asset catalogs
-  layout/auth/          # resident sign-in and registration
-  layout/resident/
-    data/               # dashboard, homes, services and booking models/repos
-    presentation/       # dashboard/services/bookings Cubits and screens
-assets/i18n/             # ar, en, ur translations
-assets/images/           # approved Rounder image exports
-docs/                    # implementation and Figma flow guide
-```
+- `lib/main.dart`, `lib/service_initialize.dart`, `lib/app.dart`: startup and app shell.
+- `lib/core/images`, `locale`, `network`, `services`, `theme`: shared infrastructure.
+- `lib/layout/global/features/auth`: authentication.
+- `lib/layout/resident/features/{dashboard,bookings,services,emergencies,properties,account,onboarding,association}`: resident features.
+- Each applicable feature has `data/model`, `data/repo`, `presentation/cubit`, `presentation/view/screen` and `presentation/view/widget`.
+- `assets/i18n` and `assets/images`: unchanged translations and assets.
+
+The restructuring preserves the existing mix of API-backed functionality and local previews. It does not complete the remaining Figma screens or add new API integration.

@@ -25,12 +25,12 @@ flowchart TD
 
 | Area | Key files | Responsibility |
 |---|---|---|
-| Bootstrap | `lib/main.dart`, `lib/app.dart` | EasyLocalization setup, GetIt, auth gate, global theme |
-| Locale IDs | `lib/core/constants/app_locale_key.dart` | Stable IDs used by every visible translated label |
-| Image IDs | `lib/core/constants/app_images.dart` | Central asset paths; store approved exports in `assets/images/` |
+| Bootstrap | `lib/main.dart`, `lib/service_initialize.dart`, `lib/app.dart` | EasyLocalization setup, GetIt, auth gate, global theme |
+| Locale IDs | `lib/core/locale/app_locale_key.dart` | Stable IDs used by every visible translated label |
+| Image IDs | `lib/core/images/app_images.dart` | Central asset paths; store approved exports in `assets/images/` |
 | Theme | `lib/core/theme/app_theme.dart` | Rounder petrol, orange, sand, mint and shared Material theme |
-| Network / DI | `lib/core/network/*`, `lib/core/di/injection.dart` | Dio, bearer token, locale headers and feature registrations |
-| Sign-in | `lib/layout/auth/data/auth_repository.dart`, `presentation/auth_cubit.dart`, `presentation/screens/login_screen.dart` | Registration, sign-in, encrypted token persistence and sign-out |
+| Network / DI | `lib/core/network/*`, `lib/core/services/services_locator.dart` | Dio, bearer token, locale headers and feature registrations |
+| Sign-in | `lib/layout/global/features/auth/data/repo/auth_repo.dart`, `lib/layout/global/features/auth/presentation/cubit/auth_cubit.dart`, `lib/layout/global/features/auth/presentation/view/screen/login_screen.dart` | Registration, sign-in, encrypted token persistence and sign-out |
 | Resident dashboard | `layout/resident/data/models/resident_dashboard.dart`, `data/repositories/resident_repository.dart`, `presentation/cubit/resident_dashboard_cubit.dart`, `presentation/screens/resident_home_screen.dart` | Live home balance, health, upcoming work and latest booking |
 | Residence linking | `presentation/screens/link_home_screen.dart` | Link an account to a managed home via property code and unit |
 | Service catalog | `data/models/service_option.dart`, `data/repositories/services_repository.dart`, `presentation/cubit/services_cubit.dart`, `presentation/screens/services_screen.dart` | Fetch translated services and submit a dated booking |

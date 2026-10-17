@@ -1,6 +1,6 @@
 # Rounder mobile restructuring — inventory and proposed mapping
 
-Status: awaiting owner approval. No application file has been moved.
+Status: approved by the owner on 2026-10-17; all 29 mapped files moved and validated.
 Package: `rounder_application`.
 Branch: `restructure/petromin-layout`.
 Source baseline: `8979aa5167796479ef4a27de02ae7260ba83f394`.
@@ -62,7 +62,7 @@ The account/onboarding placement decisions below require explicit approval.
 Tests retain their paths and receive updated package imports.
 Assets, translation JSON, pubspec dependencies and platform files remain unchanged.
 
-## Decisions requiring approval
+## Approved placement and preservation decisions
 
 1. `account_flow.dart` combines profile, settings, notifications, privacy, help, gifts and phone editing. Proposed: move intact to resident/features/account. Do not split widget/state logic or assume this is reusable by other roles.
 2. `resident_welcome_flow.dart` combines introduction, tasks and gifts. Proposed: keep intact in resident/features/onboarding, not global onboarding.
@@ -83,7 +83,7 @@ Existing colocated Cubit state declarations may be extracted verbatim into match
 preserving their Dart library, identifiers and behavior. PreviewOrdersCubit has no custom state class to extract.
 Bootstrap extraction, if performed, must preserve the exact existing initialization sequence; no additional services or permissions.
 
-## Execution after approval
+## Approved execution sequence
 
 - Phase 2: move shared core files and update all imports; analyze + tests; one commit.
 - Phase 3: migrate auth, then each resident feature separately; analyze + tests after each feature; one commit per feature.
@@ -91,10 +91,10 @@ Bootstrap extraction, if performed, must preserve the exact existing initializat
 - Phase 5: verify entry/localization imports, build Android APK without committing generated native files.
 - Phase 6: remove only verified obsolete paths, update README/ARCHITECTURE and report actual checks.
 
-Each failing phase stops execution. No move is approved by the existence of this document.
+Each failing phase stops execution. The owner explicitly approved this mapping before Phase 2 started.
 
 ## Phase 0 validation
 
 Flutter pub get, strict flutter analyze and flutter test passed after the prerequisite fix.
 Evidence: https://github.com/khaledmohsen954/Rounderapplication/actions/runs/39040893589
-APK rebuild is pending the restructuring phases; this baseline run does not claim APK validation.
+APK validation was subsequently completed in Phase 5; see RESTRUCTURE_VALIDATION.md.
