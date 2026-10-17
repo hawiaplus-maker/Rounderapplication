@@ -8,11 +8,11 @@ import 'package:rounder_application/layout/global/features/auth/data/repo/auth_r
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/data/repositories/services_repository.dart';
-import 'package:rounder_application/layout/resident/data/repositories/bookings_repository.dart';
+import 'package:rounder_application/layout/resident/features/bookings/data/repo/bookings_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/presentation/cubit/services_cubit.dart';
-import 'package:rounder_application/layout/resident/presentation/cubit/bookings_cubit.dart';
-import 'package:rounder_application/layout/resident/presentation/cubits/preview_orders_cubit.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/bookings_cubit.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 final sl=GetIt.instance;
 const tokenStorage=FlutterSecureStorage();
 void configureDependencies(){

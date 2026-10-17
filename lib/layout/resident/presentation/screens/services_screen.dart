@@ -6,7 +6,7 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/presentation/cubit/services_cubit.dart';
-import 'package:rounder_application/layout/resident/presentation/screens/bookings_screen.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screen/bookings_screen.dart';
 import 'package:rounder_application/layout/resident/data/models/service_option.dart';
 class ServicesScreen extends StatelessWidget {
  const ServicesScreen({super.key});

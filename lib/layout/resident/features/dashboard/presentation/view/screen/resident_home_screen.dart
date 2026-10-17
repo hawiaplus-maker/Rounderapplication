@@ -9,7 +9,7 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:rounder_application/layout/resident/presentation/screens/account_flow.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/emergency_request_screen.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/link_home_screen.dart';
-import 'package:rounder_application/layout/resident/presentation/screens/orders_prototype_screen.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screen/orders_prototype_screen.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/service_journey_screen.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/union_screen.dart';
 

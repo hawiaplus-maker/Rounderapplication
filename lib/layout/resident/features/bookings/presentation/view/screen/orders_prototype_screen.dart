@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
-import 'package:rounder_application/layout/resident/presentation/cubits/preview_orders_cubit.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/service_journey_screen.dart';

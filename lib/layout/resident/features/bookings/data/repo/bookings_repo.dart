@@ -1,5 +1,5 @@
 import 'package:rounder_application/core/network/api_consumer.dart';
-import 'package:rounder_application/layout/resident/data/models/booking_item.dart';
+import 'package:rounder_application/layout/resident/features/bookings/data/model/booking_item_model.dart';
 class BookingsRepository {
  BookingsRepository(this.api);final ApiConsumer api;
  Future<List<BookingItem>> list()async{final r=await api.get<Map<String,dynamic>>('/resident/bookings');final values=r.data?['data'];if(values is! List)return [];return values.whereType<Map<String,dynamic>>().map(BookingItem.fromJson).toList();}

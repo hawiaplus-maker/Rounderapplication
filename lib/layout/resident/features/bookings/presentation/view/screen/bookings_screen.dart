@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/resident/presentation/cubit/bookings_cubit.dart';
-import 'package:rounder_application/layout/resident/data/models/booking_item.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/bookings_cubit.dart';
+import 'package:rounder_application/layout/resident/features/bookings/data/model/booking_item_model.dart';
 class BookingsScreen extends StatelessWidget {
  const BookingsScreen({super.key});
  @override Widget build(BuildContext context)=>BlocProvider(create:(_)=>sl<BookingsCubit>()..load(),child:const _BookingsBody());
