@@ -11,7 +11,7 @@ import 'package:rounder_application/layout/resident/features/emergencies/present
 import 'package:rounder_application/layout/resident/features/properties/presentation/view/screen/link_home_screen.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screen/orders_prototype_screen.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screen/service_journey_screen.dart';
-import 'package:rounder_application/layout/resident/presentation/screens/union_screen.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screen/union_screen.dart';
 
 /// Resident application shell. The selected tab stays alive as a local
 /// prototype; each feature owns its own screens and state.
