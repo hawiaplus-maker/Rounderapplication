@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
-import 'package:rounder_application/layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/presentation/cubit/services_cubit.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/bookings_screen.dart';
 import 'package:rounder_application/layout/resident/data/models/service_option.dart';

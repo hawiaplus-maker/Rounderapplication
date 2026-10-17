@@ -1,10 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rounder_application/layout/resident/data/models/resident_dashboard.dart';
-import 'package:rounder_application/layout/resident/data/repositories/resident_repository.dart';
-sealed class ResidentDashboardState {}
-class DashboardLoading extends ResidentDashboardState {}
-class DashboardReady extends ResidentDashboardState { DashboardReady(this.data); final ResidentDashboard data; }
-class DashboardFailed extends ResidentDashboardState { DashboardFailed(this.key); final String key; }
+import 'package:rounder_application/layout/resident/features/dashboard/data/model/resident_dashboard_model.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
+part 'resident_dashboard_state.dart';
+
 class ResidentDashboardCubit extends Cubit<ResidentDashboardState> {
   ResidentDashboardCubit(this.repo):isPreview=false,super(DashboardLoading());
   ResidentDashboardCubit.preview(this.repo):isPreview=true,super(DashboardReady(const ResidentDashboard(hasHome:true)));

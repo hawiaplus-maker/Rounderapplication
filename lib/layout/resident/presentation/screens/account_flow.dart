@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rounder_application/layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/resident_welcome_flow.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/link_home_screen.dart';
