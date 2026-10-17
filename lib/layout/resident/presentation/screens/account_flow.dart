@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/resident_welcome_flow.dart';
-import 'package:rounder_application/layout/resident/presentation/screens/link_home_screen.dart';
+import 'package:rounder_application/layout/resident/features/properties/presentation/view/screen/link_home_screen.dart';
 import 'package:rounder_application/layout/resident/presentation/widgets/phone_change_panel.dart';
 import 'package:rounder_application/layout/resident/presentation/widgets/discard_profile_dialog.dart';
 import 'package:rounder_application/core/images/app_images.dart';
