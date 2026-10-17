@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rounder_application/layout/resident/presentation/cubits/phone_change_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/phone_change_cubit.dart';
 
 void main() {
   test('phone preview normalizes Arabic and Urdu digits', () {

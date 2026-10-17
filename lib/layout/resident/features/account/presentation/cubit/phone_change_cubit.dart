@@ -2,16 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 
-enum PhoneChangeStep { number, code, verified }
-
-class PhoneChangeState {
-  const PhoneChangeState({this.step = PhoneChangeStep.number, this.phone = '',
-    this.remaining = 0, this.errorKey});
-  final PhoneChangeStep step;
-  final String phone;
-  final int remaining;
-  final String? errorKey;
-}
+part 'phone_change_state.dart';
 
 /// Offline preview only. Replace this adapter with server verification when API
 /// integration is enabled; this code must never authorize a real account change.

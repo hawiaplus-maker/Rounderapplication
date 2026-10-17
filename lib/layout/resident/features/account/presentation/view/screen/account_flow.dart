@@ -4,8 +4,8 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:flutter/material.dart';
 import 'package:rounder_application/layout/resident/presentation/screens/resident_welcome_flow.dart';
 import 'package:rounder_application/layout/resident/features/properties/presentation/view/screen/link_home_screen.dart';
-import 'package:rounder_application/layout/resident/presentation/widgets/phone_change_panel.dart';
-import 'package:rounder_application/layout/resident/presentation/widgets/discard_profile_dialog.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/phone_change_panel.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/discard_profile_dialog.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
