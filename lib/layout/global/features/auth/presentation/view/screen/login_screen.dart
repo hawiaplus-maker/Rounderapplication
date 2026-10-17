@@ -9,7 +9,7 @@ import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screen/resident_home_screen.dart';
-import 'package:rounder_application/layout/resident/presentation/screens/resident_welcome_flow.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screen/resident_welcome_flow.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
