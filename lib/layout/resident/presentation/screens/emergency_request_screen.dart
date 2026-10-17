@@ -48,7 +48,10 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
 
   Widget _formView() => Form(
     key: _formKey,
-    child: ListView(
+    child: RadioGroup<String>(
+      groupValue: _type,
+      onChanged: (value) => setState(() => _type = value),
+      child: ListView(
       padding: const EdgeInsets.all(20),
       children: [
         Container(
@@ -71,8 +74,6 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
             margin: const EdgeInsets.only(bottom: 8),
             child: RadioListTile<String>(
               value: item.$1,
-              groupValue: _type,
-              onChanged: (value) => setState(() => _type = value),
               secondary: Icon(item.$2, color: selected ? AppColors.orange : AppColors.petrol),
               title: Text(item.$1.tr()),
               activeColor: AppColors.orange,
@@ -106,6 +107,7 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
           label: Text(AppLocaleKey.sendEmergency.tr(), style: const TextStyle(fontWeight: FontWeight.w800)),
         ),
       ],
+      ),
     ),
   );
 
