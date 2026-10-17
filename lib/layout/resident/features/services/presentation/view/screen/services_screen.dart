@@ -5,9 +5,9 @@ import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
-import 'package:rounder_application/layout/resident/presentation/cubit/services_cubit.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/cubit/services_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screen/bookings_screen.dart';
-import 'package:rounder_application/layout/resident/data/models/service_option.dart';
+import 'package:rounder_application/layout/resident/features/services/data/model/service_option_model.dart';
 class ServicesScreen extends StatelessWidget {
  const ServicesScreen({super.key});
  @override Widget build(BuildContext context)=>BlocProvider(create:(_)=>sl<ServicesCubit>()..load(),child:const _ServicesBody());
