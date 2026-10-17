@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/di/injection.dart';
-import '../cubits/preview_orders_cubit.dart';
-import '../../../../core/constants/app_locale_key.dart';
-import '../../../../core/theme/app_theme.dart';
-import 'service_journey_screen.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
+import 'package:rounder_application/layout/resident/presentation/cubits/preview_orders_cubit.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/service_journey_screen.dart';
 
 /// Local orders prototype for the Figma list, detail, tracking, and cancel flows.
 /// No booking or payment endpoint is called from this screen.

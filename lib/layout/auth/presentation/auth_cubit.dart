@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../data/auth_repository.dart';
+import 'package:rounder_application/layout/auth/data/auth_repository.dart';
 sealed class AuthState {}
 class AuthChecking extends AuthState {}
 class Unauthenticated extends AuthState {}

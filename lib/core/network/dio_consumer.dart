@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'api_consumer.dart';
+import 'package:rounder_application/core/network/api_consumer.dart';
 class DioConsumer implements ApiConsumer {
  DioConsumer(this.dio); final Dio dio;
  @override Future<Response<T>> get<T>(String path)=>dio.get<T>(path);

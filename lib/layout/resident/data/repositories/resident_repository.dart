@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../../../core/network/api_consumer.dart';
-import '../models/resident_dashboard.dart';
+import 'package:rounder_application/core/network/api_consumer.dart';
+import 'package:rounder_application/layout/resident/data/models/resident_dashboard.dart';
 class ResidentRepository {
   ResidentRepository(this.api); final ApiConsumer api;
   Future<void> linkHome({required String propertyCode,required String unitLabel}) async { await api.post('/resident/homes/link',data:{'property_code':propertyCode,'unit_label':unitLabel}); }

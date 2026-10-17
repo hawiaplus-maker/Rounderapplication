@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/resident_dashboard.dart';
-import '../../data/repositories/resident_repository.dart';
+import 'package:rounder_application/layout/resident/data/models/resident_dashboard.dart';
+import 'package:rounder_application/layout/resident/data/repositories/resident_repository.dart';
 sealed class ResidentDashboardState {}
 class DashboardLoading extends ResidentDashboardState {}
 class DashboardReady extends ResidentDashboardState { DashboardReady(this.data); final ResidentDashboard data; }

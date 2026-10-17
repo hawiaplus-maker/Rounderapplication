@@ -1,5 +1,5 @@
-import '../../../../core/network/api_consumer.dart';
-import '../models/service_option.dart';
+import 'package:rounder_application/core/network/api_consumer.dart';
+import 'package:rounder_application/layout/resident/data/models/service_option.dart';
 class ServicesRepository {
  ServicesRepository(this.api); final ApiConsumer api;
  Future<List<ServiceOption>> list() async {

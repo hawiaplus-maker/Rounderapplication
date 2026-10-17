@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_locale_key.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
 
 class PreviewOrder {
   const PreviewOrder({required this.reference, required this.serviceKey,

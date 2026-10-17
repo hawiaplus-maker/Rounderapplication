@@ -1,15 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_locale_key.dart';
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../auth_cubit.dart';
-import '../../../../core/di/injection.dart';
-import '../../../resident/data/repositories/resident_repository.dart';
-import '../../../resident/presentation/cubit/resident_dashboard_cubit.dart';
-import '../../../resident/presentation/screens/resident_home_screen.dart';
-import '../../../resident/presentation/screens/resident_welcome_flow.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/images/app_images.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/auth/presentation/auth_cubit.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
+import 'package:rounder_application/layout/resident/data/repositories/resident_repository.dart';
+import 'package:rounder_application/layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/resident_home_screen.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/resident_welcome_flow.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

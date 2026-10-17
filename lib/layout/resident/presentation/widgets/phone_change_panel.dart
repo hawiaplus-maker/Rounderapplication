@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/constants/app_locale_key.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../cubits/phone_change_cubit.dart';
+import 'package:rounder_application/core/images/app_images.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/presentation/cubits/phone_change_cubit.dart';
 
 /// Figma 636:1160 and 636:1205. Verification updates the edit draft only.
 class PhoneChangePanel extends StatefulWidget {

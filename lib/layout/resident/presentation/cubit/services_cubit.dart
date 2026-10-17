@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/service_option.dart';
-import '../../data/repositories/services_repository.dart';
+import 'package:rounder_application/layout/resident/data/models/service_option.dart';
+import 'package:rounder_application/layout/resident/data/repositories/services_repository.dart';
 sealed class ServicesState {}
 class ServicesLoading extends ServicesState {}
 class ServicesReady extends ServicesState {ServicesReady(this.services);final List<ServiceOption> services;}

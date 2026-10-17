@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_locale_key.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Association and resident-community prototype. Uses local UI sample values;
 /// API integration is intentionally deferred.

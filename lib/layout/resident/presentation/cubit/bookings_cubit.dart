@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/booking_item.dart';
-import '../../data/repositories/bookings_repository.dart';
+import 'package:rounder_application/layout/resident/data/models/booking_item.dart';
+import 'package:rounder_application/layout/resident/data/repositories/bookings_repository.dart';
 sealed class BookingsState{}
 class BookingsLoading extends BookingsState{}
 class BookingsReady extends BookingsState{BookingsReady(this.items);final List<BookingItem> items;}

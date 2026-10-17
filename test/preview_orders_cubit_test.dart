@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rounder_application/layout/resident/presentation/cubits/preview_orders_cubit.dart';
-import 'package:rounder_application/core/constants/app_locale_key.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
 
 void main() {
   test('created order retains chosen service, price, provider and date', () async {

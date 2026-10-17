@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_locale_key.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Figma 642:1021: explicit discard, with keep-editing as the primary action.
 Future<bool> confirmDiscardProfile(BuildContext context) async =>

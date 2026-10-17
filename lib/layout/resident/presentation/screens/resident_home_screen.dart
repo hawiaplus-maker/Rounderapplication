@@ -2,16 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/constants/app_locale_key.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../cubit/resident_dashboard_cubit.dart';
-import 'account_flow.dart';
-import 'emergency_request_screen.dart';
-import 'link_home_screen.dart';
-import 'orders_prototype_screen.dart';
-import 'service_journey_screen.dart';
-import 'union_screen.dart';
+import 'package:rounder_application/core/images/app_images.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/account_flow.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/emergency_request_screen.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/link_home_screen.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/orders_prototype_screen.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/service_journey_screen.dart';
+import 'package:rounder_application/layout/resident/presentation/screens/union_screen.dart';
 
 /// Resident application shell. The selected tab stays alive as a local
 /// prototype; each feature owns its own screens and state.
