@@ -78,7 +78,9 @@ class _UnionScreenState extends State<UnionScreen> {
     _panel([
       Text(AppLocaleKey.workTogether.tr(),textAlign:TextAlign.right,style:const TextStyle(color:AppColors.petrol,fontSize:20,fontWeight:FontWeight.w800)),
       const SizedBox(height:8),
-      ListTile(contentPadding:EdgeInsets.zero,leading:const Icon(Icons.meeting_room_outlined,color:AppColors.orange),
+      ListTile(
+        tileColor: Colors.white,
+        contentPadding:EdgeInsets.zero,leading:const Icon(Icons.meeting_room_outlined,color:AppColors.orange),
         title:Text(AppLocaleKey.improveEntrance.tr(),textAlign:TextAlign.right),
         subtitle:Text(AppLocaleKey.residentsJoined.tr(),textAlign:TextAlign.right),
         trailing:TextButton(onPressed:()=>open(_Section.initiative),child:Text(AppLocaleKey.shareIdea.tr()))),
@@ -208,11 +210,13 @@ class _UnionScreenState extends State<UnionScreen> {
     child:Column(crossAxisAlignment:CrossAxisAlignment.stretch,children:children));
 
   Widget _navRow(String key,IconData icon,_Section target)=>ListTile(
+    tileColor: Colors.white,
     contentPadding:EdgeInsets.zero,leading:CircleAvatar(backgroundColor:AppColors.mint,child:Icon(icon,color:AppColors.petrol)),
     title:Text(key.tr(),textAlign:TextAlign.right,style:const TextStyle(fontWeight:FontWeight.w700,color:AppColors.petrol)),
     trailing:const Icon(Icons.chevron_left),onTap:()=>open(target));
 
   Widget _line(String key,String value)=>ListTile(
+    tileColor: Colors.white,
     contentPadding:EdgeInsets.zero,title:Text(key.tr(),textAlign:TextAlign.right,style:const TextStyle(fontWeight:FontWeight.w700,color:AppColors.petrol)),
     subtitle:Text(value,textAlign:TextAlign.right,style:const TextStyle(color:AppColors.muted)));
 

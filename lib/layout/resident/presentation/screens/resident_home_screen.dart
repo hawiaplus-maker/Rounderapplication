@@ -46,9 +46,9 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
       showDragHandle: true,
       builder: (context) => SafeArea(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          ListTile(title: Text(AppLocaleKey.arabic.tr()), onTap: () => Navigator.pop(context, const Locale('ar'))),
-          ListTile(title: Text(AppLocaleKey.english.tr()), onTap: () => Navigator.pop(context, const Locale('en'))),
-          ListTile(title: Text(AppLocaleKey.urdu.tr()), onTap: () => Navigator.pop(context, const Locale('ur'))),
+          ListTile(tileColor: Colors.white, title: Text(AppLocaleKey.arabic.tr()), onTap: () => Navigator.pop(context, const Locale('ar'))),
+          ListTile(tileColor: Colors.white, title: Text(AppLocaleKey.english.tr()), onTap: () => Navigator.pop(context, const Locale('en'))),
+          ListTile(tileColor: Colors.white, title: Text(AppLocaleKey.urdu.tr()), onTap: () => Navigator.pop(context, const Locale('ur'))),
         ]),
       ),
     );

@@ -70,6 +70,7 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
           return Card(
             margin: const EdgeInsets.only(bottom: 8),
             child: RadioListTile<String>(
+              tileColor: Colors.white,
               value: item.$1,
               groupValue: _type,
               onChanged: (value) => setState(() => _type = value),
@@ -91,6 +92,7 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
           validator: (value) => value == null || value.trim().length < 10 ? AppLocaleKey.requiredField.tr() : null, maxLength: 3000, maxLines: 4),
         const SizedBox(height: 8),
         CheckboxListTile(
+          tileColor: Colors.white,
           contentPadding: EdgeInsets.zero,
           value: _confirmed,
           onChanged: (value) => setState(() => _confirmed = value ?? false),

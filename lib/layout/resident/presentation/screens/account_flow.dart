@@ -199,7 +199,9 @@ class _AccountFlowState extends State<AccountFlow> {
     _panel([
       _input(AppLocaleKey.fullName, nameController, keyboard: TextInputType.name),
       const SizedBox(height: 14),
-      ListTile(contentPadding: EdgeInsets.zero,
+      ListTile(
+        tileColor: Colors.white,
+        contentPadding: EdgeInsets.zero,
         title: Text(AppLocaleKey.phoneNumber.tr()),
         subtitle: Text(phoneController.text, textDirection: TextDirection.ltr),
         trailing: TextButton(onPressed: () => open(_Page.phone), child: Text(AppLocaleKey.changePhone.tr()))),
@@ -231,10 +233,14 @@ class _AccountFlowState extends State<AccountFlow> {
       Text(AppLocaleKey.aliHelps.tr(), textAlign: TextAlign.right, style: const TextStyle(color: AppColors.petrol, fontSize: 20, fontWeight: FontWeight.w800)),
       const SizedBox(height: 8),
       Text(AppLocaleKey.changeAnytime.tr(), textAlign: TextAlign.right, style: const TextStyle(color: AppColors.muted)),
-      SwitchListTile(contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.requestUpdates.tr()),
+      SwitchListTile(
+        tileColor: Colors.white,
+        contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.requestUpdates.tr()),
         subtitle: Text(orderUpdates ? AppLocaleKey.on.tr() : AppLocaleKey.off.tr()), value: orderUpdates,
         activeThumbColor: AppColors.orange, onChanged: (v) => setState(() => orderUpdates=v)),
-      SwitchListTile(contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.offersAndGifts.tr()),
+      SwitchListTile(
+        tileColor: Colors.white,
+        contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.offersAndGifts.tr()),
         subtitle: Text(offers ? AppLocaleKey.on.tr() : AppLocaleKey.off.tr()), value: offers,
         activeThumbColor: AppColors.orange, onChanged: (v) => setState(() => offers=v)),
     ]),
@@ -278,10 +284,14 @@ class _AccountFlowState extends State<AccountFlow> {
     _panel([
       Text(AppLocaleKey.privacyData.tr(), textAlign: TextAlign.right, style: const TextStyle(color: AppColors.petrol, fontSize: 20, fontWeight: FontWeight.w800)),
       const SizedBox(height: 12),
-      SwitchListTile(contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.serviceAddress.tr()),
+      SwitchListTile(
+        tileColor: Colors.white,
+        contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.serviceAddress.tr()),
         subtitle: Text(AppLocaleKey.privacyAddressBody.tr()), value: addressUse, activeThumbColor: AppColors.orange,
         onChanged: (v) => setState(() => addressUse=v)),
-      SwitchListTile(contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.requestContact.tr()),
+      SwitchListTile(
+        tileColor: Colors.white,
+        contentPadding: EdgeInsets.zero, title: Text(AppLocaleKey.requestContact.tr()),
         subtitle: Text(AppLocaleKey.privacyContactBody.tr()), value: requestContact, activeThumbColor: AppColors.orange,
         onChanged: (v) => setState(() => requestContact=v)),
       Text(AppLocaleKey.optionalOffers.tr(), textAlign: TextAlign.right, style: const TextStyle(color: AppColors.muted, fontSize: 12)),

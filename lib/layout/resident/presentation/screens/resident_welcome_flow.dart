@@ -177,6 +177,7 @@ class _ResidentWelcomeFlowState extends State<ResidentWelcomeFlow> {
     margin: const EdgeInsets.only(bottom: 10),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
     child: ListTile(
+      tileColor: Colors.white,
       onTap: onTap,
       leading: CircleAvatar(backgroundColor: AppColors.mint, child: Icon(complete ? Icons.check : icon, color: AppColors.petrol)),
       title: Text(title.tr(), textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.petrol)),
@@ -200,6 +201,7 @@ class _ResidentWelcomeFlowState extends State<ResidentWelcomeFlow> {
           margin: const EdgeInsets.only(bottom: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: selected ? AppColors.orange : Colors.transparent, width: 2)),
           child: ListTile(
+            tileColor: selected ? AppColors.mint : Colors.white,
             onTap: () => setState(() { _gift = _giftKeys[index]; _page = _WelcomePage.details; }),
             contentPadding: const EdgeInsets.all(14),
             leading: CircleAvatar(backgroundColor: AppColors.mint, child: Icon(_giftIcons[index], color: AppColors.petrol)),
