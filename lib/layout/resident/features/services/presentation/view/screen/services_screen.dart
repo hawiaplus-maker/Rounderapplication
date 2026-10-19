@@ -34,6 +34,7 @@ class _ServiceCard extends StatelessWidget {
   catch(_){if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(AppLocaleKey.bookingFailed.tr())));}
  }
  @override Widget build(BuildContext context)=>Card(margin:const EdgeInsets.only(bottom:12),child:ListTile(
+  tileColor: Colors.white,
   contentPadding:const EdgeInsets.all(14),leading:const CircleAvatar(backgroundColor:AppColors.mint,child:Icon(Icons.home_repair_service_outlined,color:AppColors.petrol)),
   title:Text(service.name,style:const TextStyle(fontWeight:FontWeight.w700)),subtitle:Text('${service.categoryName}\n${service.price.toStringAsFixed(0)} ${AppLocaleKey.currencyEgp.tr()}'),
   isThreeLine:true,trailing:IconButton(onPressed:()=>book(context),icon:const Icon(Icons.add_circle_outline,color:AppColors.orange),tooltip:AppLocaleKey.bookNow.tr())));

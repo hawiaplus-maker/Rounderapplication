@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/images/app_images.dart';
+import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screen/resident_home_screen.dart';
@@ -54,45 +54,81 @@ class _LoginScreenState extends State<LoginScreen> {
                     Image.asset(AppImages.rounderLogo, height: 78, fit: BoxFit.contain),
                     const SizedBox(height: 12),
                     const SizedBox(height: 8),
-                    Text(creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.welcome.tr(),
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                      creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.welcome.tr(),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 28),
                     if (creating) ...[
-                      _field(name, AppLocaleKey.fullName.tr(), icon: Icons.person_outline,
-                          validator: (value) => value == null || value.trim().length < 2
-                              ? AppLocaleKey.requiredField.tr()
-                              : null),
+                      _field(
+                        name,
+                        AppLocaleKey.fullName.tr(),
+                        icon: Icons.person_outline,
+                        validator: (value) => value == null || value.trim().length < 2
+                            ? AppLocaleKey.requiredField.tr()
+                            : null,
+                      ),
                       const SizedBox(height: 12),
-                      _field(phone, AppLocaleKey.phone.tr(), icon: Icons.phone_outlined,
-                          keyboard: TextInputType.phone, requiredField: false,
-                          validator: (value) => value != null &&
-                                  value.isNotEmpty &&
-                                  !RegExp(r'^\+[1-9][0-9]{7,14}$').hasMatch(value)
-                              ? AppLocaleKey.phoneFormat.tr()
-                              : null),
+                      _field(
+                        phone,
+                        AppLocaleKey.phone.tr(),
+                        icon: Icons.phone_outlined,
+                        keyboard: TextInputType.phone,
+                        requiredField: false,
+                        validator: (value) =>
+                            value != null &&
+                                value.isNotEmpty &&
+                                !RegExp(r'^\+[1-9][0-9]{7,14}$').hasMatch(value)
+                            ? AppLocaleKey.phoneFormat.tr()
+                            : null,
+                      ),
                       const SizedBox(height: 12),
                     ],
-                    _field(email, AppLocaleKey.email.tr(), icon: Icons.email_outlined,
-                        keyboard: TextInputType.emailAddress,
-                        validator: (value) => value == null || value.trim().length > 254 || !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim())
-                            ? AppLocaleKey.emailInvalid.tr()
-                            : null),
+                    _field(
+                      email,
+                      AppLocaleKey.email.tr(),
+                      icon: Icons.email_outlined,
+                      keyboard: TextInputType.emailAddress,
+                      validator: (value) =>
+                          value == null ||
+                              value.trim().length > 254 ||
+                              !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim())
+                          ? AppLocaleKey.emailInvalid.tr()
+                          : null,
+                    ),
                     const SizedBox(height: 12),
-                    _field(password, AppLocaleKey.password.tr(), icon: Icons.lock_outline,
-                        obscure: true, validator: (value) => value == null || value.length < 10 || value.length > 72 || !RegExp(r'[a-z]').hasMatch(value) || !RegExp(r'[A-Z]').hasMatch(value) || !RegExp(r'[0-9]').hasMatch(value)
-                            ? AppLocaleKey.passwordRule.tr()
-                            : null),
+                    _field(
+                      password,
+                      AppLocaleKey.password.tr(),
+                      icon: Icons.lock_outline,
+                      obscure: true,
+                      validator: (value) =>
+                          value == null ||
+                              value.length < 10 ||
+                              value.length > 72 ||
+                              !RegExp(r'[a-z]').hasMatch(value) ||
+                              !RegExp(r'[A-Z]').hasMatch(value) ||
+                              !RegExp(r'[0-9]').hasMatch(value)
+                          ? AppLocaleKey.passwordRule.tr()
+                          : null,
+                    ),
                     if (creating) ...[
                       const SizedBox(height: 12),
-                      _field(confirm, AppLocaleKey.confirmPassword.tr(),
-                          icon: Icons.lock_reset, obscure: true,
-                          validator: (value) => value != password.text
-                              ? AppLocaleKey.passwordMismatch.tr()
-                              : null),
+                      _field(
+                        confirm,
+                        AppLocaleKey.confirmPassword.tr(),
+                        icon: Icons.lock_reset,
+                        obscure: true,
+                        validator: (value) =>
+                            value != password.text ? AppLocaleKey.passwordMismatch.tr() : null,
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
-                        child: Text(AppLocaleKey.passwordRule.tr(),
-                            style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                        child: Text(
+                          AppLocaleKey.passwordRule.tr(),
+                          style: const TextStyle(fontSize: 12, color: AppColors.muted),
+                        ),
                       ),
                     ],
                     const SizedBox(height: 18),
@@ -102,8 +138,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (state is AuthFailure)
                             Padding(
                               padding: const EdgeInsets.only(bottom: 12),
-                              child: Text(state.messageKey.tr(),
-                                  style: const TextStyle(color: Colors.red)),
+                              child: Text(
+                                state.messageKey.tr(),
+                                style: const TextStyle(color: Colors.red),
+                              ),
                             ),
                           SizedBox(
                             width: double.infinity,
@@ -114,10 +152,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 20,
                                       width: 20,
                                       child: CircularProgressIndicator(
-                                          strokeWidth: 2, color: Colors.white))
-                                  : Text(creating
-                                      ? AppLocaleKey.createAccount.tr()
-                                      : AppLocaleKey.signIn.tr()),
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      creating
+                                          ? AppLocaleKey.createAccount.tr()
+                                          : AppLocaleKey.signIn.tr(),
+                                    ),
                             ),
                           ),
                         ],
@@ -125,21 +168,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () => setState(() => creating = !creating),
-                      child: Text(creating
-                          ? AppLocaleKey.haveAccount.tr()
-                          : AppLocaleKey.createAccount.tr()),
+                      child: Text(
+                        creating ? AppLocaleKey.haveAccount.tr() : AppLocaleKey.createAccount.tr(),
+                      ),
                     ),
                     OutlinedButton(
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                        builder: (_) => BlocProvider(
-                          create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
-                          child: const ResidentHomeScreen()))),
-                      child: Text(AppLocaleKey.exploreRounder.tr())),
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => BlocProvider(
+                            create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
+                            child: const ResidentHomeScreen(),
+                          ),
+                        ),
+                      ),
+                      child: Text(AppLocaleKey.exploreRounder.tr()),
+                    ),
                     Text(AppLocaleKey.prototypeData.tr(), textAlign: TextAlign.center),
                     TextButton(
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                        builder: (_) => const ResidentWelcomeFlow())),
-                      child: Text(AppLocaleKey.welcomeSteps.tr())),
+                      onPressed: () => Navigator.of(
+                        context,
+                      ).push(MaterialPageRoute<void>(builder: (_) => const ResidentWelcomeFlow())),
+                      child: Text(AppLocaleKey.welcomeSteps.tr()),
+                    ),
                     TextButton(
                       onPressed: chooseLanguage,
                       child: Text('🌐  ${AppLocaleKey.language.tr()}'),
@@ -173,7 +223,8 @@ class _LoginScreenState extends State<LoginScreen> {
         prefixIcon: icon == null ? null : Icon(icon),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       ),
-      validator: validator ??
+      validator:
+          validator ??
           (value) => requiredField && (value == null || value.isEmpty)
               ? AppLocaleKey.requiredField.tr()
               : null,
@@ -205,14 +256,17 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              tileColor: Colors.white,
               title: Text(AppLocaleKey.arabic.tr()),
               onTap: () => Navigator.pop(context, const Locale('ar')),
             ),
             ListTile(
+              tileColor: Colors.white,
               title: Text(AppLocaleKey.english.tr()),
               onTap: () => Navigator.pop(context, const Locale('en')),
             ),
             ListTile(
+              tileColor: Colors.white,
               title: Text(AppLocaleKey.urdu.tr()),
               onTap: () => Navigator.pop(context, const Locale('ur')),
             ),

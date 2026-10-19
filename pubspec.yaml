@@ -24,3 +24,6 @@ flutter:
   assets:
     - assets/i18n/
     - assets/images/
+    - assets/svg/
+    - assets/images/ali/
+
