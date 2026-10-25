@@ -1,16 +1,27 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screen/email_login_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screen/otp_flow_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_brand.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_form_card.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_guest_action.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_hero.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_prototype_links.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screen/resident_home_screen.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screen/resident_welcome_flow.dart';
 
+/// Approved login (design `00 — تسجيل الدخول • APPROVED`): brand wordmark,
+/// Ali phone hero, frosted phone-entry form with the alternate social actions
+/// and the guest action, all on the brand gradient. The phone journey opens the
+/// OTP flow; the prototype links under the fold keep the working email
+/// sign-in and the design previews reachable.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -19,182 +30,145 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final form = GlobalKey<FormState>();
-  final name = TextEditingController();
-  final email = TextEditingController();
   final phone = TextEditingController();
-  final password = TextEditingController();
-  final confirm = TextEditingController();
-  bool creating = false;
+  String? _phoneError;
 
   @override
-  void dispose() {
-    name.dispose();
-    email.dispose();
-    phone.dispose();
-    password.dispose();
-    confirm.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    phone.addListener(_clearPhoneError);
   }
 
   @override
+  void dispose() {
+    phone.removeListener(_clearPhoneError);
+    phone.dispose();
+    super.dispose();
+  }
+
+  void _clearPhoneError() {
+    if (_phoneError != null) setState(() => _phoneError = null);
+  }
+
+  void _continueWithPhone() {
+    final digits = phone.text.replaceAll(RegExp(r'\D'), '');
+    if (digits.length != 9) {
+      setState(() => _phoneError = AppLocaleKey.localPhoneInvalid.tr());
+      return;
+    }
+    setState(() => _phoneError = null);
+    _push(OtpFlowScreen(phone: '+966$digits', onContinue: _continueToPreviewHome));
+  }
+
+  void _push(Widget screen) =>
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+
+  /// The OTP result page's "متابعة" leads to the design's الرئيسية destination
+  /// (the prototype preview home).
+  void _continueToPreviewHome() {
+    Navigator.of(context).pop();
+    _browseAsGuest();
+  }
+
+  void _openEmailSignIn() => _push(const EmailLoginScreen());
+
+  void _openWelcomeSteps() => _push(const ResidentWelcomeFlow());
+
+  void _browseAsGuest() => _push(
+    BlocProvider(
+      create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
+      child: const ResidentHomeScreen(),
+    ),
+  );
+
+  Future<void> _chooseLanguage() async {
+    final selected = await showModalBottomSheet<Locale>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: AppColors.white,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(AppLocaleKey.arabic.tr()),
+              onTap: () => Navigator.pop(sheetContext, const Locale('ar')),
+            ),
+            ListTile(
+              title: Text(AppLocaleKey.english.tr()),
+              onTap: () => Navigator.pop(sheetContext, const Locale('en')),
+            ),
+            ListTile(
+              title: Text(AppLocaleKey.urdu.tr()),
+              onTap: () => Navigator.pop(sheetContext, const Locale('ur')),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (selected != null && mounted) context.setLocale(selected);
+  }
+
+  /// The frame top is brand petrol, so the system status icons must be light.
+  static const _overlayStyle = SystemUiOverlayStyle(
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+  );
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Form(
-                key: form,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Image.asset(AppImages.rounderLogo, height: 78, fit: BoxFit.contain),
-                    const SizedBox(height: 12),
-                    const SizedBox(height: 8),
-                    Text(
-                      creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.welcome.tr(),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 28),
-                    if (creating) ...[
-                      _field(
-                        name,
-                        AppLocaleKey.fullName.tr(),
-                        icon: Icons.person_outline,
-                        validator: (value) => value == null || value.trim().length < 2
-                            ? AppLocaleKey.requiredField.tr()
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      _field(
-                        phone,
-                        AppLocaleKey.phone.tr(),
-                        icon: Icons.phone_outlined,
-                        keyboard: TextInputType.phone,
-                        requiredField: false,
-                        validator: (value) =>
-                            value != null &&
-                                value.isNotEmpty &&
-                                !RegExp(r'^\+[1-9][0-9]{7,14}$').hasMatch(value)
-                            ? AppLocaleKey.phoneFormat.tr()
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                    _field(
-                      email,
-                      AppLocaleKey.email.tr(),
-                      icon: Icons.email_outlined,
-                      keyboard: TextInputType.emailAddress,
-                      validator: (value) =>
-                          value == null ||
-                              value.trim().length > 254 ||
-                              !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim())
-                          ? AppLocaleKey.emailInvalid.tr()
-                          : null,
-                    ),
-                    const SizedBox(height: 12),
-                    _field(
-                      password,
-                      AppLocaleKey.password.tr(),
-                      icon: Icons.lock_outline,
-                      obscure: true,
-                      validator: (value) =>
-                          value == null ||
-                              value.length < 10 ||
-                              value.length > 72 ||
-                              !RegExp(r'[a-z]').hasMatch(value) ||
-                              !RegExp(r'[A-Z]').hasMatch(value) ||
-                              !RegExp(r'[0-9]').hasMatch(value)
-                          ? AppLocaleKey.passwordRule.tr()
-                          : null,
-                    ),
-                    if (creating) ...[
-                      const SizedBox(height: 12),
-                      _field(
-                        confirm,
-                        AppLocaleKey.confirmPassword.tr(),
-                        icon: Icons.lock_reset,
-                        obscure: true,
-                        validator: (value) =>
-                            value != password.text ? AppLocaleKey.passwordMismatch.tr() : null,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          AppLocaleKey.passwordRule.tr(),
-                          style: const TextStyle(fontSize: 12, color: AppColors.muted),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 18),
-                    BlocBuilder<AuthCubit, AuthState>(
-                      builder: (context, state) => Column(
-                        children: [
-                          if (state is AuthFailure)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Text(
-                                state.messageKey.tr(),
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton(
-                              onPressed: state is AuthChecking ? null : submit,
-                              child: state is AuthChecking
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Text(
-                                      creating
-                                          ? AppLocaleKey.createAccount.tr()
-                                          : AppLocaleKey.signIn.tr(),
-                                    ),
-                            ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _overlayStyle,
+      child: Scaffold(
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0, .17, .31, .52, .77, 1],
+              colors: [
+                AppColors.petrol,
+                AppColors.petrol,
+                AppColors.teal,
+                AppColors.mintLight,
+                AppColors.canvas,
+                AppColors.sand,
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const LoginBrand(),
+                        const LoginHero(),
+                        LoginFormCard(
+                          phoneController: phone,
+                          phoneError: _phoneError,
+                          onContinue: _continueWithPhone,
+                          onGoogle: () => _push(
+                            OtpFlowScreen(startAtResult: true, onContinue: _continueToPreviewHome),
                           ),
-                        ],
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => setState(() => creating = !creating),
-                      child: Text(
-                        creating ? AppLocaleKey.haveAccount.tr() : AppLocaleKey.createAccount.tr(),
-                      ),
-                    ),
-                    OutlinedButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => BlocProvider(
-                            create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
-                            child: const ResidentHomeScreen(),
+                          onApple: () => _push(
+                            OtpFlowScreen(startAtResult: true, onContinue: _continueToPreviewHome),
                           ),
                         ),
-                      ),
-                      child: Text(AppLocaleKey.exploreRounder.tr()),
+                        LoginGuestAction(onTap: _browseAsGuest),
+                        const SizedBox(height: 12),
+                        LoginPrototypeLinks(
+                          onEmailSignIn: _openEmailSignIn,
+                          onWelcomeSteps: _openWelcomeSteps,
+                          onLanguage: _chooseLanguage,
+                        ),
+                      ],
                     ),
-                    Text(AppLocaleKey.prototypeData.tr(), textAlign: TextAlign.center),
-                    TextButton(
-                      onPressed: () => Navigator.of(
-                        context,
-                      ).push(MaterialPageRoute<void>(builder: (_) => const ResidentWelcomeFlow())),
-                      child: Text(AppLocaleKey.welcomeSteps.tr()),
-                    ),
-                    TextButton(
-                      onPressed: chooseLanguage,
-                      child: Text('🌐  ${AppLocaleKey.language.tr()}'),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -202,78 +176,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  Widget _field(
-    TextEditingController controller,
-    String label, {
-    IconData? icon,
-    bool obscure = false,
-    TextInputType? keyboard,
-    bool requiredField = true,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboard,
-      obscureText: obscure,
-      autofillHints: obscure ? const [AutofillHints.password] : null,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: icon == null ? null : Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-      validator:
-          validator ??
-          (value) => requiredField && (value == null || value.isEmpty)
-              ? AppLocaleKey.requiredField.tr()
-              : null,
-    );
-  }
-
-  Future<void> submit() async {
-    if (!form.currentState!.validate()) return;
-    final cubit = context.read<AuthCubit>();
-    if (creating) {
-      await cubit.register(
-        name: name.text,
-        email: email.text,
-        phone: phone.text,
-        password: password.text,
-        locale: context.locale.languageCode,
-      );
-    } else {
-      await cubit.signIn(email.text, password.text);
-    }
-  }
-
-  Future<void> chooseLanguage() async {
-    final selected = await showModalBottomSheet<Locale>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              tileColor: Colors.white,
-              title: Text(AppLocaleKey.arabic.tr()),
-              onTap: () => Navigator.pop(context, const Locale('ar')),
-            ),
-            ListTile(
-              tileColor: Colors.white,
-              title: Text(AppLocaleKey.english.tr()),
-              onTap: () => Navigator.pop(context, const Locale('en')),
-            ),
-            ListTile(
-              tileColor: Colors.white,
-              title: Text(AppLocaleKey.urdu.tr()),
-              onTap: () => Navigator.pop(context, const Locale('ur')),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (selected != null && mounted) context.setLocale(selected);
   }
 }

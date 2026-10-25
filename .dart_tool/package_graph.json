@@ -14,11 +14,26 @@
         "flutter_localizations",
         "flutter_secure_storage",
         "flutter_svg",
-        "get_it"
+        "get_it",
+        "shared_preferences_android"
       ],
       "devDependencies": [
+        "flutter_launcher_icons",
         "flutter_lints",
         "flutter_test"
+      ]
+    },
+    {
+      "name": "flutter_launcher_icons",
+      "version": "0.14.4",
+      "dependencies": [
+        "args",
+        "checked_yaml",
+        "cli_util",
+        "image",
+        "json_annotation",
+        "path",
+        "yaml"
       ]
     },
     {
@@ -44,6 +59,15 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "shared_preferences_android",
+      "version": "2.4.28",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "shared_preferences_platform_interface"
       ]
     },
     {
@@ -136,6 +160,56 @@
       ]
     },
     {
+      "name": "yaml",
+      "version": "3.1.4",
+      "dependencies": [
+        "collection",
+        "source_span",
+        "string_scanner"
+      ]
+    },
+    {
+      "name": "path",
+      "version": "1.9.1",
+      "dependencies": []
+    },
+    {
+      "name": "json_annotation",
+      "version": "4.12.0",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "image",
+      "version": "4.12.0",
+      "dependencies": [
+        "archive"
+      ]
+    },
+    {
+      "name": "cli_util",
+      "version": "0.4.2",
+      "dependencies": [
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "checked_yaml",
+      "version": "2.0.4",
+      "dependencies": [
+        "json_annotation",
+        "source_span",
+        "yaml"
+      ]
+    },
+    {
+      "name": "args",
+      "version": "2.7.0",
+      "dependencies": []
+    },
+    {
       "name": "lints",
       "version": "5.1.1",
       "dependencies": []
@@ -194,11 +268,6 @@
       ]
     },
     {
-      "name": "path",
-      "version": "1.9.1",
-      "dependencies": []
-    },
-    {
       "name": "matcher",
       "version": "0.12.20",
       "dependencies": [
@@ -222,6 +291,14 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "version": "2.4.2",
+      "dependencies": [
+        "flutter",
+        "plugin_platform_interface"
       ]
     },
     {
@@ -364,11 +441,6 @@
       ]
     },
     {
-      "name": "args",
-      "version": "2.7.0",
-      "dependencies": []
-    },
-    {
       "name": "intl",
       "version": "0.20.3",
       "dependencies": [
@@ -408,6 +480,30 @@
       "dependencies": []
     },
     {
+      "name": "string_scanner",
+      "version": "1.4.1",
+      "dependencies": [
+        "source_span"
+      ]
+    },
+    {
+      "name": "source_span",
+      "version": "1.10.2",
+      "dependencies": [
+        "collection",
+        "path",
+        "term_glyph"
+      ]
+    },
+    {
+      "name": "archive",
+      "version": "4.5.2",
+      "dependencies": [
+        "path",
+        "posix"
+      ]
+    },
+    {
       "name": "leak_tracker_testing",
       "version": "3.0.2",
       "dependencies": [
@@ -433,27 +529,18 @@
       "dependencies": []
     },
     {
-      "name": "string_scanner",
-      "version": "1.4.1",
-      "dependencies": [
-        "source_span"
-      ]
-    },
-    {
-      "name": "source_span",
-      "version": "1.10.2",
-      "dependencies": [
-        "collection",
-        "path",
-        "term_glyph"
-      ]
-    },
-    {
       "name": "boolean_selector",
       "version": "2.1.2",
       "dependencies": [
         "source_span",
         "string_scanner"
+      ]
+    },
+    {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependencies": [
+        "meta"
       ]
     },
     {
@@ -501,13 +588,6 @@
       "version": "0.0.0",
       "dependencies": [
         "flutter"
-      ]
-    },
-    {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
       ]
     },
     {
@@ -564,14 +644,6 @@
       ]
     },
     {
-      "name": "shared_preferences_platform_interface",
-      "version": "2.4.2",
-      "dependencies": [
-        "flutter",
-        "plugin_platform_interface"
-      ]
-    },
-    {
       "name": "shared_preferences_linux",
       "version": "2.4.1",
       "dependencies": [
@@ -593,13 +665,12 @@
       ]
     },
     {
-      "name": "shared_preferences_android",
-      "version": "2.5.0",
+      "name": "posix",
+      "version": "6.5.2",
       "dependencies": [
-        "flutter",
-        "jni",
+        "ffi",
         "meta",
-        "shared_preferences_platform_interface"
+        "path"
       ]
     },
     {
@@ -679,20 +750,6 @@
       ]
     },
     {
-      "name": "jni",
-      "version": "1.1.0",
-      "dependencies": [
-        "args",
-        "collection",
-        "ffi",
-        "jni_util",
-        "meta",
-        "package_config",
-        "path",
-        "plugin_platform_interface"
-      ]
-    },
-    {
       "name": "xdg_directories",
       "version": "1.1.0",
       "dependencies": [
@@ -722,17 +779,17 @@
       ]
     },
     {
-      "name": "package_config",
-      "version": "3.0.0",
+      "name": "jni",
+      "version": "1.1.0",
       "dependencies": [
-        "meta"
-      ]
-    },
-    {
-      "name": "jni_util",
-      "version": "1.0.0",
-      "dependencies": [
-        "path"
+        "args",
+        "collection",
+        "ffi",
+        "jni_util",
+        "meta",
+        "package_config",
+        "path",
+        "plugin_platform_interface"
       ]
     },
     {
@@ -769,12 +826,17 @@
       ]
     },
     {
-      "name": "yaml",
-      "version": "3.1.4",
+      "name": "package_config",
+      "version": "3.0.0",
       "dependencies": [
-        "collection",
-        "source_span",
-        "string_scanner"
+        "meta"
+      ]
+    },
+    {
+      "name": "jni_util",
+      "version": "1.0.0",
+      "dependencies": [
+        "path"
       ]
     },
     {

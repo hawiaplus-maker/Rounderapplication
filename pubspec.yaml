@@ -15,10 +15,16 @@ dependencies:
   dio: ^5.11.1
   get_it: ^9.3.0
   flutter_secure_storage: ^11.2.0
+  shared_preferences_android: ">=2.4.28 <2.5.0"
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo1024.png"
 flutter:
   uses-material-design: true
   assets:
@@ -26,4 +32,19 @@ flutter:
     - assets/images/
     - assets/svg/
     - assets/images/ali/
+    - assets/images/auth/
+    - assets/images/home/
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo.ttf
+          weight: 400
+        - asset: assets/fonts/Cairo.ttf
+          weight: 500
+        - asset: assets/fonts/Cairo.ttf
+          weight: 600
+        - asset: assets/fonts/Cairo.ttf
+          weight: 700
+        - asset: assets/fonts/Cairo.ttf
+          weight: 800
 

@@ -13,7 +13,7 @@ Future<bool> confirmDiscardProfile(BuildContext context) async =>
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Text(AppLocaleKey.discardChangesTitle.tr(), style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w700, color: AppColors.petrol)),
           const SizedBox(height: 12),
-          Text(AppLocaleKey.unsavedChanges.tr(), style: const TextStyle(fontSize: 14, color: const Color(0xFF0F6570))),
+          Text(AppLocaleKey.unsavedChanges.tr(), style: const TextStyle(fontSize: 14, color: Color(0xFF0F6570))),
           const SizedBox(height: 28),
           FilledButton(onPressed: () => Navigator.pop(context, false),
             style: FilledButton.styleFrom(backgroundColor: AppColors.orange, foregroundColor: AppColors.petrol,

@@ -1,264 +1,334 @@
 abstract final class AppLocaleKey {
-  static const appName='app_name', hello='hello', homeOverview='home_overview', myHome='my_home';
-  static const quickActions='quick_actions', bookService='book_service', emergency='emergency';
-  static const association='association', associationBalance='association_balance', propertyHealth='property_health';
-  static const upcomingService='upcoming_service', recentActivity='recent_activity', noUpcomingService='no_upcoming_service';
-  static const noActivity='no_activity', dashboardUnavailable='dashboard_unavailable', retry='retry';
-  static const language='language', arabic='arabic', english='english', urdu='urdu', loading='loading';
-  static const home='home', services='services', community='community', account='account';
-  static const currencyEgp='currency_egp', loginRequired='login_required';
-  static const welcome='welcome', createAccount='create_account', fullName='full_name', phone='phone';
-  static const email='email', password='password', confirmPassword='confirm_password', signIn='sign_in';
-  static const haveAccount='have_account', requiredField='required_field', emailInvalid='email_invalid';
-  static const passwordRule='password_rule', passwordMismatch='password_mismatch', phoneFormat='phone_format';
-  static const checkFields='check_fields', connectionError='connection_error', authFailed='auth_failed', signOut='sign_out';
-  static const serviceCatalog='service_catalog', noServices='no_services', bookNow='book_now';
-  static const linkYourHome='link_your_home', linkHomeHelp='link_home_help', propertyCode='property_code';
-  static const unitNumber='unit_number', linkHome='link_home', homeLinkFailed='home_link_failed';
-  static const myBookings='my_bookings', noBookings='no_bookings', cancelBooking='cancel_booking';
-  static const cancelConfirm='cancel_confirm', keepBooking='keep_booking', residentCancelled='resident_cancelled';
-  static const bookingCancelled='booking_cancelled';
-  static const bookingCreated='booking_created', bookingFailed='booking_failed', linkHomeFirst='link_home_first';
-  static const profile='profile';
-  static const resident='resident';
-  static const units='units';
-  static const unitCount='unit_count';
-  static const linkedHomes='linked_homes';
-  static const manage='manage';
-  static const currentUnit='current_unit';
-  static const gifts='gifts';
-  static const discoverGifts='discover_gifts';
-  static const accountDetails='account_details';
-  static const settings='settings';
-  static const notifications='notifications';
-  static const privacy='privacy';
-  static const help='help';
-  static const editProfile='edit_profile';
-  static const profileSubtitle='profile_subtitle';
-  static const changePhoto='change_photo';
-  static const phoneNumber='phone_number';
-  static const emailAddress='email_address';
-  static const optional='optional';
-  static const saveChanges='save_changes';
-  static const profileSaved='profile_saved';
-  static const settingsTitle='settings_title';
-  static const aliHelps='ali_helps';
-  static const requestUpdates='request_updates';
-  static const offersAndGifts='offers_and_gifts';
-  static const on='on';
-  static const off='off';
-  static const changeAnytime='change_anytime';
-  static const privacyData='privacy_data';
-  static const serviceAddress='service_address';
-  static const privacyAddressBody='privacy_address_body';
-  static const requestContact='request_contact';
-  static const privacyContactBody='privacy_contact_body';
-  static const optionalOffers='optional_offers';
-  static const communicationPrefs='communication_prefs';
-  static const reviewData='review_data';
-  static const allNotifications='all_notifications';
-  static const actionRequired='action_required';
-  static const unread='unread';
-  static const readAll='read_all';
-  static const notificationOfferTitle='notification_offer_title';
-  static const notificationOfferBody='notification_offer_body';
-  static const notificationReportTitle='notification_report_title';
-  static const notificationReportBody='notification_report_body';
-  static const reviewNow='review_now';
-  static const emptyNotifications='empty_notifications';
-  static const faqTitle='faq_title';
-  static const faqHome='faq_home';
-  static const faqHomeAnswer='faq_home_answer';
-  static const faqPayment='faq_payment';
-  static const faqPaymentAnswer='faq_payment_answer';
-  static const faqGift='faq_gift';
-  static const faqGiftAnswer='faq_gift_answer';
-  static const faqHint='faq_hint';
-  static const comingSoon='coming_soon';
-  static const back='back';
-  static const linkedHomesNote='linked_homes_note';
-  static const unitTitle='unit_title';
-  static const contactUs='contact_us';
-  static const orders='orders';
-  static const unionTab='union_tab';
-  static const unionTitle='union_title';
-  static const unionBalance='union_balance';
-  static const availableBalance='available_balance';
-  static const financialDetails='financial_details';
-  static const dueAmount='due_amount';
-  static const pay='pay';
-  static const dueDate='due_date';
-  static const workTogether='work_together';
-  static const improveEntrance='improve_entrance';
-  static const residentsJoined='residents_joined';
-  static const shareIdea='share_idea';
-  static const associationCommunity='association_community';
-  static const associationFinance='association_finance';
-  static const myDues='my_dues';
-  static const facilitiesReports='facilities_reports';
-  static const unionVisits='union_visits';
-  static const unionNews='union_news';
-  static const initiatives='initiatives';
-  static const expenses='expenses';
-  static const cleaning='cleaning';
-  static const maintenance='maintenance';
-  static const utilities='utilities';
-  static const total='total';
-  static const paymentHistory='payment_history';
-  static const paid='paid';
-  static const pending='pending';
-  static const noReports='no_reports';
-  static const openReports='open_reports';
-  static const visitUpcoming='visit_upcoming';
-  static const visitCompleted='visit_completed';
-  static const announcement='announcement';
-  static const documents='documents';
-  static const communityChat='community_chat';
-  static const sendMessage='send_message';
-  static const messageHint='message_hint';
-  static const suggestInitiative='suggest_initiative';
-  static const supportScore='support_score';
-  static const prototypeData='prototype_data';
-  static const currencySar='currency_sar';
-  static const goodCondition='good_condition';
-  static const elevatorFollowup='elevator_followup';
-  static const visitDateTime='visit_date_time';
-  static const completedDate='completed_date';
-  static const announcementDate='announcement_date';
-  static const financialPdf='financial_pdf';
-  static const cleaningPdf='cleaning_pdf';
-  static const neighborMessageOne='neighbor_message_one';
-  static const neighborMessageTwo='neighbor_message_two';
-  static const associationReply='association_reply';
-  static const cleaningCampaign='cleaning_campaign';
-  static const septemberDues='september_dues';
-  static const pastCleaningPayment='past_cleaning_payment';
-  static const contactUse='contact_use';
-  static const catalogTitle='catalog_title';
-  static const greetingAli='greeting_ali';
-  static const searchHint='search_hint';
-  static const plumbing='plumbing';
-  static const electrical='electrical';
-  static const airConditioning='air_conditioning';
-  static const generalServices='general_services';
-  static const fixedPriceService='fixed_price_service';
-  static const serviceDetails='service_details';
-  static const describeProblem='describe_problem';
-  static const problemHint='problem_hint';
-  static const issueType='issue_type';
-  static const waterLeak='water_leak';
-  static const drainBlock='drain_block';
-  static const installation='installation';
-  static const notSure='not_sure';
-  static const addPhotos='add_photos';
-  static const nextProviders='next_providers';
-  static const whenService='when_service';
-  static const whereService='where_service';
-  static const myUnit='my_unit';
-  static const sharedFacilities='shared_facilities';
-  static const scheduled='scheduled';
-  static const urgent='urgent';
-  static const emergencyMode='emergency_mode';
-  static const preferredDate='preferred_date';
-  static const morning='morning';
-  static const providerTiming='provider_timing';
-  static const availableProviders='available_providers';
-  static const providerOne='provider_one';
-  static const providerTwo='provider_two';
-  static const serviceType='service_type';
-  static const closestArrival='closest_arrival';
-  static const companyProfile='company_profile';
-  static const viewCompany='view_company';
-  static const selectProvider='select_provider';
-  static const reviewRequest='review_request';
-  static const basePrice='base_price';
-  static const serviceSummary='service_summary';
-  static const submitRequest='submit_request';
-  static const waitingProvider='waiting_provider';
-  static const requestSent='request_sent';
-  static const cancel='cancel';
-  static const requestCancelled='request_cancelled';
-  static const providerAccepted='provider_accepted';
-  static const technicianOnWay='technician_on_way';
-  static const serviceInProgress='service_in_progress';
-  static const orderReference='order_reference';
-  static const serviceComplete='service_complete';
-  static const chat='chat';
-  static const callTechnician='call_technician';
-  static const serviceFiles='service_files';
-  static const addWork='add_work';
-  static const serviceReport='service_report';
-  static const additionalOffer='additional_offer';
-  static const ratingNote='rating_note';
-  static const approveOffer='approve_offer';
-  static const declineOffer='decline_offer';
-  static const uploadHint='upload_hint';
-  static const addPhoto='add_photo';
-  static const addVideo='add_video';
-  static const proofOfWork='proof_of_work';
-  static const invoice='invoice';
-  static const warranty='warranty';
-  static const confirmReceipt='confirm_receipt';
-  static const payNow='pay_now';
-  static const paymentComplete='payment_complete';
-  static const rateExperience='rate_experience';
-  static const ratingPrompt='rating_prompt';
-  static const sendRating='send_rating';
-  static const later='later';
-  static const followUp='follow_up';
-  static const orderHistory='order_history';
-  static const noOrdersYet='no_orders_yet';
-  static const orderActive='order_active';
-  static const orderScheduled='order_scheduled';
-  static const trackOrder='track_order';
-  static const activeOrderOne='active_order_one';
-  static const activeOrderTwo='active_order_two';
-  static const emergencyTitle='emergency_title';
-  static const emergencyIntro='emergency_intro';
-  static const emergencyType='emergency_type';
-  static const emergencyContact='emergency_contact';
-  static const emergencyLocation='emergency_location';
-  static const emergencyDetails='emergency_details';
-  static const confirmEmergency='confirm_emergency';
-  static const sendEmergency='send_emergency';
-  static const emergencyReceived='emergency_received';
-  static const emergencyReference='emergency_reference';
-  static const emergencyClose='emergency_close';
-  static const emergencyTypeFire='emergency_type_fire';
-  static const emergencyTypeMedical='emergency_type_medical';
-  static const emergencyTypeGas='emergency_type_gas';
-  static const emergencyTypeElectrical='emergency_type_electrical';
-  static const emergencyTypeWater='emergency_type_water';
-  static const emergencyTypeElevator='emergency_type_elevator';
-  static const emergencyTypeSecurity='emergency_type_security';
-  static const emergencyRequired='emergency_required';
-  static const invalidPhone='invalid_phone';
-  static const emergencySafety='emergency_safety';
-  static const flatNumber='flat_number';
-  static const providerOneMeta='provider_one_meta';
-  static const providerTwoMeta='provider_two_meta';
-  static const arrivalInThreeHours='arrival_in_three_hours';
-  static const days30='days30';
+  static const appName = 'app_name',
+      hello = 'hello',
+      homeOverview = 'home_overview',
+      myHome = 'my_home';
+  static const quickActions = 'quick_actions',
+      bookService = 'book_service',
+      emergency = 'emergency';
+  static const association = 'association',
+      associationBalance = 'association_balance',
+      propertyHealth = 'property_health';
+  static const upcomingService = 'upcoming_service',
+      recentActivity = 'recent_activity',
+      noUpcomingService = 'no_upcoming_service';
+  static const noActivity = 'no_activity',
+      dashboardUnavailable = 'dashboard_unavailable',
+      retry = 'retry';
+  static const language = 'language',
+      arabic = 'arabic',
+      english = 'english',
+      urdu = 'urdu',
+      loading = 'loading';
+  static const home = 'home', services = 'services', community = 'community', account = 'account';
+  static const currencyEgp = 'currency_egp', loginRequired = 'login_required';
+  static const welcome = 'welcome',
+      createAccount = 'create_account',
+      fullName = 'full_name',
+      phone = 'phone';
+  static const email = 'email',
+      password = 'password',
+      confirmPassword = 'confirm_password',
+      signIn = 'sign_in';
+  static const haveAccount = 'have_account',
+      requiredField = 'required_field',
+      emailInvalid = 'email_invalid';
+  static const passwordRule = 'password_rule',
+      passwordMismatch = 'password_mismatch',
+      phoneFormat = 'phone_format';
+  static const checkFields = 'check_fields',
+      connectionError = 'connection_error',
+      authFailed = 'auth_failed',
+      signOut = 'sign_out';
+  static const serviceCatalog = 'service_catalog', noServices = 'no_services', bookNow = 'book_now';
+  static const linkYourHome = 'link_your_home',
+      linkHomeHelp = 'link_home_help',
+      propertyCode = 'property_code';
+  static const unitNumber = 'unit_number',
+      linkHome = 'link_home',
+      homeLinkFailed = 'home_link_failed';
+  static const myBookings = 'my_bookings',
+      noBookings = 'no_bookings',
+      cancelBooking = 'cancel_booking';
+  static const cancelConfirm = 'cancel_confirm',
+      keepBooking = 'keep_booking',
+      residentCancelled = 'resident_cancelled';
+  static const bookingCancelled = 'booking_cancelled';
+  static const bookingCreated = 'booking_created',
+      bookingFailed = 'booking_failed',
+      linkHomeFirst = 'link_home_first';
+  static const profile = 'profile';
+  static const resident = 'resident';
+  static const units = 'units';
+  static const unitCount = 'unit_count';
+  static const linkedHomes = 'linked_homes';
+  static const manage = 'manage';
+  static const currentUnit = 'current_unit';
+  static const gifts = 'gifts';
+  static const discoverGifts = 'discover_gifts';
+  static const accountDetails = 'account_details';
+  static const settings = 'settings';
+  static const notifications = 'notifications';
+  static const privacy = 'privacy';
+  static const help = 'help';
+  static const editProfile = 'edit_profile';
+  static const profileSubtitle = 'profile_subtitle';
+  static const changePhoto = 'change_photo';
+  static const phoneNumber = 'phone_number';
+  static const emailAddress = 'email_address';
+  static const optional = 'optional';
+  static const saveChanges = 'save_changes';
+  static const profileSaved = 'profile_saved';
+  static const settingsTitle = 'settings_title';
+  static const aliHelps = 'ali_helps';
+  static const requestUpdates = 'request_updates';
+  static const offersAndGifts = 'offers_and_gifts';
+  static const on = 'on';
+  static const off = 'off';
+  static const changeAnytime = 'change_anytime';
+  static const privacyData = 'privacy_data';
+  static const serviceAddress = 'service_address';
+  static const privacyAddressBody = 'privacy_address_body';
+  static const requestContact = 'request_contact';
+  static const privacyContactBody = 'privacy_contact_body';
+  static const optionalOffers = 'optional_offers';
+  static const communicationPrefs = 'communication_prefs';
+  static const reviewData = 'review_data';
+  static const allNotifications = 'all_notifications';
+  static const actionRequired = 'action_required';
+  static const unread = 'unread';
+  static const readAll = 'read_all';
+  static const notificationOfferTitle = 'notification_offer_title';
+  static const notificationOfferBody = 'notification_offer_body';
+  static const notificationReportTitle = 'notification_report_title';
+  static const notificationReportBody = 'notification_report_body';
+  static const reviewNow = 'review_now';
+  static const emptyNotifications = 'empty_notifications';
+  static const faqTitle = 'faq_title';
+  static const faqHome = 'faq_home';
+  static const faqHomeAnswer = 'faq_home_answer';
+  static const faqPayment = 'faq_payment';
+  static const faqPaymentAnswer = 'faq_payment_answer';
+  static const faqGift = 'faq_gift';
+  static const faqGiftAnswer = 'faq_gift_answer';
+  static const faqHint = 'faq_hint';
+  static const comingSoon = 'coming_soon';
+  static const back = 'back';
+  static const linkedHomesNote = 'linked_homes_note';
+  static const unitTitle = 'unit_title';
+  static const contactUs = 'contact_us';
+  static const orders = 'orders';
+  static const unionTab = 'union_tab';
+  static const unionTitle = 'union_title';
+  static const unionBalance = 'union_balance';
+  static const availableBalance = 'available_balance';
+  static const financialDetails = 'financial_details';
+  static const dueAmount = 'due_amount';
+  static const pay = 'pay';
+  static const dueDate = 'due_date';
+  static const workTogether = 'work_together';
+  static const improveEntrance = 'improve_entrance';
+  static const residentsJoined = 'residents_joined';
+  static const shareIdea = 'share_idea';
+  static const associationCommunity = 'association_community';
+  static const associationFinance = 'association_finance';
+  static const myDues = 'my_dues';
+  static const facilitiesReports = 'facilities_reports';
+  static const unionVisits = 'union_visits';
+  static const unionNews = 'union_news';
+  static const initiatives = 'initiatives';
+  static const expenses = 'expenses';
+  static const cleaning = 'cleaning';
+  static const maintenance = 'maintenance';
+  static const utilities = 'utilities';
+  static const total = 'total';
+  static const paymentHistory = 'payment_history';
+  static const paid = 'paid';
+  static const pending = 'pending';
+  static const noReports = 'no_reports';
+  static const openReports = 'open_reports';
+  static const visitUpcoming = 'visit_upcoming';
+  static const visitCompleted = 'visit_completed';
+  static const announcement = 'announcement';
+  static const documents = 'documents';
+  static const communityChat = 'community_chat';
+  static const sendMessage = 'send_message';
+  static const messageHint = 'message_hint';
+  static const suggestInitiative = 'suggest_initiative';
+  static const supportScore = 'support_score';
+  static const prototypeData = 'prototype_data';
+  static const currencySar = 'currency_sar';
+  static const goodCondition = 'good_condition';
+  static const elevatorFollowup = 'elevator_followup';
+  static const visitDateTime = 'visit_date_time';
+  static const completedDate = 'completed_date';
+  static const announcementDate = 'announcement_date';
+  static const financialPdf = 'financial_pdf';
+  static const cleaningPdf = 'cleaning_pdf';
+  static const neighborMessageOne = 'neighbor_message_one';
+  static const neighborMessageTwo = 'neighbor_message_two';
+  static const associationReply = 'association_reply';
+  static const cleaningCampaign = 'cleaning_campaign';
+  static const septemberDues = 'september_dues';
+  static const pastCleaningPayment = 'past_cleaning_payment';
+  static const contactUse = 'contact_use';
+  static const catalogTitle = 'catalog_title';
+  static const greetingAli = 'greeting_ali';
+  static const searchHint = 'search_hint';
+  static const plumbing = 'plumbing';
+  static const electrical = 'electrical';
+  static const airConditioning = 'air_conditioning';
+  static const generalServices = 'general_services';
+  static const fixedPriceService = 'fixed_price_service';
+  static const serviceDetails = 'service_details';
+  static const describeProblem = 'describe_problem';
+  static const problemHint = 'problem_hint';
+  static const issueType = 'issue_type';
+  static const waterLeak = 'water_leak';
+  static const drainBlock = 'drain_block';
+  static const installation = 'installation';
+  static const notSure = 'not_sure';
+  static const addPhotos = 'add_photos';
+  static const nextProviders = 'next_providers';
+  static const whenService = 'when_service';
+  static const whereService = 'where_service';
+  static const myUnit = 'my_unit';
+  static const sharedFacilities = 'shared_facilities';
+  static const scheduled = 'scheduled';
+  static const urgent = 'urgent';
+  static const emergencyMode = 'emergency_mode';
+  static const preferredDate = 'preferred_date';
+  static const morning = 'morning';
+  static const providerTiming = 'provider_timing';
+  static const availableProviders = 'available_providers';
+  static const providerOne = 'provider_one';
+  static const providerTwo = 'provider_two';
+  static const serviceType = 'service_type';
+  static const closestArrival = 'closest_arrival';
+  static const companyProfile = 'company_profile';
+  static const viewCompany = 'view_company';
+  static const selectProvider = 'select_provider';
+  static const reviewRequest = 'review_request';
+  static const basePrice = 'base_price';
+  static const serviceSummary = 'service_summary';
+  static const submitRequest = 'submit_request';
+  static const waitingProvider = 'waiting_provider';
+  static const requestSent = 'request_sent';
+  static const cancel = 'cancel';
+  static const requestCancelled = 'request_cancelled';
+  static const providerAccepted = 'provider_accepted';
+  static const technicianOnWay = 'technician_on_way';
+  static const serviceInProgress = 'service_in_progress';
+  static const orderReference = 'order_reference';
+  static const serviceComplete = 'service_complete';
+  static const chat = 'chat';
+  static const callTechnician = 'call_technician';
+  static const serviceFiles = 'service_files';
+  static const addWork = 'add_work';
+  static const serviceReport = 'service_report';
+  static const additionalOffer = 'additional_offer';
+  static const ratingNote = 'rating_note';
+  static const approveOffer = 'approve_offer';
+  static const declineOffer = 'decline_offer';
+  static const uploadHint = 'upload_hint';
+  static const addPhoto = 'add_photo';
+  static const addVideo = 'add_video';
+  static const proofOfWork = 'proof_of_work';
+  static const invoice = 'invoice';
+  static const warranty = 'warranty';
+  static const confirmReceipt = 'confirm_receipt';
+  static const payNow = 'pay_now';
+  static const paymentComplete = 'payment_complete';
+  static const rateExperience = 'rate_experience';
+  static const ratingPrompt = 'rating_prompt';
+  static const sendRating = 'send_rating';
+  static const later = 'later';
+  static const followUp = 'follow_up';
+  static const orderHistory = 'order_history';
+  static const noOrdersYet = 'no_orders_yet';
+  static const orderActive = 'order_active';
+  static const orderScheduled = 'order_scheduled';
+  static const trackOrder = 'track_order';
+  static const activeOrderOne = 'active_order_one';
+  static const activeOrderTwo = 'active_order_two';
+  static const emergencyTitle = 'emergency_title';
+  static const emergencyIntro = 'emergency_intro';
+  static const emergencyType = 'emergency_type';
+  static const emergencyContact = 'emergency_contact';
+  static const emergencyLocation = 'emergency_location';
+  static const emergencyDetails = 'emergency_details';
+  static const confirmEmergency = 'confirm_emergency';
+  static const sendEmergency = 'send_emergency';
+  static const emergencyReceived = 'emergency_received';
+  static const emergencyReference = 'emergency_reference';
+  static const emergencyClose = 'emergency_close';
+  static const emergencyTypeFire = 'emergency_type_fire';
+  static const emergencyTypeMedical = 'emergency_type_medical';
+  static const emergencyTypeGas = 'emergency_type_gas';
+  static const emergencyTypeElectrical = 'emergency_type_electrical';
+  static const emergencyTypeWater = 'emergency_type_water';
+  static const emergencyTypeElevator = 'emergency_type_elevator';
+  static const emergencyTypeSecurity = 'emergency_type_security';
+  static const emergencyRequired = 'emergency_required';
+  static const invalidPhone = 'invalid_phone';
+  static const emergencySafety = 'emergency_safety';
+  static const flatNumber = 'flat_number';
+  static const providerOneMeta = 'provider_one_meta';
+  static const providerTwoMeta = 'provider_two_meta';
+  static const arrivalInThreeHours = 'arrival_in_three_hours';
+  static const days30 = 'days30';
 
-  static const exploreRounder='explore_rounder';
-  static const introTitleServices='intro_title_services', introBodyServices='intro_body_services';
-  static const introTitleAli='intro_title_ali', introBodyAli='intro_body_ali';
-  static const introTitleQuality='intro_title_quality', introBodyQuality='intro_body_quality';
-  static const welcomeSteps='welcome_steps', welcomeGiftTitle='welcome_gift_title';
-  static const completeProfile='complete_profile', saveResidence='save_residence', pickWelcomeGift='pick_welcome_gift';
-  static const taskComplete='task_complete', taskAction='task_action', chooseWelcomeGiftTitle='choose_welcome_gift_title';
-  static const chooseWelcomeGiftBody='choose_welcome_gift_body', giftDetails='gift_details', giftTerms='gift_terms';
-  static const giftHomeCare='gift_home_care', giftHomeCareDesc='gift_home_care_desc';
-  static const giftServiceCredit='gift_service_credit', giftCreditDesc='gift_credit_desc';
-  static const giftCleaning='gift_cleaning', giftCleaningDesc='gift_cleaning_desc';
-  static const selectGift='select_gift', giftSaved='gift_saved', continueLater='continue_later', skip='skip', next='next', startUsingRounder='start_using_rounder', close='close';
+  static const exploreRounder = 'explore_rounder';
+  static const introTitleServices = 'intro_title_services',
+      introBodyServices = 'intro_body_services';
+  static const introTitleAli = 'intro_title_ali', introBodyAli = 'intro_body_ali';
+  static const introTitleQuality = 'intro_title_quality', introBodyQuality = 'intro_body_quality';
+  static const maintenanceServices = 'maintenance_services';
+  static const chatUserIntent = 'chat_user_intent', chatAliReply = 'chat_ali_reply';
+  static const qualityFollowUp = 'quality_follow_up',
+      followExecution = 'follow_execution',
+      reviewResult = 'review_result',
+      rateService = 'rate_service';
+  static const welcomeSteps = 'welcome_steps', welcomeGiftTitle = 'welcome_gift_title';
+  static const completeProfile = 'complete_profile',
+      saveResidence = 'save_residence',
+      pickWelcomeGift = 'pick_welcome_gift';
+  static const taskComplete = 'task_complete',
+      taskAction = 'task_action',
+      chooseWelcomeGiftTitle = 'choose_welcome_gift_title';
+  static const chooseWelcomeGiftBody = 'choose_welcome_gift_body',
+      giftDetails = 'gift_details',
+      giftTerms = 'gift_terms';
+  static const giftHomeCare = 'gift_home_care', giftHomeCareDesc = 'gift_home_care_desc';
+  static const giftServiceCredit = 'gift_service_credit', giftCreditDesc = 'gift_credit_desc';
+  static const giftCleaning = 'gift_cleaning', giftCleaningDesc = 'gift_cleaning_desc';
+  static const selectGift = 'select_gift',
+      giftSaved = 'gift_saved',
+      continueLater = 'continue_later',
+      skip = 'skip',
+      next = 'next',
+      startUsingRounder = 'start_using_rounder',
+      close = 'close';
 
-  static const changePhone='change_phone', enterNewPhone='enter_new_phone', sendCode='send_code', verificationCode='verification_code';
-  static const phoneOtpHint='phone_otp_hint', verifyPhone='verify_phone', phoneUpdated='phone_updated', invalidVerificationCode='invalid_verification_code';
-  static const addUnit='add_unit', primaryUnit='primary_unit';
+  static const changePhone = 'change_phone',
+      enterNewPhone = 'enter_new_phone',
+      sendCode = 'send_code',
+      verificationCode = 'verification_code';
+  static const phoneOtpHint = 'phone_otp_hint',
+      verifyPhone = 'verify_phone',
+      phoneUpdated = 'phone_updated',
+      invalidVerificationCode = 'invalid_verification_code';
+  static const addUnit = 'add_unit', primaryUnit = 'primary_unit';
 
-  static const allOrders='all_orders', orderDetails='order_details', orderStatus='order_status', orderPlace='order_place', orderDate='order_date', orderAmount='order_amount', orderProgress='order_progress';
-  static const cancelOrderTitle='cancel_order_title', cancelOrderQuestion='cancel_order_question';
+  static const allOrders = 'all_orders',
+      orderDetails = 'order_details',
+      orderStatus = 'order_status',
+      orderPlace = 'order_place',
+      orderDate = 'order_date',
+      orderAmount = 'order_amount',
+      orderProgress = 'order_progress';
+  static const cancelOrderTitle = 'cancel_order_title',
+      cancelOrderQuestion = 'cancel_order_question';
   static const newPhoneIntro = 'new_phone_intro';
   static const enterCodeForNumber = 'enter_code_for_number';
   static const currentPhoneUnchanged = 'current_phone_unchanged';
@@ -271,4 +341,98 @@ abstract final class AppLocaleKey {
   static const unsavedChanges = 'unsaved_changes';
   static const keepEditing = 'keep_editing';
   static const discardChanges = 'discard_changes';
+
+  // OTP verification journey (design الدخول / رمز التحقق + نتيجة التحقق).
+  static const confirmNumber = 'confirm_number',
+      otpIntro = 'otp_intro',
+      otpMaskedPhone = 'otp_masked_phone';
+  static const otpCodeTitle = 'otp_code_title', otpPrompt = 'otp_prompt', otpVerify = 'otp_verify';
+  static const otpKeptNote = 'otp_kept_note',
+      otpVerifiedTitle = 'otp_verified_title',
+      otpVerifiedBody = 'otp_verified_body';
+  static const otpContinue = 'otp_continue',
+      backToLogin = 'back_to_login',
+      otpPrototypeEntry = 'otp_prototype_entry';
+
+  // My Units (وحداتي) + property rating (تقييم العقار).
+  static const unitsSubtitle = 'units_subtitle',
+      unitsEmptyTitle = 'units_empty_title',
+      unitsEmptyBody = 'units_empty_body';
+  static const unitsEmptyHint = 'units_empty_hint',
+      unitsAddUnit = 'units_add_unit',
+      otherUnit = 'other_unit';
+  static const ownerRole = 'owner_role', tenantRole = 'tenant_role';
+  static const unitRowPalm = 'unit_row_palm',
+      unitRowJasmine = 'unit_row_jasmine',
+      jasmineBuilding = 'jasmine_building';
+  static const dammamCity = 'dammam_city', khobarCity = 'khobar_city';
+  static const areaApproved = 'area_approved',
+      areaNotAdded = 'area_not_added',
+      viewUnit = 'view_unit',
+      setAsCurrent = 'set_as_current';
+  static const propertyRating = 'property_rating', ratingSummaryTitle = 'rating_summary_title';
+  static const residentialStatePrefix = 'residential_state_prefix',
+      facilityStatePrefix = 'facility_state_prefix';
+  static const stateExcellent = 'state_excellent',
+      stateGood = 'state_good',
+      ratingPendingNote = 'rating_pending_note';
+  static const toFacilitiesReports = 'to_facilities_reports', unitScore87 = 'unit_score_87';
+
+  // After-service (ما بعد الخدمة): warranty + Ali-assisted claim + follow-up.
+  static const warrantyTitle = 'warranty_title', warrantyThisService = 'warranty_this_service';
+  static const warrantyStart = 'warranty_start',
+      warrantyEnd = 'warranty_end',
+      warrantyDuration = 'warranty_duration';
+  static const valueUnavailable = 'value_unavailable',
+      valueUnavailableShort = 'value_unavailable_short';
+  static const warrantyCoverageTitle = 'warranty_coverage_title',
+      warrantyCoverageBody = 'warranty_coverage_body';
+  static const warrantyExclusionsTitle = 'warranty_exclusions_title',
+      warrantyExclusionsBody = 'warranty_exclusions_body',
+      warrantyExclusionsNote = 'warranty_exclusions_note';
+  static const backToOrder = 'back_to_order', warrantyInquiry = 'warranty_inquiry';
+  static const aftercareTitle = 'aftercare_title',
+      claimSummaryTitle = 'claim_summary_title',
+      claimSummaryBody = 'claim_summary_body';
+  static const claimCoverageNote = 'claim_coverage_note',
+      submitForReview = 'submit_for_review',
+      viewOriginalDoc = 'view_original_doc',
+      followupTitle = 'followup_title';
+
+  // Splash + approved login (design 00 — تسجيل الدخول • APPROVED / 00 — سبلاش).
+  static const loginGreeting = 'login_greeting', loginTagline = 'login_tagline';
+  static const saudiArabia = 'saudi_arabia',
+      phonePlaceholder = 'phone_placeholder',
+      phoneVerifyHint = 'phone_verify_hint';
+  static const continueWithPhone = 'continue_with_phone', orContinueWith = 'or_continue_with';
+  static const continueWithGoogle = 'continue_with_google',
+      continueWithApple = 'continue_with_apple';
+  static const privacyPolicy = 'privacy_policy', termsConditions = 'terms_conditions';
+  static const browseNowRegisterLater = 'browse_now_register_later', emailSignIn = 'email_sign_in';
+  static const localPhoneInvalid = 'local_phone_invalid';
+
+  // Resident home (design 108:44): header, hero, emergency bar, summary cards,
+  // visits and the floating dock.
+  static const homeWeather = 'home_weather',
+      homeGreeting = 'home_greeting',
+      homeHeroQuestion = 'home_hero_question';
+  static const homeTalkToAli = 'home_talk_to_ali', homeEmergencyHint = 'home_emergency_hint';
+  static const homeDashboardTitle = 'home_dashboard_title', homeUnitWord = 'home_unit_word';
+  static const homeBalanceRemaining = 'home_balance_remaining',
+      homePeriodStart = 'home_period_start',
+      homeMore = 'home_more';
+  static const homeHealthTitle = 'home_health_title', homeHealthCaption = 'home_health_caption';
+  static const homeHealthUnitLabel = 'home_health_unit_label',
+      homeHealthFacilitiesLabel = 'home_health_facilities_label';
+  static const homeViewAssessment = 'home_view_assessment';
+  static const homeVisitsTitle = 'home_visits_title', homeVisitsSubtitle = 'home_visits_subtitle';
+  static const homeLastVisitTitle = 'home_last_visit_title',
+      homeLastVisitService = 'home_last_visit_service';
+  static const homeLastVisitProvider = 'home_last_visit_provider',
+      homeLastVisitTime = 'home_last_visit_time';
+  static const homeStatusCompleted = 'home_status_completed', homeDetails = 'home_details';
+  static const homeRemaining = 'home_remaining', homeCountdownValue = 'home_countdown_value';
+  static const homeCountdownUnit = 'home_countdown_unit',
+      homeNextServiceName = 'home_next_service_name';
+  static const homeNextServiceTime = 'home_next_service_time';
 }

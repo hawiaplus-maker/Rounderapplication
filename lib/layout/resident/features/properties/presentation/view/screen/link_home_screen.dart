@@ -12,7 +12,7 @@ class _LinkHomeScreenState extends State<LinkHomeScreen>{
  @override void dispose(){code.dispose();unit.dispose();super.dispose();}
  Future<void> submit()async{if(!form.currentState!.validate())return;setState(()=>busy=true);try{
  if(context.read<ResidentDashboardCubit>().isPreview){
-  context.read<ResidentDashboardCubit>().previewHome(code.text.trim()+' • '+unit.text.trim());
+  context.read<ResidentDashboardCubit>().previewHome('${code.text.trim()} • ${unit.text.trim()}');
   if(mounted)Navigator.maybePop(context);
   return;
  }

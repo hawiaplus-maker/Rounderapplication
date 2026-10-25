@@ -22,7 +22,11 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repo;
   Future<void> restoreSession() async {
     emit(AuthChecking());
-    emit(await repo.hasSession() ? Authenticated() : Unauthenticated());
+    try {
+      emit(await repo.hasSession() ? Authenticated() : Unauthenticated());
+    } catch (_) {
+      emit(Unauthenticated());
+    }
   }
 
   Future<void> signIn(String email, String password) async =>
@@ -48,12 +52,14 @@ class AuthCubit extends Cubit<AuthState> {
       await action();
       emit(Authenticated());
     } catch (e) {
-      if (e is DioException && e.response?.statusCode == 422)
+      if (e is DioException && e.response?.statusCode == 422) {
         emit(AuthFailure('check_fields'));
-      else if (e is DioException && e.type == DioExceptionType.connectionError)
+      } else if (e is DioException &&
+          e.type == DioExceptionType.connectionError) {
         emit(AuthFailure('connection_error'));
-      else
+      } else {
         emit(AuthFailure('auth_failed'));
+      }
     }
   }
 

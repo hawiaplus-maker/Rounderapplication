@@ -9,6 +9,7 @@ import 'package:rounder_application/layout/resident/features/bookings/presentati
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/data/repo/onboarding_repository.dart';
 import 'package:rounder_application/layout/resident/features/services/data/repo/services_repo.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/cubit/services_cubit.dart';
 
@@ -42,6 +43,7 @@ void configureDependencies() {
   );
   sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(dio));
   sl.registerLazySingleton(() => AuthRepository(sl<ApiConsumer>(), tokenStorage));
+  sl.registerLazySingleton(() => OnboardingRepository(tokenStorage));
   sl.registerFactory(() => AuthCubit(sl<AuthRepository>()));
   sl.registerLazySingleton(() => ResidentRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => ServicesRepository(sl<ApiConsumer>()));

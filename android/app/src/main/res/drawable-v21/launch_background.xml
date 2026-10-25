@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Modify this file to customize your launch splash screen -->
+<!-- Rounder brand launch screen: petrol→teal gradient with the approved wordmark. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="?android:colorBackground" />
-
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#FF073B43"
+                android:centerColor="#FF0F6570"
+                android:endColor="#FF0F6570" />
+        </shape>
+    </item>
+    <item
+        android:width="180dp"
+        android:height="40dp"
+        android:gravity="center">
         <bitmap
-            android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:src="@drawable/rounder_wordmark"
+            android:gravity="fill" />
+    </item>
 </layer-list>
