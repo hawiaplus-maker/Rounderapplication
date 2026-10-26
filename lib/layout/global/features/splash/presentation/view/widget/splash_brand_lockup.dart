@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
@@ -27,14 +28,8 @@ class SplashBrandLockup extends StatelessWidget {
         children: [
           const _Ring(size: 184),
           const _Ring(size: 202),
-          for (final point in _lightPoints)
-            Align(alignment: point, child: const _Light()),
-          Image.asset(
-            AppImages.rounderWordmark,
-            width: 180,
-            height: 40,
-            fit: BoxFit.contain,
-          ),
+          for (final point in _lightPoints) Align(alignment: point, child: const _Light()),
+          SvgPicture.asset(AppImages.rounderIcon, height: 40, fit: BoxFit.contain),
         ],
       ),
     );
@@ -52,10 +47,7 @@ class _Ring extends StatelessWidget {
     height: size,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      border: Border.all(
-        width: .7,
-        color: AppColors.white.withValues(alpha: .14),
-      ),
+      border: Border.all(width: .7, color: AppColors.white.withValues(alpha: .14)),
     ),
   );
 }

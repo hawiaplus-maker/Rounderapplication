@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 
 /// Approved login brand slot (design `Login / Brand`): the original orange
@@ -11,12 +12,7 @@ class LoginBrand extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: Center(
-        child: Image.asset(
-          AppImages.rounderWordmark,
-          width: 130,
-          height: 29,
-          fit: BoxFit.contain,
-        ),
+        child: SvgPicture.asset(AppImages.rounderIcon, width: 130, height: 29, fit: BoxFit.contain),
       ),
     );
   }

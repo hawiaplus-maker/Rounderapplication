@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -19,12 +19,8 @@ class HomeTopBar extends StatelessWidget {
       height: HomeSizes.topBarHeight,
       child: Row(
         children: <Widget>[
-          Image.asset(
-            AppImages.rounderWordmark,
-            width: 118,
-            height: 26,
-            fit: BoxFit.contain,
-          ),
+          SvgPicture.asset(AppImages.rounderIcon, width: 118, height: 26, fit: BoxFit.contain),
+
           const Spacer(),
           Flexible(
             child: FittedBox(

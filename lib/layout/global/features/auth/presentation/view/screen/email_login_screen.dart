@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -46,7 +47,9 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.signIn.tr())),
+        appBar: AppBar(
+          title: Text(creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.signIn.tr()),
+        ),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -58,11 +61,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.asset(
-                        AppImages.rounderWordmark,
-                        height: 40,
-                        fit: BoxFit.contain,
-                      ),
+                      SvgPicture.asset(AppImages.rounderIcon, height: 40, fit: BoxFit.contain),
                       const SizedBox(height: 12),
                       Text(
                         creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.welcome.tr(),
@@ -75,8 +74,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                           controller: name,
                           label: AppLocaleKey.fullName.tr(),
                           icon: Icons.person_outline,
-                          validator: (value) =>
-                              value == null || value.trim().length < 2
+                          validator: (value) => value == null || value.trim().length < 2
                               ? AppLocaleKey.requiredField.tr()
                               : null,
                         ),

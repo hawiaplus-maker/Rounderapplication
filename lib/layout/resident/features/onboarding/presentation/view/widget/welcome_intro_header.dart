@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -16,7 +17,7 @@ class WelcomeIntroHeader extends StatelessWidget {
       height: 44,
       child: Row(
         children: [
-          Image.asset(AppImages.rounderWordmark, height: 24, fit: BoxFit.contain),
+          SvgPicture.asset(AppImages.rounderIcon, height: 40, fit: BoxFit.contain),
           const Spacer(),
           ConstrainedBox(
             constraints: const BoxConstraints(minWidth: 54, minHeight: 44),
