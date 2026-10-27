@@ -59,6 +59,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Rounder uses the camera to take photos you attach to your service requests.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Rounder uses your photo library to attach photos to your service requests.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

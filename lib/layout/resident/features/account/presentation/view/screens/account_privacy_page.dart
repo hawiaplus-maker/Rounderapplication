@@ -4,7 +4,7 @@ import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_action_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Privacy page: service-address/contact preferences and data review entries.
 class AccountPrivacyPage extends StatelessWidget {

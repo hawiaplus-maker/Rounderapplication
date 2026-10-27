@@ -2,14 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
-import 'package:rounder_application/layout/resident/features/properties/presentation/view/screen/link_home_screen.dart';
-import 'package:rounder_application/layout/resident/features/units/presentation/view/screen/property_rating_screen.dart';
+import 'package:rounder_application/layout/resident/features/properties/presentation/view/screens/link_home_screen.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/property_rating_screen.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_emblem.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_empty_state.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_header.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_linked_list.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_title_block.dart';
 
 /// My Units journey (وحداتي — design 536:943). This is a local prototype
 /// screen: the two design units render from approved copy and it is reached
@@ -26,22 +27,7 @@ class UnitsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0, .25, .42, .6, .78, 1],
-            colors: [
-              AppColors.petrol,
-              AppColors.petrol,
-              AppColors.teal,
-              AppColors.mintLight,
-              AppColors.canvas,
-              AppColors.sand,
-            ],
-          ),
-        ),
+      body: BrandGradientBackdrop(
         child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
@@ -51,26 +37,7 @@ class UnitsScreen extends StatelessWidget {
                 onBack: () => Navigator.maybePop(context),
               ),
               const SizedBox(height: 22),
-              Text(
-                AppLocaleKey.units.tr(),
-                textAlign: TextAlign.start,
-                style: const TextStyle(
-                  color: AppColors.white,
-                  fontSize: 34,
-                  height: 48 / 34,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                AppLocaleKey.unitsSubtitle.tr(),
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  color: AppColors.white.withValues(alpha: .8),
-                  fontSize: 14,
-                  height: 22 / 14,
-                ),
-              ),
+              const UnitsTitleBlock(),
               const SizedBox(height: 16),
               if (hasUnits) const UnitsEmblem(),
               const SizedBox(height: 20),

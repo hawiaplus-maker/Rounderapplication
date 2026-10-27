@@ -6,7 +6,7 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_kv.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Payment step: the total and the payment-complete actions.
 class JourneyPaymentPage extends StatelessWidget {
@@ -40,10 +40,7 @@ class JourneyPaymentPage extends StatelessWidget {
                 color: AppColors.petrol,
               ),
             ),
-            JourneyKv(
-              labelKey: AppLocaleKey.total,
-              value: totalLabel,
-            ),
+            JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel),
             JourneyActionButton(
               labelKey: AppLocaleKey.paymentComplete,
               icon: Icons.credit_card,

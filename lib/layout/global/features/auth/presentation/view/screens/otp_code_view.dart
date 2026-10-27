@@ -6,7 +6,9 @@ import 'package:rounder_application/layout/global/features/auth/presentation/vie
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/otp_header.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/otp_intro_card.dart';
 
-/// OTP code step: number confirmation, code field and its actions.
+/// OTP code step: number confirmation, code field and its actions. When the
+/// validated-phone journey drives this screen the resend action mirrors the
+/// send-otp call state.
 class OtpCodeView extends StatelessWidget {
   const OtpCodeView({
     super.key,
@@ -16,6 +18,9 @@ class OtpCodeView extends StatelessWidget {
     required this.onResend,
     required this.onVerify,
     required this.onChangePhone,
+    this.sendingCode = false,
+    this.verifying = false,
+    this.errorText,
   });
 
   final String maskedPhone;
@@ -24,6 +29,9 @@ class OtpCodeView extends StatelessWidget {
   final VoidCallback onResend;
   final VoidCallback onVerify;
   final VoidCallback onChangePhone;
+  final bool sendingCode;
+  final bool verifying;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) => ListView(
@@ -46,6 +54,9 @@ class OtpCodeView extends StatelessWidget {
       const SizedBox(height: 12),
       OtpCodeActions(
         canVerify: canVerify,
+        sendingCode: sendingCode,
+        verifying: verifying,
+        errorText: errorText,
         onResend: onResend,
         onVerify: onVerify,
         onChangePhone: onChangePhone,

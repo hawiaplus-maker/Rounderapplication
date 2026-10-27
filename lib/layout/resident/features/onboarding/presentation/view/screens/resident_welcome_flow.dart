@@ -1,13 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/model/welcome_gift_option.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_flow_header.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_gift_details_view.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_gift_success_view.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_gifts_view.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_intro_view.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_tasks_view.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/welcome_gift_details_view.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/welcome_gift_success_view.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/welcome_gifts_view.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/welcome_intro_view.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/welcome_tasks_view.dart';
 
 /// Local, screen-only welcome journey from Resident App: onboarding, setup
 /// checklist, welcome-gift selection, gift details, and completion.
@@ -57,29 +58,12 @@ class _ResidentWelcomeFlowState extends State<ResidentWelcomeFlow> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.petrol,
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0, .19, .34, .57, .76, 1],
-            colors: [
-              AppColors.petrol,
-              AppColors.petrol,
-              AppColors.teal,
-              AppColors.mintLight,
-              AppColors.canvas,
-              AppColors.sand,
-            ],
-          ),
-        ),
+      body: BrandGradientBackdrop.onboarding(
         child: SafeArea(
           child: Column(
             children: [
               if (_page != _WelcomePage.intro)
-                WelcomeFlowHeader(
-                  onClose: () => Navigator.maybePop(context),
-                ),
+                WelcomeFlowHeader(onClose: () => Navigator.maybePop(context)),
               Expanded(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 220),

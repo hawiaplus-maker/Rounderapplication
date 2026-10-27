@@ -2,20 +2,24 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_edit_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_gifts_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_help_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_notifications_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_privacy_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_profile_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_settings_page.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_sub_page.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
+import 'package:rounder_application/logic/email_logic.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_edit_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_gifts_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_help_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_notifications_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_privacy_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_profile_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_settings_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/discard_profile_dialog.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/phone_change_panel.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/sign_out_dialog.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screen/resident_welcome_flow.dart';
-import 'package:rounder_application/layout/resident/features/properties/presentation/view/screen/link_home_screen.dart';
-import 'package:rounder_application/layout/resident/features/units/presentation/view/screen/units_screen.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/resident_welcome_flow.dart';
+import 'package:rounder_application/layout/resident/features/properties/presentation/view/screens/link_home_screen.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/units_screen.dart';
 
 /// Resident account screens from Figma. This prototype uses local state only
 /// and deliberately does not call the API.
@@ -29,14 +33,28 @@ class AccountFlow extends StatefulWidget {
   State<AccountFlow> createState() => _AccountFlowState();
 }
 
-enum _Page { profile, edit, settings, notifications, privacy, help, gifts, phone }
+enum _Page {
+  profile,
+  edit,
+  settings,
+  notifications,
+  privacy,
+  help,
+  gifts,
+  phone,
+}
 
 class _AccountFlowState extends State<AccountFlow> {
   _Page page = _Page.profile;
   String name = '';
   String phone = '+966 5X XXX XXXX';
   String email = '';
-  bool orderUpdates = true, offers = false, addressUse = true, requestContact = true, read = false;
+  bool orderUpdates = true,
+      offers = false,
+      addressUse = true,
+      requestContact = true,
+      read = false;
+  bool _signingOut = false;
   int filter = 0;
   final nameController = TextEditingController();
   final phoneController = TextEditingController(text: '+966 5X XXX XXXX');
@@ -59,11 +77,16 @@ class _AccountFlowState extends State<AccountFlow> {
 
   void open(_Page value) => setState(() => page = value);
 
-  bool get _dirty => nameController.text.trim() != name ||
-    emailController.text.trim() != email || phoneController.text.trim() != phone;
+  bool get _dirty =>
+      nameController.text.trim() != name ||
+      emailController.text.trim() != email ||
+      phoneController.text.trim() != phone;
 
   Future<void> goBack() async {
-    if (page == _Page.phone) { open(_Page.edit); return; }
+    if (page == _Page.phone) {
+      open(_Page.edit);
+      return;
+    }
     if (page == _Page.edit && _dirty) {
       if (!await confirmDiscardProfile(context) || !mounted) return;
       nameController.text = name;
@@ -76,22 +99,10 @@ class _AccountFlowState extends State<AccountFlow> {
   @override
   Widget build(BuildContext context) => PopScope(
     canPop: page == _Page.profile,
-    onPopInvokedWithResult: (didPop, result) { if (!didPop) goBack(); },
-    child: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0, .25, .52, .72, 1],
-          colors: [
-            Color(0xFF073B43),
-            Color(0xFF0F6570),
-            Color(0xFFA8D4CF),
-            Color(0xFFDDF3EE),
-            Color(0xFFFFF9EF),
-          ],
-        ),
-      ),
+    onPopInvokedWithResult: (didPop, result) {
+      if (!didPop) goBack();
+    },
+    child: BrandGradientBackdrop.deep(
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 180),
         child: switch (page) {
@@ -106,6 +117,7 @@ class _AccountFlowState extends State<AccountFlow> {
             onNotifications: () => open(_Page.notifications),
             onPrivacy: () => open(_Page.privacy),
             onHelp: () => open(_Page.help),
+            onLogout: _signOut,
           ),
           _Page.edit => AccountEditPage(
             onBack: goBack,
@@ -120,10 +132,12 @@ class _AccountFlowState extends State<AccountFlow> {
             onBack: goBack,
             orderUpdates: orderUpdates,
             offers: offers,
-            onOrderUpdatesChanged: (value) => setState(() => orderUpdates = value),
+            onOrderUpdatesChanged: (value) =>
+                setState(() => orderUpdates = value),
             onOffersChanged: (value) => setState(() => offers = value),
             onEditProfile: () => open(_Page.edit),
             onPrivacy: () => open(_Page.privacy),
+            onLogout: _signOut,
           ),
           _Page.notifications => AccountNotificationsPage(
             onBack: goBack,
@@ -138,7 +152,8 @@ class _AccountFlowState extends State<AccountFlow> {
             addressUse: addressUse,
             requestContact: requestContact,
             onAddressUseChanged: (value) => setState(() => addressUse = value),
-            onRequestContactChanged: (value) => setState(() => requestContact = value),
+            onRequestContactChanged: (value) =>
+                setState(() => requestContact = value),
             onCommunicationPrefs: () => open(_Page.settings),
             onReviewData: () => open(_Page.edit),
           ),
@@ -180,9 +195,7 @@ class _AccountFlowState extends State<AccountFlow> {
       return;
     }
     final candidateEmail = emailController.text.trim();
-    if (candidateEmail.isNotEmpty &&
-        (candidateEmail.length > 254 ||
-            !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(candidateEmail))) {
+    if (candidateEmail.isNotEmpty && !isEmail(candidateEmail)) {
       _toast(AppLocaleKey.emailInvalid.tr());
       return;
     }
@@ -213,7 +226,10 @@ class _AccountFlowState extends State<AccountFlow> {
       MaterialPageRoute<void>(
         builder: (_) => BlocProvider.value(
           value: dashboard,
-          child: Scaffold(appBar: AppBar(), body: const SafeArea(child: LinkHomeScreen())),
+          child: Scaffold(
+            appBar: AppBar(),
+            body: const SafeArea(child: LinkHomeScreen()),
+          ),
         ),
       ),
     );
@@ -228,6 +244,21 @@ class _AccountFlowState extends State<AccountFlow> {
   }
 
   void _comingSoon() => _toast(AppLocaleKey.comingSoon.tr());
+
+  /// Sign out is the only account action that talks to the API: confirm,
+  /// POST `/auth/logout` and clear the cached token (the repository already
+  /// falls back to the local clear when offline), then let the boot gate
+  /// swap to the login screen. Popping to the root covers the preview home
+  /// opened on top of the gate.
+  Future<void> _signOut() async {
+    if (_signingOut) return;
+    if (!await confirmSignOut(context) || !mounted) return;
+    setState(() => _signingOut = true);
+    await context.read<AuthCubit>().signOut();
+    if (!mounted) return;
+    setState(() => _signingOut = false);
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
 
   void _toast(String message) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()

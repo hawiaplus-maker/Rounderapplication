@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/layout/global/features/auth/data/repo/auth_repo.dart';
 
-
-
 sealed class AuthState {}
 
 class AuthChecking extends AuthState {}
@@ -20,10 +18,19 @@ class AuthFailure extends AuthState {
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this.repo) : super(AuthChecking());
   final AuthRepository repo;
+
+  /// The stored token is only the hint — the backend decides: `me` must
+  /// answer for the boot gate to show the resident home; no token, or any
+  /// failure (rejection, offline), falls to the login branch.
   Future<void> restoreSession() async {
     emit(AuthChecking());
+    if (!await repo.hasSession()) {
+      emit(Unauthenticated());
+      return;
+    }
     try {
-      emit(await repo.hasSession() ? Authenticated() : Unauthenticated());
+      await repo.me();
+      emit(Authenticated());
     } catch (_) {
       emit(Unauthenticated());
     }
@@ -63,8 +70,17 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  /// The phone journey's verify-otp already cached the session token —
+  /// flips the app-level session so the boot gate reveals the resident
+  /// home without another `me` round-trip.
+  void markAuthenticated() {
+    if (!isClosed) emit(Authenticated());
+  }
+
   Future<void> signOut() async {
+    if (isClosed) return;
     await repo.signOut();
+    if (isClosed) return;
     emit(Unauthenticated());
   }
 }

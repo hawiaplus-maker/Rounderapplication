@@ -18,11 +18,7 @@ class WelcomeIntroHero extends StatelessWidget {
 
   /// Artboard-tuned light positions as fractions of the hero slot
   /// (decorative atoms — identical for both languages by design).
-  static const _lightPoints = [
-    Alignment(-.67, -.63),
-    Alignment(.81, -.31),
-    Alignment(-.7, .51),
-  ];
+  static const _lightPoints = [Alignment(-.67, -.63), Alignment(.81, -.31), Alignment(-.7, .51)];
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +84,7 @@ class _OrbitLight extends StatelessWidget {
       shape: BoxShape.circle,
       color: AppColors.mintLight.withValues(alpha: .9),
       boxShadow: [
-        BoxShadow(
-          color: AppColors.mintLight.withValues(alpha: .5),
-          blurRadius: 7,
-          spreadRadius: 1,
-        ),
+        BoxShadow(color: AppColors.mintLight.withValues(alpha: .5), blurRadius: 7, spreadRadius: 1),
       ],
     ),
   );
@@ -104,20 +96,13 @@ class _ServicesArtwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Stack(
     children: [
-      Center(
-        child: Image.asset(
-          AppImages.aliWave,
-          width: 162,
-          height: 265,
-          fit: BoxFit.contain,
-        ),
-      ),
+      Center(child: Image.asset(AppImages.aliWave, width: 162, height: 265, fit: BoxFit.contain)),
       Align(
-        alignment: const Alignment(-.77, .11),
+        alignment: const Alignment(-.99, .11),
         child: _GlassChip(label: AppLocaleKey.maintenanceServices.tr()),
       ),
       Align(
-        alignment: const Alignment(.77, .11),
+        alignment: const Alignment(.99, .11),
         child: _GlassChip(label: AppLocaleKey.generalServices.tr()),
       ),
     ],
@@ -154,16 +139,12 @@ class _AliArtwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Stack(
     children: [
-      Center(
-        child: Image.asset(
-          AppImages.aliListen,
-          width: 148,
-          height: 270,
-          fit: BoxFit.contain,
-        ),
+      Align(
+        alignment: const Alignment(-.80, .13),
+        child: Image.asset(AppImages.aliListen, width: 148, height: 270, fit: BoxFit.contain),
       ),
       Align(
-        alignment: const Alignment(.54, .13),
+        alignment: const Alignment(.99, .13),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -206,11 +187,7 @@ class _ChatBubble extends StatelessWidget {
     child: Text(
       message,
       textAlign: TextAlign.center,
-      style: const TextStyle(
-        color: AppColors.petrol,
-        fontSize: 14,
-        height: 24 / 14,
-      ),
+      style: const TextStyle(color: AppColors.petrol, fontSize: 14, height: 24 / 14),
     ),
   );
 }
@@ -221,18 +198,11 @@ class _QualityArtwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Stack(
     children: [
-      Center(
-        child: Image.asset(
-          AppImages.aliTablet,
-          width: 153,
-          height: 308,
-          fit: BoxFit.contain,
-        ),
+      Align(
+        alignment: Alignment(.87, .24),
+        child: Image.asset(AppImages.aliTablet, width: 153, height: 308, fit: BoxFit.contain),
       ),
-      const Align(
-        alignment: Alignment(-.57, .24),
-        child: _QualityCard(),
-      ),
+      const Align(alignment: Alignment(-.99, .24), child: _QualityCard()),
     ],
   );
 }
@@ -264,21 +234,13 @@ class _QualityCard extends StatelessWidget {
         Text(
           AppLocaleKey.followExecution.tr(),
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 14,
-            height: 26 / 14,
-          ),
+          style: const TextStyle(color: AppColors.petrol, fontSize: 14, height: 26 / 14),
         ),
         const SizedBox(height: 8),
         Text(
           AppLocaleKey.reviewResult.tr(),
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 14,
-            height: 26 / 14,
-          ),
+          style: const TextStyle(color: AppColors.petrol, fontSize: 14, height: 26 / 14),
         ),
         const SizedBox(height: 8),
         Container(
@@ -307,6 +269,10 @@ class _QualityCard extends StatelessWidget {
 /// white stroke, backdrop blur and a soft petrol shadow (design: bg-blur 16,
 /// shadow 0 8 20 petrol .08). Boxes hug their padding; heights stay minimums
 /// so translated labels can grow instead of clipping.
+///
+/// The child is centered with `heightFactor: 1` (not `Container.alignment`,
+/// which would expand to the bounded slot height inside the hero `Stack` and
+/// stretch the panel to the whole artwork).
 class _GlassPanel extends StatelessWidget {
   const _GlassPanel({
     required this.radius,
@@ -330,15 +296,11 @@ class _GlassPanel extends StatelessWidget {
       child: Container(
         width: width,
         constraints: BoxConstraints(minHeight: minHeight ?? 0),
-        alignment: Alignment.center,
         padding: padding,
         decoration: BoxDecoration(
           color: AppColors.white.withValues(alpha: .2),
           borderRadius: radius,
-          border: Border.all(
-            color: AppColors.white.withValues(alpha: .65),
-            width: .8,
-          ),
+          border: Border.all(color: AppColors.white.withValues(alpha: .65), width: .8),
           boxShadow: [
             BoxShadow(
               color: AppColors.petrol.withValues(alpha: .08),
@@ -347,7 +309,7 @@ class _GlassPanel extends StatelessWidget {
             ),
           ],
         ),
-        child: child,
+        child: Center(heightFactor: 1, child: child),
       ),
     ),
   );

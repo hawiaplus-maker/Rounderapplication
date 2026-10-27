@@ -6,11 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/view/screen/login_screen.dart';
-import 'package:rounder_application/layout/global/features/splash/presentation/view/screen/splash_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/cubit/phone_auth_cubit.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/login_screen.dart';
+import 'package:rounder_application/layout/global/features/splash/presentation/view/screens/splash_screen.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
-import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screen/resident_home_screen.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screen/onboarding_intro_screen.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screens/resident_home_screen.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/onboarding_intro_screen.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/data/repo/onboarding_repository.dart';
 
 class RounderApp extends StatelessWidget {
@@ -84,7 +85,13 @@ class _BootGateState extends State<_BootGate> {
                 child: const ResidentHomeScreen(),
               );
             }
-            return const LoginScreen();
+            // Login owns a PhoneAuthCubit so its callbacks can read the
+            // journey cubit from the screen's own context — same wrap-at-creation
+            // rule the register/OTP screens get at their push sites.
+            return BlocProvider<PhoneAuthCubit>(
+              create: (_) => sl<PhoneAuthCubit>(),
+              child: const LoginScreen(),
+            );
           },
         );
       },

@@ -5,7 +5,7 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_action_button.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_sub_page.dart';
 
 /// Association facilities reports page.
 class UnionFacilitiesPage extends StatelessWidget {

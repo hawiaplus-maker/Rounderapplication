@@ -6,7 +6,7 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_kv.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Warranty step after a completed service.
 class JourneyWarrantyPage extends StatelessWidget {
@@ -43,10 +43,7 @@ class JourneyWarrantyPage extends StatelessWidget {
                 color: AppColors.petrol,
               ),
             ),
-            Text(
-              AppLocaleKey.serviceComplete.tr(),
-              textAlign: TextAlign.right,
-            ),
+            Text(AppLocaleKey.serviceComplete.tr(), textAlign: TextAlign.right),
             JourneyKv(
               labelKey: AppLocaleKey.followUp,
               value: AppLocaleKey.days30.tr(),
@@ -58,10 +55,7 @@ class JourneyWarrantyPage extends StatelessWidget {
           icon: Icons.event_available_outlined,
           onAction: onFollowUp,
         ),
-        JourneyNextButton(
-          labelKey: AppLocaleKey.home,
-          onPressed: onHome,
-        ),
+        JourneyNextButton(labelKey: AppLocaleKey.home, onPressed: onHome),
       ],
     );
   }

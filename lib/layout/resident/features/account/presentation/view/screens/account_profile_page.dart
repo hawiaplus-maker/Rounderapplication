@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_header.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_logout_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
 
 /// Account profile page: identity, linked units, gifts and account entries.
@@ -19,6 +20,7 @@ class AccountProfilePage extends StatelessWidget {
     required this.onNotifications,
     required this.onPrivacy,
     required this.onHelp,
+    required this.onLogout,
   });
 
   final String name;
@@ -31,6 +33,10 @@ class AccountProfilePage extends StatelessWidget {
   final VoidCallback onNotifications;
   final VoidCallback onPrivacy;
   final VoidCallback onHelp;
+
+  /// Ends the session: the flow confirms, calls the logout API and clears the
+  /// stored token; the boot gate then reveals the login screen.
+  final VoidCallback onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +147,7 @@ class AccountProfilePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      homeName.isEmpty
-                          ? AppLocaleKey.unitTitle.tr()
-                          : homeName,
+                      homeName.isEmpty ? AppLocaleKey.unitTitle.tr() : homeName,
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         color: AppColors.petrol,
@@ -245,6 +249,10 @@ class AccountProfilePage extends StatelessWidget {
             ],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 0, 22, 28),
+          child: AccountLogoutButton(onPressed: onLogout),
+        ),
       ],
     );
   }
@@ -286,10 +294,7 @@ class _EntryCard extends StatelessWidget {
                 ),
                 Text(
                   subtitleKey.tr(),
-                  style: const TextStyle(
-                    color: AppColors.muted,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: AppColors.muted, fontSize: 12),
                 ),
               ],
             ),

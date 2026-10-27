@@ -5,17 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/view/screen/email_login_screen.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/view/screen/otp_flow_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/data/model/validate_mobile_model.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/cubit/phone_auth_cubit.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/email_login_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/otp_flow_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/register_screen.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/auth_gradient_backdrop.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_brand.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_form_card.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_guest_action.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_hero.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_prototype_links.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
-import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screen/resident_home_screen.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screen/resident_welcome_flow.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screens/resident_home_screen.dart';
+import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/resident_welcome_flow.dart';
+import 'package:rounder_application/logic/phone_number_logic.dart';
 
 /// Approved login (design `00 — تسجيل الدخول • APPROVED`): brand wordmark,
 /// Ali phone hero, frosted phone-entry form with the alternate social actions
@@ -51,13 +55,38 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _continueWithPhone() {
-    final digits = phone.text.replaceAll(RegExp(r'\D'), '');
-    if (digits.length != 9) {
+    // Both Saudi local shapes are accepted — 05… with 10 digits and 5… with
+    // 9; the logic helper normalizes to the 05… form the journey exchanges
+    // with validate-mobile and flags anything else.
+    final mobile = normalizeSaudiLocalMobile(phone.text);
+    if (mobile == null) {
       setState(() => _phoneError = AppLocaleKey.localPhoneInvalid.tr());
       return;
     }
     setState(() => _phoneError = null);
-    _push(OtpFlowScreen(phone: '+966$digits', onContinue: _continueToPreviewHome));
+    context.read<PhoneAuthCubit>().validateMobile(mobile);
+  }
+
+  /// Phone validation branches the journey: an existing number goes to the
+  /// send-otp screen, an unregistered one to the phone register screen. Each
+  /// destination owns its own journey cubit (per-screen factory) and carries
+  /// the exact validated model forward.
+  void _continueAfterValidation(ValidateMobileModel model) {
+    if (model.isRegistered) {
+      _push(
+        BlocProvider(
+          create: (_) => sl<PhoneAuthCubit>(),
+          child: OtpFlowScreen(phone: model.formattedMobile, validated: model),
+        ),
+      );
+    } else {
+      _push(
+        BlocProvider(
+          create: (_) => sl<PhoneAuthCubit>(),
+          child: RegisterScreen(validated: model),
+        ),
+      );
+    }
   }
 
   void _push(Widget screen) =>
@@ -117,56 +146,69 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: _overlayStyle,
-      child: Scaffold(
-        body: DecoratedBox(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0, .17, .31, .52, .77, 1],
-              colors: [
-                AppColors.petrol,
-                AppColors.petrol,
-                AppColors.teal,
-                AppColors.mintLight,
-                AppColors.canvas,
-                AppColors.sand,
-              ],
-            ),
-          ),
-          child: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) => SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const LoginBrand(),
-                        const LoginHero(),
-                        LoginFormCard(
-                          phoneController: phone,
-                          phoneError: _phoneError,
-                          onContinue: _continueWithPhone,
-                          onGoogle: () => _push(
-                            OtpFlowScreen(startAtResult: true, onContinue: _continueToPreviewHome),
+    return BlocListener<PhoneAuthCubit, PhoneAuthState>(
+      listener: (context, state) {
+        switch (state) {
+          case PhoneAuthFailure(:final message):
+            if (mounted) setState(() => _phoneError = message);
+          case PhoneValidated(:final model):
+            _continueAfterValidation(model);
+          default:
+            break;
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: _overlayStyle,
+        child: Scaffold(
+          body: AuthGradientBackdrop(
+            child: SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) => SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(12, 24, 12, 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const LoginBrand(),
+                          const LoginHero(),
+                          BlocBuilder<PhoneAuthCubit, PhoneAuthState>(
+                            builder: (context, journeyState) => LoginFormCard(
+                              phoneController: phone,
+                              phoneError: _phoneError,
+                              inProgress: journeyState is PhoneAuthInProgress,
+                              onContinue: _continueWithPhone,
+                              onGoogle: () => _push(
+                                BlocProvider(
+                                  create: (_) => sl<PhoneAuthCubit>(),
+                                  child: OtpFlowScreen(
+                                    startAtResult: true,
+                                    onContinue: _continueToPreviewHome,
+                                  ),
+                                ),
+                              ),
+                              onApple: () => _push(
+                                BlocProvider(
+                                  create: (_) => sl<PhoneAuthCubit>(),
+                                  child: OtpFlowScreen(
+                                    startAtResult: true,
+                                    onContinue: _continueToPreviewHome,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          onApple: () => _push(
-                            OtpFlowScreen(startAtResult: true, onContinue: _continueToPreviewHome),
-                          ),
-                        ),
-                        LoginGuestAction(onTap: _browseAsGuest),
-                        const SizedBox(height: 12),
-                        LoginPrototypeLinks(
-                          onEmailSignIn: _openEmailSignIn,
-                          onWelcomeSteps: _openWelcomeSteps,
-                          onLanguage: _chooseLanguage,
-                        ),
-                      ],
+                          const SizedBox(height: 12),
+                          LoginGuestAction(onTap: _browseAsGuest),
+                          const SizedBox(height: 12),
+                          // LoginPrototypeLinks(
+                          //   onEmailSignIn: _openEmailSignIn,
+                          //   onWelcomeSteps: _openWelcomeSteps,
+                          //   onLanguage: _chooseLanguage,
+                          // ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

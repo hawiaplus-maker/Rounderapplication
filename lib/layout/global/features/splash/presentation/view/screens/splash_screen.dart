@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/global/features/splash/presentation/view/widget/splash_brand_lockup.dart';
 import 'package:rounder_application/layout/global/features/splash/presentation/view/widget/splash_loader_dots.dart';
 
@@ -14,13 +14,17 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 900),
   )..forward();
 
-  late final Animation<double> _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+  late final Animation<double> _fade = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeOut,
+  );
   late final Animation<double> _scale = Tween<double>(
     begin: .94,
     end: 1,
@@ -43,22 +47,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: _overlayStyle,
       child: Scaffold(
-        body: DecoratedBox(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0, .25, .42, .6, .78, 1],
-              colors: [
-                AppColors.petrol,
-                AppColors.petrol,
-                AppColors.teal,
-                AppColors.mintLight,
-                AppColors.canvas,
-                AppColors.sand,
-              ],
-            ),
-          ),
+        body: BrandGradientBackdrop(
           child: SafeArea(
             child: Stack(
               fit: StackFit.expand,
@@ -67,10 +56,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   alignment: const Alignment(0, -.17),
                   child: FadeTransition(
                     opacity: _fade,
-                    child: ScaleTransition(scale: _scale, child: const SplashBrandLockup()),
+                    child: ScaleTransition(
+                      scale: _scale,
+                      child: const SplashBrandLockup(),
+                    ),
                   ),
                 ),
-                const Align(alignment: Alignment(0, .47), child: SplashLoaderDots()),
+                const Align(
+                  alignment: Alignment(0, .47),
+                  child: SplashLoaderDots(),
+                ),
               ],
             ),
           ),

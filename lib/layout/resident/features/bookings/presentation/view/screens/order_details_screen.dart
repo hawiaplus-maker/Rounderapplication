@@ -6,9 +6,9 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/model/order_data.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/widget/order_cancel_result.dart';
-import 'package:rounder_application/layout/resident/features/bookings/presentation/view/widget/order_details_view.dart';
-import 'package:rounder_application/layout/resident/features/post_service/presentation/view/screen/aftercare_flow.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/screen/service_journey_screen.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screens/order_details_view.dart';
+import 'package:rounder_application/layout/resident/features/post_service/presentation/view/screens/aftercare_flow.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/service_journey_screen.dart';
 
 /// Details state includes the review, tracking, cancellation confirmation,
 /// and cancellation result screens represented in Resident App.
@@ -89,9 +89,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   void _openWarranty() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => const Scaffold(
-          body: SafeArea(child: AftercareFlowScreen()),
-        ),
+        builder: (_) =>
+            const Scaffold(body: SafeArea(child: AftercareFlowScreen())),
       ),
     );
   }

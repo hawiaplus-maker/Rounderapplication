@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_intro_copy.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_intro_footer.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/widget/welcome_intro_header.dart';
@@ -44,22 +45,7 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.petrol,
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0, .19, .34, .57, .76, 1],
-            colors: [
-              AppColors.petrol,
-              AppColors.petrol,
-              AppColors.teal,
-              AppColors.mintLight,
-              AppColors.canvas,
-              AppColors.sand,
-            ],
-          ),
-        ),
+      body: BrandGradientBackdrop.onboarding(
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
@@ -72,7 +58,9 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                     duration: const Duration(milliseconds: 220),
                     child: KeyedSubtree(
                       key: ValueKey('onboarding-hero-$_slide'),
-                      child: WelcomeIntroHero(slide: WelcomeSlide.values[_slide]),
+                      child: WelcomeIntroHero(
+                        slide: WelcomeSlide.values[_slide],
+                      ),
                     ),
                   ),
                 ),
@@ -80,13 +68,20 @@ class _OnboardingIntroScreenState extends State<OnboardingIntroScreen> {
                   duration: const Duration(milliseconds: 220),
                   child: KeyedSubtree(
                     key: ValueKey('onboarding-copy-$_slide'),
-                    child: WelcomeIntroCopy(headline: _titles[_slide].tr(), body: _bodies[_slide].tr()),
+                    child: WelcomeIntroCopy(
+                      headline: _titles[_slide].tr(),
+                      body: _bodies[_slide].tr(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 28),
                 WelcomeIntroFooter(
                   step: _slide + 1,
-                  ctaLabel: (_slide == 2 ? AppLocaleKey.startUsingRounder : AppLocaleKey.next).tr(),
+                  ctaLabel:
+                      (_slide == 2
+                              ? AppLocaleKey.startUsingRounder
+                              : AppLocaleKey.next)
+                          .tr(),
                   onNext: _next,
                 ),
               ],

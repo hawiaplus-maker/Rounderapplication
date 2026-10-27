@@ -4,7 +4,7 @@ import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_action_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Rating step: stars, note and the skip entry.
 class JourneyRatingPage extends StatelessWidget {
@@ -44,10 +44,7 @@ class JourneyRatingPage extends StatelessWidget {
                 color: AppColors.petrol,
               ),
             ),
-            Text(
-              providerLabel,
-              textAlign: TextAlign.right,
-            ),
+            Text(providerLabel, textAlign: TextAlign.right),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -57,9 +54,7 @@ class JourneyRatingPage extends StatelessWidget {
                   onPressed: () => onStar(index + 1),
                   icon: Icon(
                     Icons.star_rounded,
-                    color: index < stars
-                        ? AppColors.orange
-                        : AppColors.muted,
+                    color: index < stars ? AppColors.orange : AppColors.muted,
                     size: 33,
                   ),
                 ),

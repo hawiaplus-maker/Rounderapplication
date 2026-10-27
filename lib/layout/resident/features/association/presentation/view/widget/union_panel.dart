@@ -10,21 +10,29 @@ class UnionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+    // A Material (not a decorated Container) so the ListTiles it hosts paint
+    // their tile color and ink splashes on this panel instead of the ancestor
+    // Scaffold's Material, which the panel's background would hide.
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      child: Material(
         color: glass
             ? AppColors.white.withValues(alpha: .2)
             : AppColors.white.withValues(alpha: .93),
-        border: glass
-            ? Border.all(color: AppColors.white.withValues(alpha: .38))
-            : null,
-        borderRadius: BorderRadius.circular(22),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
+          side: glass
+              ? BorderSide(color: AppColors.white.withValues(alpha: .38))
+              : BorderSide.none,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
+        ),
       ),
     );
   }

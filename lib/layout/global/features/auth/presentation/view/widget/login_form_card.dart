@@ -21,12 +21,14 @@ class LoginFormCard extends StatelessWidget {
     required this.onGoogle,
     required this.onApple,
     this.phoneError,
+    this.inProgress = false,
   });
   final TextEditingController phoneController;
   final String? phoneError;
   final VoidCallback onContinue;
   final VoidCallback onGoogle;
   final VoidCallback onApple;
+  final bool inProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,11 @@ class LoginFormCard extends StatelessWidget {
               Text(
                 AppLocaleKey.loginTagline.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.petrol, fontSize: 16, height: 24 / 16),
+                style: const TextStyle(
+                  color: AppColors.petrol,
+                  fontSize: 16,
+                  height: 24 / 16,
+                ),
               ),
               const SizedBox(height: 24),
               LoginPhoneEntry(
@@ -74,6 +80,7 @@ class LoginFormCard extends StatelessWidget {
                 radius: 12,
                 labelSize: 20,
                 labelLineHeight: 32,
+                inProgress: inProgress,
                 onPressed: onContinue,
               ),
               const SizedBox(height: 16),

@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_action_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Service details step: problem description, issue type and photos entry.
 class JourneyDetailPage extends StatelessWidget {
@@ -17,6 +20,7 @@ class JourneyDetailPage extends StatelessWidget {
     required this.issueType,
     required this.onIssueTypeChanged,
     required this.onAddPhotos,
+    required this.photos,
     required this.onNext,
   });
 
@@ -26,6 +30,10 @@ class JourneyDetailPage extends StatelessWidget {
   final String issueType;
   final ValueChanged<String> onIssueTypeChanged;
   final VoidCallback onAddPhotos;
+
+  /// Photos the resident already attached through the source chooser; shown
+  /// as thumbnails on this same step (no page change).
+  final List<XFile> photos;
   final VoidCallback onNext;
 
   static const _issueTypes = <String>[
@@ -120,6 +128,25 @@ class JourneyDetailPage extends StatelessWidget {
           icon: Icons.add_a_photo_outlined,
           onAction: onAddPhotos,
         ),
+        if (photos.isNotEmpty) ...<Widget>[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final photo in photos)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    File(photo.path),
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+            ],
+          ),
+        ],
         JourneyNextButton(
           labelKey: AppLocaleKey.nextProviders,
           onPressed: onNext,

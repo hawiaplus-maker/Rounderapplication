@@ -22,12 +22,13 @@ screen's rebuild and is invisible to the rest of the feature.
 lib/layout/<role>/features/<feature>/
 ├── presentation/
 │   └── view/
-│       ├── screen/<name>_screen.dart     # skeleton only — calls widgets below
+│       ├── screens/<name>_page.dart      # skeleton only — calls widgets below
 │       └── widget/<name>.dart            # every extracted section/widget
 ├── data/ …
 ```
 
-- Plain feature screens → `presentation/view/widget/`.
+- Pages/screens/flows → `presentation/view/screens/` (rounder-screens).
+- Section widgets → `presentation/view/widget/`.
 - Flow screens already under `execution/<flow>/` → `execution/<flow>/presentation/widget/` (match the neighbours, don't move existing files to a new shape).
 - Cross-feature reusable pieces → `lib/layout/global/widgets/` (create only when genuinely shared by 2+ features).
 - Do not create `widgets/`, `widgets.dart`, or a single barrel file; one widget class per file, snake_case file name.
@@ -101,6 +102,10 @@ a shared atom to its own file only when two or more widgets use it.
 
 ## Related skills
 
+- `rounder-screens` — which files are pages and why they live in
+  `presentation/view/screens/`; this skill governs what goes inside them.
+- `rounder-logic` — pure helpers live in the app-level `lib/logic/`, never in
+  widgets.
 - `flutter` — general Flutter rules and finish line (analyze/format/tests).
 - Project UI conventions: `AppColors`/`AppTheme`, `AppLocaleKey`, `AppImages` — read the actual files in `lib/core/` before inventing a token.
 - `figma-mcp-to-code` — when the sections come from a Figma design, pull each section with `get_design_context` and land it in its widget file directly (don't dump it into the screen).

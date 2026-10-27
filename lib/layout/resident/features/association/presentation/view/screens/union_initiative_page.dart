@@ -6,7 +6,7 @@ import 'package:rounder_application/layout/resident/features/association/present
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_prototype_note.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_sub_page.dart';
 
 /// Association initiatives page.
 class UnionInitiativePage extends StatelessWidget {
@@ -41,10 +41,7 @@ class UnionInitiativePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              AppLocaleKey.residentsJoined.tr(),
-              textAlign: TextAlign.right,
-            ),
+            Text(AppLocaleKey.residentsJoined.tr(), textAlign: TextAlign.right),
             const SizedBox(height: 10),
             const LinearProgressIndicator(
               value: .7,

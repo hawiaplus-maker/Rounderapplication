@@ -9,16 +9,22 @@ class AccountPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+    // A Material (not a decorated Container) so the ListTiles/SwitchListTiles
+    // it hosts paint their tile color and ink splashes on this panel instead
+    // of the ancestor Scaffold's Material, which the background would hide.
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      child: Material(
         color: AppColors.white.withValues(alpha: .93),
-        borderRadius: BorderRadius.circular(22),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
+        ),
       ),
     );
   }

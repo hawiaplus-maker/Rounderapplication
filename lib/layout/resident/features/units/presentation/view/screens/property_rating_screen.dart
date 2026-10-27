@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/assessment_card.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/property_rating_facilities_button.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/property_rating_header.dart';
@@ -16,22 +16,7 @@ class PropertyRatingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0, .25, .42, .6, .78, 1],
-            colors: [
-              AppColors.petrol,
-              AppColors.petrol,
-              AppColors.teal,
-              AppColors.mintLight,
-              AppColors.canvas,
-              AppColors.sand,
-            ],
-          ),
-        ),
+      body: BrandGradientBackdrop(
         child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),

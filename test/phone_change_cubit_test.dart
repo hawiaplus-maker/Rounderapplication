@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/phone_change_cubit.dart';
+import 'package:rounder_application/logic/phone_number_logic.dart';
 
 void main() {
   test('phone preview normalizes Arabic and Urdu digits', () {
-    expect(PhoneChangeCubit.normalize('+٩٦٦ (٥٠) ۱۲۳-۴۵۶۷'), '+966501234567');
+    expect(normalizePhoneDigits('+٩٦٦ (٥٠) ۱۲۳-۴۵۶۷'), '+966501234567');
   });
   test('invalid number cannot reach verification', () async {
     final cubit = PhoneChangeCubit();

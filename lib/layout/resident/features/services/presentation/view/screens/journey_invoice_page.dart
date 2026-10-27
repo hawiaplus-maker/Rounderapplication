@@ -6,7 +6,7 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_kv.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Invoice step: completed order, amounts and receipt/payment actions.
 class JourneyInvoicePage extends StatelessWidget {
@@ -53,20 +53,14 @@ class JourneyInvoicePage extends StatelessWidget {
                 fontWeight: FontWeight.w800,
               ),
             ),
-            JourneyKv(
-              labelKey: AppLocaleKey.basePrice,
-              value: basePriceLabel,
-            ),
+            JourneyKv(labelKey: AppLocaleKey.basePrice, value: basePriceLabel),
             if (acceptedAdditional)
               JourneyKv(
                 labelKey: AppLocaleKey.addWork,
                 value: '50 ${AppLocaleKey.currencySar.tr()}',
               ),
             const Divider(),
-            JourneyKv(
-              labelKey: AppLocaleKey.total,
-              value: totalLabel,
-            ),
+            JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel),
             Text(
               AppLocaleKey.warranty.tr(),
               textAlign: TextAlign.right,

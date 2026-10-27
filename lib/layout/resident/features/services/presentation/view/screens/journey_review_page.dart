@@ -6,7 +6,7 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_kv.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Review step: service, provider, schedule and amount summary.
 class JourneyReviewPage extends StatelessWidget {
@@ -53,28 +53,14 @@ class JourneyReviewPage extends StatelessWidget {
               ),
             ),
             Text(
-              problemText.isEmpty
-                  ? AppLocaleKey.problemHint.tr()
-                  : problemText,
+              problemText.isEmpty ? AppLocaleKey.problemHint.tr() : problemText,
               textAlign: TextAlign.right,
             ),
             const Divider(height: 24),
-            JourneyKv(
-              labelKey: providerKey,
-              value: dateTimeLabel,
-            ),
-            JourneyKv(
-              labelKey: AppLocaleKey.orderPlace,
-              value: locationLabel,
-            ),
-            JourneyKv(
-              labelKey: AppLocaleKey.basePrice,
-              value: basePriceLabel,
-            ),
-            JourneyKv(
-              labelKey: AppLocaleKey.total,
-              value: totalLabel,
-            ),
+            JourneyKv(labelKey: providerKey, value: dateTimeLabel),
+            JourneyKv(labelKey: AppLocaleKey.orderPlace, value: locationLabel),
+            JourneyKv(labelKey: AppLocaleKey.basePrice, value: basePriceLabel),
+            JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel),
           ],
         ),
         JourneyActionButton(

@@ -4,7 +4,7 @@ import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_input.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Edit profile page: photo, name, phone, email and save action.
 class AccountEditPage extends StatelessWidget {

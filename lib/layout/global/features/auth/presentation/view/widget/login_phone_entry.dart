@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/logic/phone_number_logic.dart';
 
 /// Approved phone entry (design `Phone number / Entry`): label, the Saudi
-/// number field (country block + divider + 9-digit local number) and the
-/// helper line — replaced by the validation message when the number is short.
+/// number field (country block + divider + the dialable local number — `05…`
+/// with 10 digits or `5…` with 9) and the helper line — replaced by the
+/// validation message when the shape is rejected.
 class LoginPhoneEntry extends StatelessWidget {
   const LoginPhoneEntry({
     super.key,
@@ -134,10 +136,7 @@ class _NumberField extends StatelessWidget {
     keyboardType: TextInputType.phone,
     textInputAction: TextInputAction.done,
     onSubmitted: (_) => onSubmitted(),
-    inputFormatters: [
-      FilteringTextInputFormatter.digitsOnly,
-      LengthLimitingTextInputFormatter(9),
-    ],
+    inputFormatters: [_SaudiLocalMobileFormatter()],
     textDirection: ui_direction.TextDirection.ltr,
     textAlign: TextAlign.center,
     style: const TextStyle(
@@ -157,4 +156,26 @@ class _NumberField extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Digits-only entry that grows exactly like the journey's helper: the two
+/// accepted Saudi local shapes are the only text this field can hold —
+/// `0…` reaches 10 digits, `5…` stops at 9 and any other leading digit is
+/// rejected at the keystroke, so `0512345670` and `512345670` stay typeable
+/// as the same number from entry to submit.
+class _SaudiLocalMobileFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digits = digitsOnly(newValue.text);
+    if (!saudiLocalMobileAllows(digits)) return oldValue;
+    return digits == newValue.text
+        ? newValue
+        : TextEditingValue(
+            text: digits,
+            selection: TextSelection.collapsed(offset: digits.length),
+          );
+  }
 }

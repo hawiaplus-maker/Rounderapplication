@@ -5,7 +5,7 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_action_button.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_sub_page.dart';
 
 /// Association visits page: the upcoming visit and the completed one.
 class UnionVisitsPage extends StatelessWidget {
@@ -36,10 +36,7 @@ class UnionVisitsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              AppLocaleKey.cleaning.tr(),
-              textAlign: TextAlign.right,
-            ),
+            Text(AppLocaleKey.cleaning.tr(), textAlign: TextAlign.right),
             Text(
               AppLocaleKey.visitDateTime.tr(),
               textAlign: TextAlign.right,

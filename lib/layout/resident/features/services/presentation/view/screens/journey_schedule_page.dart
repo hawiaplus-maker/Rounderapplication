@@ -5,7 +5,7 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_select_pill.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Schedule step: service location, visit mode, date and time.
 class JourneySchedulePage extends StatelessWidget {

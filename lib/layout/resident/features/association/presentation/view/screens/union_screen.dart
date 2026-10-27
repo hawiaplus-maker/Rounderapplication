@@ -1,15 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/model/union_section.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_community_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_dues_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_facilities_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_finances_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_initiative_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_news_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_overview_page.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_visits_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_community_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_dues_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_facilities_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_finances_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_initiative_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_news_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_overview_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_visits_page.dart';
 
 /// Association and resident-community prototype. Uses local UI sample values;
 /// API integration is intentionally deferred.
@@ -36,21 +37,7 @@ class _UnionScreenState extends State<UnionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: [0, .25, .52, .72, 1],
-        colors: [
-          Color(0xFF073B43),
-          Color(0xFF0F6570),
-          Color(0xFFA8D4CF),
-          Color(0xFFDDF3EE),
-          Color(0xFFFFF9EF),
-        ],
-      ),
-    ),
+  Widget build(BuildContext context) => BrandGradientBackdrop.deep(
     child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 180),
       child: switch (section) {

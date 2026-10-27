@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Welcome-gift page of the account.
 class AccountGiftsPage extends StatelessWidget {

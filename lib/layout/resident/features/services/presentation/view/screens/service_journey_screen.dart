@@ -1,24 +1,28 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
+import 'package:rounder_application/logic/service_schedule_logic.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
-import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screen/emergency_request_screen.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_additional_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_catalog_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_detail_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_files_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_followup_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_invoice_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_payment_page.dart';
+import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screens/emergency_request_screen.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_additional_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_catalog_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_detail_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_files_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_followup_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_invoice_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_payment_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/image_source_sheet.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_picker_sheet.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_providers_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_rating_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_review_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_schedule_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_tracking_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_waiting_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_warranty_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_providers_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_rating_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_review_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_schedule_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_tracking_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_waiting_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_warranty_page.dart';
 
 /// Screen-only service journey. Values and actions are local prototype state
 /// so the complete Figma flow can be reviewed before API integration.
@@ -78,6 +82,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   int mode = 0, stage = 0, stars = 0;
   bool acceptedAdditional = false;
+  final List<XFile> _photos = [];
+  final _picker = ImagePicker();
   final query = TextEditingController(),
       issue = TextEditingController(),
       notes = TextEditingController();
@@ -120,17 +126,13 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       _toast(AppLocaleKey.checkFields.tr());
       return;
     }
-    final date = selectedDate ?? DateTime.now();
-    final schedule = mode == 1
-        ? DateTime.now().add(const Duration(hours: 3))
-        : DateTime(
-            date.year,
-            date.month,
-            date.day,
-            selectedTime.hour,
-            selectedTime.minute,
-          );
-    if (!schedule.isAfter(DateTime.now())) {
+    final schedule = resolveServiceSchedule(
+      selectedDate: selectedDate,
+      hour: selectedTime.hour,
+      minute: selectedTime.minute,
+      fastestAvailable: mode == 1,
+    );
+    if (!isServiceScheduleInFuture(schedule)) {
       _toast(AppLocaleKey.checkFields.tr());
       return;
     }
@@ -139,16 +141,12 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   void _submitPreview() {
     if (orderReference == null) {
-      final date = selectedDate ?? DateTime.now();
-      final scheduledAt = mode == 1
-          ? DateTime.now().add(const Duration(hours: 3))
-          : DateTime(
-              date.year,
-              date.month,
-              date.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
+      final scheduledAt = resolveServiceSchedule(
+        selectedDate: selectedDate,
+        hour: selectedTime.hour,
+        minute: selectedTime.minute,
+        fastestAvailable: mode == 1,
+      );
       final order = sl<PreviewOrdersCubit>().create(
         serviceKey: service,
         providerKey: selectedProvider,
@@ -240,21 +238,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        stops: [0, .25, .52, .72, 1],
-        colors: [
-          Color(0xFF073B43),
-          Color(0xFF0F6570),
-          Color(0xFFA8D4CF),
-          Color(0xFFDDF3EE),
-          Color(0xFFFFF9EF),
-        ],
-      ),
-    ),
+  Widget build(BuildContext context) => BrandGradientBackdrop.deep(
     child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 180),
       child: switch (page) {
@@ -269,7 +253,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           issue: issue,
           issueType: issueType,
           onIssueTypeChanged: (key) => setState(() => issueType = key),
-          onAddPhotos: () => go(_Journey.files),
+          onAddPhotos: _pickPhoto,
+          photos: _photos,
           onNext: () {
             if (issue.text.trim().length < 5) {
               _toast(AppLocaleKey.requiredField.tr());
@@ -323,8 +308,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           reference: orderReference,
           providerLabel: selectedProvider.tr(),
           onChat: () => showJourneyPicker(context, AppLocaleKey.chat),
-          onCall: () =>
-              showJourneyPicker(context, AppLocaleKey.callTechnician),
+          onCall: () => showJourneyPicker(context, AppLocaleKey.callTechnician),
           onFiles: () => go(_Journey.files),
           onAdditional: () => go(_Journey.additional),
           onAdvance: _advancePreview,
@@ -344,9 +328,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         ),
         _Journey.files => JourneyFilesPage(
           onBack: back,
-          onAddPhoto: _comingSoon,
+          onAddPhoto: _pickPhoto,
           onAddVideo: _comingSoon,
           onProof: () => go(_Journey.invoice),
+          photos: _photos,
         ),
         _Journey.invoice => JourneyInvoicePage(
           onBack: back,
@@ -396,6 +381,25 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       },
     ),
   );
+
+  /// Photo entry of the journey: a source chooser (gallery / camera) sheet
+  /// stays on the current step — no page is opened for the pick — and the
+  /// picked image is kept for the step's thumbnails.
+  Future<void> _pickPhoto() async {
+    final source = await showImageSourceSheet(context);
+    if (source == null || !mounted) return;
+    try {
+      final picked = await _picker.pickImage(
+        source: source,
+        maxWidth: 1600,
+        imageQuality: 85,
+      );
+      if (picked == null || !mounted) return;
+      setState(() => _photos.add(picked));
+    } catch (_) {
+      if (mounted) _toast(AppLocaleKey.imagePickFailed.tr());
+    }
+  }
 
   void _comingSoon() => _toast(AppLocaleKey.comingSoon.tr());
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Providers step: the available providers for the selected service.
 class JourneyProvidersPage extends StatelessWidget {
@@ -103,10 +103,7 @@ class _ProviderCard extends StatelessWidget {
                     color: AppColors.petrol,
                   ),
                 ),
-                Text(
-                  rating,
-                  style: const TextStyle(color: AppColors.muted),
-                ),
+                Text(rating, style: const TextStyle(color: AppColors.muted)),
               ],
             ),
           ],

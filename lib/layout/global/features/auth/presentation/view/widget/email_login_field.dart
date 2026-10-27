@@ -1,6 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/layout/global/features/auth/validation/auth_validators.dart';
 
 /// Form field of the email register/sign-in screen.
 class EmailLoginField extends StatelessWidget {
@@ -35,10 +34,10 @@ class EmailLoginField extends StatelessWidget {
         prefixIcon: icon == null ? null : Icon(icon),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
       ),
-      validator: validator ??
-          (value) => requiredField && (value == null || value.isEmpty)
-              ? AppLocaleKey.requiredField.tr()
-              : null,
+      validator:
+          validator ??
+          (value) =>
+              AuthValidators.requiredField(value, isRequired: requiredField),
     );
   }
 }

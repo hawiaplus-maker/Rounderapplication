@@ -9,4 +9,5 @@ class EndPoints {
   static const String logout = '$baseUrl/api/v1/auth/logout';
   static const String getProfile = '$baseUrl/api/v1/resident/profile';
   static const String updateProfile = '$baseUrl/api/v1/resident/profile';
+  static const String getServiceCategories = '$baseUrl/api/v1/resident/service-categories';
 }

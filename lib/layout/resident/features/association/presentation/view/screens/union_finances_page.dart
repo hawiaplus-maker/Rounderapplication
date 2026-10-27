@@ -4,7 +4,7 @@ import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_sub_page.dart';
 
 /// Association finances page: balance, expense split and payment history.
 class UnionFinancesPage extends StatelessWidget {
@@ -116,9 +116,7 @@ class UnionFinancesPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: FilledButton(
             onPressed: onComingSoon,
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.orange,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.orange),
             child: Text(AppLocaleKey.financialDetails.tr()),
           ),
         ),
@@ -128,11 +126,7 @@ class UnionFinancesPage extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({
-    required this.labelKey,
-    required this.value,
-    required this.dot,
-  });
+  const _Stat({required this.labelKey, required this.value, required this.dot});
 
   final String labelKey;
   final String value;

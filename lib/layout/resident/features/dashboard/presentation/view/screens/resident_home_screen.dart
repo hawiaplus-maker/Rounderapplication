@@ -3,16 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/screen/account_flow.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/screen/union_screen.dart';
-import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screen/orders_prototype_screen.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_flow.dart';
+import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_screen.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screens/orders_prototype_screen.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/style/home_layout.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_dashboard_body.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/resident_dock.dart';
-import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screen/emergency_request_screen.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/screen/service_journey_screen.dart';
-import 'package:rounder_application/layout/resident/features/units/presentation/view/screen/property_rating_screen.dart';
+import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screens/emergency_request_screen.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/service_journey_screen.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/property_rating_screen.dart';
 
 /// Resident application shell. The selected tab stays alive as a local
 /// prototype; each feature owns its own screens and state.

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Notifications page with its filters and read-all action.
 class AccountNotificationsPage extends StatelessWidget {
@@ -39,10 +39,7 @@ class AccountNotificationsPage extends StatelessWidget {
             const Spacer(),
             Text(
               '${AppLocaleKey.actionRequired.tr()}: 2',
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: AppColors.white, fontSize: 12),
             ),
           ],
         ),

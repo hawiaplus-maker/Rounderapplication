@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/post_service/presentation/view/widget/aftercare_header.dart';
 import 'package:rounder_application/layout/resident/features/post_service/presentation/view/widget/claim_page_body.dart';
 import 'package:rounder_application/layout/resident/features/post_service/presentation/view/widget/followup_page_body.dart';
@@ -29,22 +29,7 @@ class _AftercareFlowScreenState extends State<AftercareFlowScreen> {
       _Page.followup => AppLocaleKey.followupTitle,
     };
     return Scaffold(
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0, .25, .42, .6, .78, 1],
-            colors: [
-              AppColors.petrol,
-              AppColors.petrol,
-              AppColors.teal,
-              AppColors.mintLight,
-              AppColors.canvas,
-              AppColors.sand,
-            ],
-          ),
-        ),
+      body: BrandGradientBackdrop(
         child: SafeArea(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 220),
@@ -61,14 +46,18 @@ class _AftercareFlowScreenState extends State<AftercareFlowScreen> {
                   switch (_page) {
                     _Page.warranty => WarrantyPageBody(
                       onBackToOrder: () => Navigator.maybePop(context),
-                      onWarrantyInquiry: () => setState(() => _page = _Page.claim),
+                      onWarrantyInquiry: () =>
+                          setState(() => _page = _Page.claim),
                     ),
                     _Page.claim => ClaimPageBody(
-                      onViewOriginalDoc: () => setState(() => _page = _Page.warranty),
-                      onSubmitForReview: () => setState(() => _page = _Page.followup),
+                      onViewOriginalDoc: () =>
+                          setState(() => _page = _Page.warranty),
+                      onSubmitForReview: () =>
+                          setState(() => _page = _Page.followup),
                     ),
                     _Page.followup => FollowupPageBody(
-                      onBackToOrder: () => setState(() => _page = _Page.warranty),
+                      onBackToOrder: () =>
+                          setState(() => _page = _Page.warranty),
                     ),
                   },
                 ],

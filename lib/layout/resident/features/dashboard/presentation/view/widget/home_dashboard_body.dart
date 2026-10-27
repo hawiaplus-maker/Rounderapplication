@@ -16,7 +16,7 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_unit_selector.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_visit_cards.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_visits_heading.dart';
-import 'package:rounder_application/layout/resident/features/properties/presentation/view/screen/link_home_screen.dart';
+import 'package:rounder_application/layout/resident/features/properties/presentation/view/screens/link_home_screen.dart';
 
 /// The resident dashboard tab: resolves the dashboard state into the approved
 /// home sections (hero, emergency bar, balance/health cards, visits).
@@ -65,7 +65,8 @@ class HomeDashboardBody extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   FilledButton(
-                    onPressed: () => context.read<ResidentDashboardCubit>().load(),
+                    onPressed: () =>
+                        context.read<ResidentDashboardCubit>().load(),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.white,
                       foregroundColor: AppColors.petrol,
@@ -84,8 +85,13 @@ class HomeDashboardBody extends StatelessWidget {
         final cubit = context.read<ResidentDashboardCubit>();
         final isPreview = cubit.isPreview;
         final HomeVisit? lastVisit = _lastVisit(context, data, isPreview);
-        final HomeNextService? nextService = _nextService(context, data, isPreview);
-        final showVisits = isPreview || (lastVisit != null && nextService != null);
+        final HomeNextService? nextService = _nextService(
+          context,
+          data,
+          isPreview,
+        );
+        final showVisits =
+            isPreview || (lastVisit != null && nextService != null);
 
         return RefreshIndicator(
           onRefresh: cubit.load,
@@ -127,7 +133,9 @@ class HomeDashboardBody extends StatelessWidget {
                     onViewHealth: onViewAssessment,
                     onMoreBalance: onMoreBalance,
                   ),
-                  if (showVisits && lastVisit != null && nextService != null) ...<Widget>[
+                  if (showVisits &&
+                      lastVisit != null &&
+                      nextService != null) ...<Widget>[
                     const SizedBox(height: HomeSpacing.block),
                     const HomeVisitsHeading(),
                     const SizedBox(height: HomeSpacing.block),
@@ -163,8 +171,8 @@ HomeBalance _balance(BuildContext context, ResidentDashboard data) {
   final String period = periodStart == null || periodStart <= 0
       ? ''
       : '${AppLocaleKey.homePeriodStart.tr()} '
-          '${_formatNumber(context, periodStart)} '
-          '${AppLocaleKey.currencySar.tr()}';
+            '${_formatNumber(context, periodStart)} '
+            '${AppLocaleKey.currencySar.tr()}';
   return HomeBalance(
     title: AppLocaleKey.associationBalance.tr(),
     amount: _formatNumber(context, data.associationBalance),

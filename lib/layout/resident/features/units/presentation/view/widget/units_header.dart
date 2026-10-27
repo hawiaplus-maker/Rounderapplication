@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
@@ -34,7 +35,11 @@ class UnitsHeader extends StatelessWidget {
             ),
           ),
         ),
-        Image.asset(AppImages.rounderLogo, height: 24, fit: BoxFit.contain),
+        SvgPicture.asset(
+          AppImages.rounderIcon,
+          height: 24,
+          fit: BoxFit.contain,
+        ),
       ],
     );
   }

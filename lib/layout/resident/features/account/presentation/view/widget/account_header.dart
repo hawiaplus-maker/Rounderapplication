@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -42,8 +43,8 @@ class AccountHeader extends StatelessWidget {
               ),
             ),
           const Spacer(),
-          Image.asset(
-            AppImages.rounderLogo,
+          SvgPicture.asset(
+            AppImages.rounderIcon,
             height: 28,
             fit: BoxFit.contain,
           ),

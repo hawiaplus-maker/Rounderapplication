@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Additional-work offer step.
 class JourneyAdditionalPage extends StatelessWidget {
@@ -37,10 +37,7 @@ class JourneyAdditionalPage extends StatelessWidget {
                 color: AppColors.petrol,
               ),
             ),
-            Text(
-              AppLocaleKey.serviceReport.tr(),
-              textAlign: TextAlign.right,
-            ),
+            Text(AppLocaleKey.serviceReport.tr(), textAlign: TextAlign.right),
             Text(
               '50 ${AppLocaleKey.currencySar.tr()}',
               textAlign: TextAlign.right,

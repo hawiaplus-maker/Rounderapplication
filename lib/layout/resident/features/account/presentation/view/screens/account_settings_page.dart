@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_action_button.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_logout_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Communication settings page of the account.
 class AccountSettingsPage extends StatelessWidget {
@@ -17,6 +18,7 @@ class AccountSettingsPage extends StatelessWidget {
     required this.onOffersChanged,
     required this.onEditProfile,
     required this.onPrivacy,
+    required this.onLogout,
   });
 
   final VoidCallback onBack;
@@ -26,6 +28,10 @@ class AccountSettingsPage extends StatelessWidget {
   final ValueChanged<bool> onOffersChanged;
   final VoidCallback onEditProfile;
   final VoidCallback onPrivacy;
+
+  /// Ends the session: the account flow confirms, calls the logout API and
+  /// clears the cached token before the boot gate reveals the login screen.
+  final VoidCallback onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +95,8 @@ class AccountSettingsPage extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 12),
+        AccountLogoutButton(onPressed: onLogout),
       ],
     );
   }

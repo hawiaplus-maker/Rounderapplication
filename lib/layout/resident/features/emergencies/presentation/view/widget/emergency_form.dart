@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/widget/emergency_input.dart';
+import 'package:rounder_application/layout/resident/features/emergencies/validation/emergency_validators.dart';
 
 /// The emergency request form: warning notice, type picker, contact/location
 /// details and the SOS submit action.
@@ -52,17 +53,44 @@ class EmergencyForm extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: const Color(0xFFFFEEE5), borderRadius: BorderRadius.circular(18), border: Border.all(color: AppColors.orange.withValues(alpha: .35))),
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Icon(Icons.warning_amber_rounded, color: AppColors.orange),
-                const SizedBox(width: 10),
-                Expanded(child: Text(AppLocaleKey.emergencyIntro.tr(), style: const TextStyle(height: 1.45))),
-              ]),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFEEE5),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: AppColors.orange.withValues(alpha: .35),
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.warning_amber_rounded,
+                    color: AppColors.orange,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      AppLocaleKey.emergencyIntro.tr(),
+                      style: const TextStyle(height: 1.45),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 12),
-            Text(AppLocaleKey.emergencySafety.tr(), style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+            Text(
+              AppLocaleKey.emergencySafety.tr(),
+              style: const TextStyle(color: AppColors.muted, fontSize: 12),
+            ),
             const SizedBox(height: 22),
-            Text(AppLocaleKey.emergencyType.tr(), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppColors.petrol)),
+            Text(
+              AppLocaleKey.emergencyType.tr(),
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w800,
+                color: AppColors.petrol,
+              ),
+            ),
             const SizedBox(height: 10),
             ..._types.map((item) {
               final selected = selectedType == item.$1;
@@ -71,10 +99,15 @@ class EmergencyForm extends StatelessWidget {
                 child: RadioListTile<String>(
                   tileColor: Colors.white,
                   value: item.$1,
-                  secondary: Icon(item.$2, color: selected ? AppColors.orange : AppColors.petrol),
+                  secondary: Icon(
+                    item.$2,
+                    color: selected ? AppColors.orange : AppColors.petrol,
+                  ),
                   title: Text(item.$1.tr()),
                   activeColor: AppColors.orange,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               );
             }),
@@ -84,14 +117,14 @@ class EmergencyForm extends StatelessWidget {
               label: AppLocaleKey.emergencyContact.tr(),
               icon: Icons.phone_outlined,
               keyboardType: TextInputType.phone,
-              validator: (value) => value == null || !RegExp(r'^\+[1-9][0-9]{7,14}$').hasMatch(value.trim()) ? AppLocaleKey.invalidPhone.tr() : null,
+              validator: EmergencyValidators.contactPhone,
             ),
             const SizedBox(height: 12),
             EmergencyInput(
               controller: location,
               label: AppLocaleKey.emergencyLocation.tr(),
               icon: Icons.location_on_outlined,
-              validator: (value) => value == null || value.trim().length < 4 ? AppLocaleKey.requiredField.tr() : null,
+              validator: EmergencyValidators.location,
               maxLength: 255,
             ),
             const SizedBox(height: 12),
@@ -99,7 +132,7 @@ class EmergencyForm extends StatelessWidget {
               controller: details,
               label: AppLocaleKey.emergencyDetails.tr(),
               icon: Icons.notes_outlined,
-              validator: (value) => value == null || value.trim().length < 10 ? AppLocaleKey.requiredField.tr() : null,
+              validator: EmergencyValidators.details,
               maxLength: 3000,
               maxLines: 4,
             ),
@@ -111,14 +144,24 @@ class EmergencyForm extends StatelessWidget {
               onChanged: (value) => onConfirmedChanged(value ?? false),
               controlAffinity: ListTileControlAffinity.leading,
               activeColor: AppColors.petrol,
-              title: Text(AppLocaleKey.confirmEmergency.tr(), style: const TextStyle(fontSize: 13)),
+              title: Text(
+                AppLocaleKey.confirmEmergency.tr(),
+                style: const TextStyle(fontSize: 13),
+              ),
             ),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: onSubmit,
-              style: FilledButton.styleFrom(backgroundColor: AppColors.orange, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(54)),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.orange,
+                foregroundColor: Colors.white,
+                minimumSize: const Size.fromHeight(54),
+              ),
               icon: const Icon(Icons.sos),
-              label: Text(AppLocaleKey.sendEmergency.tr(), style: const TextStyle(fontWeight: FontWeight.w800)),
+              label: Text(
+                AppLocaleKey.sendEmergency.tr(),
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
             ),
           ],
         ),

@@ -1,12 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/email_login_field.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/email_login_form.dart';
 
 /// Real email/password authentication (register + sign in) of the app, kept
 /// behind the approved login's prototype link. When the cubit emits
@@ -48,7 +45,11 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.signIn.tr()),
+          title: Text(
+            creating
+                ? AppLocaleKey.createAccount.tr()
+                : AppLocaleKey.signIn.tr(),
+          ),
         ),
         body: SafeArea(
           child: Center(
@@ -56,135 +57,16 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
               padding: const EdgeInsets.all(24),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 420),
-                child: Form(
-                  key: form,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SvgPicture.asset(AppImages.rounderIcon, height: 40, fit: BoxFit.contain),
-                      const SizedBox(height: 12),
-                      Text(
-                        creating ? AppLocaleKey.createAccount.tr() : AppLocaleKey.welcome.tr(),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 28),
-                      if (creating) ...[
-                        EmailLoginField(
-                          controller: name,
-                          label: AppLocaleKey.fullName.tr(),
-                          icon: Icons.person_outline,
-                          validator: (value) => value == null || value.trim().length < 2
-                              ? AppLocaleKey.requiredField.tr()
-                              : null,
-                        ),
-                        const SizedBox(height: 12),
-                        EmailLoginField(
-                          controller: phone,
-                          label: AppLocaleKey.phone.tr(),
-                          icon: Icons.phone_outlined,
-                          keyboard: TextInputType.phone,
-                          requiredField: false,
-                          validator: (value) =>
-                              value != null &&
-                                  value.isNotEmpty &&
-                                  !RegExp(r'^\+[1-9][0-9]{7,14}$').hasMatch(value)
-                              ? AppLocaleKey.phoneFormat.tr()
-                              : null,
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                      EmailLoginField(
-                        controller: email,
-                        label: AppLocaleKey.email.tr(),
-                        icon: Icons.email_outlined,
-                        keyboard: TextInputType.emailAddress,
-                        validator: (value) =>
-                            value == null ||
-                                value.trim().length > 254 ||
-                                !RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(value.trim())
-                            ? AppLocaleKey.emailInvalid.tr()
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      EmailLoginField(
-                        controller: password,
-                        label: AppLocaleKey.password.tr(),
-                        icon: Icons.lock_outline,
-                        obscure: true,
-                        validator: (value) =>
-                            value == null ||
-                                value.length < 10 ||
-                                value.length > 72 ||
-                                !RegExp(r'[a-z]').hasMatch(value) ||
-                                !RegExp(r'[A-Z]').hasMatch(value) ||
-                                !RegExp(r'[0-9]').hasMatch(value)
-                            ? AppLocaleKey.passwordRule.tr()
-                            : null,
-                      ),
-                      if (creating) ...[
-                        const SizedBox(height: 12),
-                        EmailLoginField(
-                          controller: confirm,
-                          label: AppLocaleKey.confirmPassword.tr(),
-                          icon: Icons.lock_reset,
-                          obscure: true,
-                          validator: (value) =>
-                              value != password.text ? AppLocaleKey.passwordMismatch.tr() : null,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            AppLocaleKey.passwordRule.tr(),
-                            style: const TextStyle(fontSize: 12, color: AppColors.muted),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 18),
-                      BlocBuilder<AuthCubit, AuthState>(
-                        builder: (context, state) => Column(
-                          children: [
-                            if (state is AuthFailure)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: Text(
-                                  state.messageKey.tr(),
-                                  style: const TextStyle(color: AppColors.coral),
-                                ),
-                              ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: FilledButton(
-                                onPressed: state is AuthChecking ? null : submit,
-                                child: state is AuthChecking
-                                    ? const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: AppColors.white,
-                                        ),
-                                      )
-                                    : Text(
-                                        creating
-                                            ? AppLocaleKey.createAccount.tr()
-                                            : AppLocaleKey.signIn.tr(),
-                                      ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => setState(() => creating = !creating),
-                        child: Text(
-                          creating
-                              ? AppLocaleKey.haveAccount.tr()
-                              : AppLocaleKey.createAccount.tr(),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: EmailLoginForm(
+                  formKey: form,
+                  name: name,
+                  email: email,
+                  phone: phone,
+                  password: password,
+                  confirm: confirm,
+                  creating: creating,
+                  onSubmit: submit,
+                  onToggleMode: () => setState(() => creating = !creating),
                 ),
               ),
             ),
