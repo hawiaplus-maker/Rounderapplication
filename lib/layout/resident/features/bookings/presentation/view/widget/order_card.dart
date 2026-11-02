@@ -1,6 +1,9 @@
+import 'dart:ui' as ui_direction;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/model/order_data.dart';
 
@@ -22,50 +25,70 @@ class OrderCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  backgroundColor: AppColors.mint,
-                  child: Icon(data.icon, color: AppColors.petrol),
-                ),
+                if (data.mediaUrls.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      data.mediaUrls.first,
+                      width: 56,
+                      height: 56,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _iconBox(),
+                    ),
+                  )
+                else
+                  _iconBox(),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        data.titleKey.tr(),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.petrol,
-                        ),
+                        data.titleKey,
+                        textAlign: TextAlign.start,
+                        style: AppTextStyles.extraBold15.copyWith(color: AppColors.petrol),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        data.locationKey.tr(),
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          color: AppColors.muted,
-                          fontSize: 12,
+                      if (data.subServiceName != null &&
+                          data.subServiceName!.trim().isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          data.subServiceName!,
+                          textAlign: TextAlign.start,
+                          style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
                         ),
-                      ),
+                      ],
+                      if (data.providerName != null && data.providerName!.trim().isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          data.providerName!,
+                          textAlign: TextAlign.start,
+                          style: AppTextStyles.bodySemiBold12.copyWith(color: AppColors.teal),
+                        ),
+                      ],
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_left, color: AppColors.petrol),
+                Icon(
+                  Directionality.of(context) == ui_direction.TextDirection.rtl
+                      ? Icons.arrow_back_ios_new
+                      : Icons.arrow_back_ios_new,
+                  color: AppColors.petrol,
+                ),
               ],
             ),
             const Divider(height: 22),
             Row(
               children: [
+                Icon(Icons.calendar_today, size: 14, color: AppColors.muted),
+                const SizedBox(width: 4),
                 Text(
-                  data.reference,
-                  style: const TextStyle(
-                    color: AppColors.muted,
-                    fontSize: 12,
-                  ),
+                  _formatDate(data.scheduledAt),
+                  style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
                 ),
                 const Spacer(),
                 Chip(
@@ -75,22 +98,20 @@ class OrderCard extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Text(
                   '${data.amount} ${AppLocaleKey.currencySar.tr()}',
-                  style: const TextStyle(
-                    color: AppColors.petrol,
+                  style: AppTextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.w900,
+                    color: AppColors.petrol,
                   ),
                 ),
                 const Spacer(),
                 Text(
-                  AppLocaleKey.orderDetails.tr(),
-                  style: const TextStyle(
-                    color: AppColors.orange,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  data.reference,
+                  style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
                 ),
               ],
             ),
@@ -99,4 +120,19 @@ class OrderCard extends StatelessWidget {
       ),
     ),
   );
+
+  Widget _iconBox() => Container(
+    width: 56,
+    height: 56,
+    decoration: BoxDecoration(color: AppColors.mint, borderRadius: BorderRadius.circular(12)),
+    child: const Icon(Icons.home_repair_service_outlined, color: AppColors.petrol),
+  );
+
+  String _formatDate(DateTime dt) {
+    final String d =
+        '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}';
+    final String t =
+        '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+    return '$d  $t';
+  }
 }

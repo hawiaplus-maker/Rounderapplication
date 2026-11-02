@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/constants/display_placeholder.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_action_button.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
@@ -28,23 +30,19 @@ class UnionVisitsPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.visitUpcoming.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold19.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
-            Text(AppLocaleKey.cleaning.tr(), textAlign: TextAlign.right),
+            Text(AppLocaleKey.cleaning.tr(), textAlign: TextAlign.start),
             Text(
               AppLocaleKey.visitDateTime.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
             ),
             const SizedBox(height: 14),
             const CircularProgressIndicator(
-              value: .7,
+              value: DisplayPlaceholder.progress,
               strokeWidth: 8,
               color: AppColors.petrol,
             ),
@@ -60,11 +58,8 @@ class UnionVisitsPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.visitCompleted.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
             ),
             UnionLine(
               titleKey: AppLocaleKey.facilitiesReports,

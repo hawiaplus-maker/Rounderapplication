@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Top bar of the intro steps: approved wordmark with an optional skip action.
@@ -26,7 +27,7 @@ class WelcomeIntroHeader extends StatelessWidget {
               child: Text(
                 AppLocaleKey.skip.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.mintLight, fontSize: 14, height: 24 / 14),
+                style: AppTextStyles.bodySmall.copyWith(color: AppColors.mintLight, height: 24 / 14),
               ),
             ),
           ),

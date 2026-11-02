@@ -35,7 +35,7 @@ class EmergencyInput extends StatelessWidget {
         labelText: label,
         prefixIcon: Icon(icon, color: AppColors.petrol),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppColors.white,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
       ),
     );

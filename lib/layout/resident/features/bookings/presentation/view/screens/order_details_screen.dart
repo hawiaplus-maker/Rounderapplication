@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/features/bookings/data/repo/bookings_repo.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/model/order_data.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/widget/order_cancel_result.dart';
@@ -114,8 +115,23 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ),
     );
     if (approved == true && mounted) {
-      sl<PreviewOrdersCubit>().cancel(widget.data.reference);
-      setState(() => _cancelled = true);
+      try {
+        if (widget.data.preview != null) {
+          sl<PreviewOrdersCubit>().cancel(widget.data.reference);
+        } else if (widget.data.bookingId != null) {
+          await sl<BookingsRepository>().cancel(
+            widget.data.bookingId!,
+            AppLocaleKey.cancelBooking.tr(),
+          );
+        }
+        if (mounted) setState(() => _cancelled = true);
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocaleKey.connectionError.tr())),
+          );
+        }
+      }
     }
   }
 }

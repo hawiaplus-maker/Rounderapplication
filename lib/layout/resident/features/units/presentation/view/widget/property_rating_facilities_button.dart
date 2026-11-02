@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Primary action of the property rating screen: jump to facilities reports.
@@ -22,12 +23,7 @@ class PropertyRatingFacilitiesButton extends StatelessWidget {
       child: Text(
         AppLocaleKey.toFacilitiesReports.tr(),
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: AppColors.petrol,
-          fontSize: 14,
-          height: 22 / 14,
-          fontWeight: FontWeight.w700,
-        ),
+        style: AppTextStyles.bodyBold14.copyWith(color: AppColors.petrol),
       ),
     );
   }

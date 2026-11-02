@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Glass intro card above the auth content card: icon slot + up to two text
@@ -36,11 +37,7 @@ class OtpIntroCard extends StatelessWidget {
           Text(
             firstLine,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 15,
-              height: 26 / 15,
-            ),
+            style: AppTextStyles.bodyRegular15.copyWith(color: AppColors.white, height: 26 / 15),
           ),
           if (phoneLine != null) ...[
             const SizedBox(height: 8),
@@ -50,12 +47,7 @@ class OtpIntroCard extends StatelessWidget {
               // leading "+" and masked digits are reordered.
               textDirection: TextDirection.ltr,
               textAlign: TextAlign.start,
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 17,
-                height: 26 / 17,
-                fontWeight: FontWeight.w700,
-              ),
+              style: AppTextStyles.bodyBold17.copyWith(color: AppColors.white),
             ),
           ],
         ],

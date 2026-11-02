@@ -25,7 +25,7 @@ class JourneyActionButton extends StatelessWidget {
       style: FilledButton.styleFrom(
         backgroundColor: AppColors.mint,
         foregroundColor: AppColors.petrol,
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerStart,
       ),
     ),
   );

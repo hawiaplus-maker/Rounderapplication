@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/properties/validation/properties_validators.dart';
 
@@ -42,17 +43,13 @@ class LinkHomeForm extends StatelessWidget {
               Text(
                 AppLocaleKey.linkYourHome.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.petrol,
-                ),
+                style: AppTextStyles.extraBold24.copyWith(color: AppColors.petrol),
               ),
               const SizedBox(height: 8),
               Text(
                 AppLocaleKey.linkHomeHelp.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.muted),
+                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
               ),
               const SizedBox(height: 24),
               TextFormField(
@@ -82,7 +79,7 @@ class LinkHomeForm extends StatelessWidget {
                         width: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: AppColors.white,
                         ),
                       )
                     : Text(AppLocaleKey.linkHome.tr()),

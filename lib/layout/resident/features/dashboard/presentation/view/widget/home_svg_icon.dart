@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-/// Renders one of the Figma SVG exports used by the resident home.
-///
-/// The files carry their own stroke colors; [color] replaces them
-/// (BlendMode.srcIn) when the design tints the glyph.
+import 'package:rounder_application/layout/global/widgets/svg_icon.dart';
+
+/// Dashboard alias of the promoted global [SvgIcon] renderer; every home
+/// widget keeps using this name while the implementation stays in one place.
+@Deprecated('Use the global SvgIcon from layout/global/widgets/svg_icon.dart')
 class HomeSvgIcon extends StatelessWidget {
   const HomeSvgIcon(
     this.asset, {
@@ -19,12 +19,6 @@ class HomeSvgIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      asset,
-      width: size,
-      height: size,
-      fit: BoxFit.contain,
-      colorFilter: color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn),
-    );
+    return SvgIcon(asset, size: size, color: color);
   }
 }

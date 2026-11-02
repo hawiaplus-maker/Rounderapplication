@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Which intro step's artwork the hero renders (maps to the artboard's
@@ -123,12 +124,7 @@ class _GlassChip extends StatelessWidget {
     child: Text(
       label,
       textAlign: TextAlign.center,
-      style: const TextStyle(
-        color: AppColors.white,
-        fontSize: 15,
-        height: 26 / 15,
-        fontWeight: FontWeight.w600,
-      ),
+      style: AppTextStyles.bodySemiBold15.copyWith(color: AppColors.white, height: 26 / 15),
     ),
   );
 }
@@ -187,7 +183,7 @@ class _ChatBubble extends StatelessWidget {
     child: Text(
       message,
       textAlign: TextAlign.center,
-      style: const TextStyle(color: AppColors.petrol, fontSize: 14, height: 24 / 14),
+      style: AppTextStyles.bodySmall.copyWith(color: AppColors.petrol, height: 24 / 14),
     ),
   );
 }
@@ -221,12 +217,7 @@ class _QualityCard extends StatelessWidget {
         Text(
           AppLocaleKey.qualityFollowUp.tr(),
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 15,
-            height: 26 / 15,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.bodyBold15.copyWith(color: AppColors.petrol, height: 26 / 15),
         ),
         const SizedBox(height: 8),
         Container(height: 1, color: AppColors.white.withValues(alpha: .5)),
@@ -234,13 +225,13 @@ class _QualityCard extends StatelessWidget {
         Text(
           AppLocaleKey.followExecution.tr(),
           textAlign: TextAlign.center,
-          style: const TextStyle(color: AppColors.petrol, fontSize: 14, height: 26 / 14),
+          style: AppTextStyles.bodySmall.copyWith(color: AppColors.petrol, height: 26 / 14),
         ),
         const SizedBox(height: 8),
         Text(
           AppLocaleKey.reviewResult.tr(),
           textAlign: TextAlign.center,
-          style: const TextStyle(color: AppColors.petrol, fontSize: 14, height: 26 / 14),
+          style: AppTextStyles.bodySmall.copyWith(color: AppColors.petrol, height: 26 / 14),
         ),
         const SizedBox(height: 8),
         Container(
@@ -252,12 +243,7 @@ class _QualityCard extends StatelessWidget {
           ),
           child: Text(
             AppLocaleKey.rateService.tr(),
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 15,
-              height: 26 / 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.bodySemiBold15.copyWith(color: AppColors.petrol, height: 26 / 15),
           ),
         ),
       ],

@@ -1,11 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_action_button.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 
 /// Tracking step: live order status, technician actions and work files.
 class JourneyTrackingPage extends StatelessWidget {
@@ -43,9 +42,7 @@ class JourneyTrackingPage extends StatelessWidget {
       _ => AppLocaleKey.serviceComplete,
     };
     return JourneySubPage(
-      titleKey: stage < 2
-          ? AppLocaleKey.technicianOnWay
-          : AppLocaleKey.serviceInProgress,
+      titleKey: stage < 2 ? AppLocaleKey.technicianOnWay : AppLocaleKey.serviceInProgress,
       onBack: onBack,
       children: [
         JourneyPanel(
@@ -53,85 +50,80 @@ class JourneyTrackingPage extends StatelessWidget {
           children: [
             Text(
               '${AppLocaleKey.orderReference.tr()} • ${reference ?? '—'}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: Colors.white70),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.white.withValues(alpha: .7),
+              ),
             ),
             Text(
               statusKey.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold24.copyWith(color: AppColors.white),
             ),
             const SizedBox(height: 14),
             LinearProgressIndicator(
               value: (stage + 1) / 4,
               color: AppColors.orange,
-              backgroundColor: Colors.white24,
+              backgroundColor: AppColors.white.withValues(alpha: .24),
               minHeight: 8,
             ),
             const SizedBox(height: 10),
             Text(
               AppLocaleKey.providerTiming.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: Colors.white),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white),
             ),
           ],
         ),
-        JourneyPanel(
-          children: [
-            Text(
-              providerLabel,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: JourneyActionButton(
-                    labelKey: AppLocaleKey.chat,
-                    icon: Icons.chat_bubble_outline,
-                    onAction: onChat,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: JourneyActionButton(
-                    labelKey: AppLocaleKey.callTechnician,
-                    icon: Icons.call_outlined,
-                    onAction: onCall,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        JourneyActionButton(
-          labelKey: AppLocaleKey.serviceFiles,
-          icon: Icons.photo_library_outlined,
-          onAction: onFiles,
-        ),
-        JourneyActionButton(
-          labelKey: AppLocaleKey.addWork,
-          icon: Icons.add_circle_outline,
-          onAction: onAdditional,
-        ),
-        if (stage < 3)
-          JourneyNextButton(
-            labelKey: AppLocaleKey.serviceInProgress,
-            onPressed: onAdvance,
-          )
-        else
-          JourneyNextButton(
-            labelKey: AppLocaleKey.serviceReport,
-            onPressed: onReport,
-          ),
+        // JourneyPanel(
+        //   children: [
+        //     Text(
+        //       providerLabel,
+        //       textAlign: TextAlign.start,
+        //       style: AppTextStyles.extraBold18.copyWith(color: AppColors.petrol),
+        //     ),
+        //     Row(
+        //       children: [
+        //         Expanded(
+        //           child: JourneyActionButton(
+        //             labelKey: AppLocaleKey.chat,
+        //             icon: Icons.chat_bubble_outline,
+        //             onAction: onChat,
+        //           ),
+        //         ),
+        //         const SizedBox(width: 8),
+        //         Expanded(
+        //           child: JourneyActionButton(
+        //             labelKey: AppLocaleKey.callTechnician,
+        //             icon: Icons.call_outlined,
+        //             onAction: onCall,
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ],
+        // ),
+
+        // JourneyActionButton(
+        //   labelKey: AppLocaleKey.serviceFiles,
+        //   icon: Icons.photo_library_outlined,
+        //   onAction: onFiles,
+        // ),
+        // JourneyActionButton(
+        //   labelKey: AppLocaleKey.addWork,
+        //   icon: Icons.add_circle_outline,
+        //   onAction: onAdditional,
+        // ),
+        // if (stage < 3)
+        //   JourneyNextButton(
+        //     labelKey: AppLocaleKey.serviceInProgress,
+        //     onPressed: onAdvance,
+        //   )
+        // else
+        //   JourneyNextButton(
+        //     labelKey: AppLocaleKey.serviceReport,
+        //     onPressed: onReport,
+        //   ),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_option_model.dart';
@@ -35,11 +36,6 @@ class ServiceCard extends StatelessWidget {
         serviceId: service.id,
         date: DateTime(date.year, date.month, date.day, 12),
       );
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocaleKey.bookingCreated.tr())),
-        );
-      }
     } catch (_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -53,7 +49,7 @@ class ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) => Card(
     margin: const EdgeInsets.only(bottom: 12),
     child: ListTile(
-      tileColor: Colors.white,
+      tileColor: AppColors.white,
       contentPadding: const EdgeInsets.all(14),
       leading: const CircleAvatar(
         backgroundColor: AppColors.mint,
@@ -64,7 +60,7 @@ class ServiceCard extends StatelessWidget {
       ),
       title: Text(
         service.name,
-        style: const TextStyle(fontWeight: FontWeight.w700),
+        style: AppTextStyles.bodyBold15.copyWith(fontWeight: FontWeight.w700),
       ),
       subtitle: Text(
         '${service.categoryName}\n'

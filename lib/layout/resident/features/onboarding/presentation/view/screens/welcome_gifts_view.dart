@@ -3,6 +3,7 @@ import 'dart:ui' as ui_direction show TextDirection;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/model/welcome_gift_option.dart';
 
@@ -28,16 +29,12 @@ class WelcomeGiftsView extends StatelessWidget {
       children: [
         Text(
           AppLocaleKey.chooseWelcomeGiftTitle.tr(),
-          style: const TextStyle(
-            color: AppColors.white,
-            fontSize: 26,
-            fontWeight: FontWeight.w900,
-          ),
+          style: AppTextStyles.extraBold26.copyWith(color: AppColors.white),
         ),
         const SizedBox(height: 8),
         Text(
           AppLocaleKey.chooseWelcomeGiftBody.tr(),
-          style: const TextStyle(color: AppColors.white, height: 1.5),
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white, height: 1.5),
         ),
         const SizedBox(height: 20),
         for (final option in welcomeGiftOptions)
@@ -48,10 +45,7 @@ class WelcomeGiftsView extends StatelessWidget {
           ),
         TextButton.icon(
           onPressed: onBack,
-          icon: Transform.flip(
-            flipX: rtl,
-            child: const Icon(Icons.arrow_forward),
-          ),
+          icon: Transform.flip(flipX: rtl, child: const Icon(Icons.arrow_forward)),
           label: Text(AppLocaleKey.back.tr()),
         ),
       ],
@@ -60,11 +54,7 @@ class WelcomeGiftsView extends StatelessWidget {
 }
 
 class _GiftCard extends StatelessWidget {
-  const _GiftCard({
-    required this.option,
-    required this.selected,
-    required this.onTap,
-  });
+  const _GiftCard({required this.option, required this.selected, required this.onTap});
 
   final WelcomeGiftOption option;
   final bool selected;
@@ -78,10 +68,7 @@ class _GiftCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: selected ? AppColors.coral : Colors.transparent,
-          width: 2,
-        ),
+        side: BorderSide(color: selected ? AppColors.coral : Colors.transparent, width: 2),
       ),
       child: ListTile(
         tileColor: selected ? AppColors.mint : AppColors.white,
@@ -93,18 +80,14 @@ class _GiftCard extends StatelessWidget {
         ),
         title: Text(
           option.titleKey.tr(),
-          style: const TextStyle(
+          style: AppTextStyles.bodyBold15.copyWith(
             fontWeight: FontWeight.w800,
             color: AppColors.petrol,
           ),
         ),
-        subtitle: Text(
-          option.descriptionKey.tr(),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        subtitle: Text(option.descriptionKey.tr(), maxLines: 2, overflow: TextOverflow.ellipsis),
         trailing: Icon(
-          rtl ? Icons.chevron_left : Icons.chevron_right,
+          rtl ? Icons.arrow_back_ios_new : Icons.arrow_back_ios_new,
           color: AppColors.petrol,
         ),
       ),

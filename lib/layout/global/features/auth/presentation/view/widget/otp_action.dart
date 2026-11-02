@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Filled action row of the auth screens (design `Authentication / Action`):
@@ -53,12 +54,7 @@ class OtpAction extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: AppColors.petrol,
-                fontSize: labelSize,
-                height: labelLineHeight / labelSize,
-                fontWeight: FontWeight.w700,
-              ),
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol, height: labelLineHeight / labelSize),
             ),
     );
   }

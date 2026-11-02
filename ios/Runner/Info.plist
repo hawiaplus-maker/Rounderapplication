@@ -63,6 +63,8 @@
 	<string>Rounder uses the camera to take photos you attach to your service requests.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Rounder uses your photo library to attach photos to your service requests.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Rounder uses your location to show the live weather around your home.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

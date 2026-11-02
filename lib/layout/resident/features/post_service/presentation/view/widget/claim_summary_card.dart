@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Claim summary glass card (design علي يساعدك / المشكلة · ملخص ومرفقات):
@@ -28,12 +29,7 @@ class ClaimSummaryCard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 16,
-              height: 24 / 16,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingH4.copyWith(color: AppColors.petrol),
           ),
           const SizedBox(height: 10),
           Container(
@@ -45,11 +41,7 @@ class ClaimSummaryCard extends StatelessWidget {
             child: Text(
               body,
               textAlign: TextAlign.start,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 14,
-                height: 24 / 14,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.petrol, height: 24 / 14),
             ),
           ),
         ],

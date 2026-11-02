@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/constants/display_placeholder.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_prototype_note.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_sub_page.dart';
 
 /// Association dues page: amount, paid/pending split and the pay action.
@@ -29,22 +30,18 @@ class UnionDuesPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.dueAmount.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: Colors.white70),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white.withValues(alpha: .7)),
             ),
             Text(
-              '300 ${AppLocaleKey.currencySar.tr()}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-              ),
+              '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold30.copyWith(color: AppColors.white),
             ),
             Text(
               AppLocaleKey.dueDate.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: Colors.white70),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white.withValues(alpha: .7)),
             ),
           ],
         ),
@@ -61,12 +58,13 @@ class UnionDuesPage extends StatelessWidget {
           children: [
             UnionLine(
               titleKey: AppLocaleKey.unitTitle,
-              value: '300 ${AppLocaleKey.currencySar.tr()}',
+              value:
+                  '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
             ),
             Text(
               '${AppLocaleKey.currentUnit.tr()} • ${AppLocaleKey.septemberDues.tr()}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
             ),
           ],
         ),
@@ -78,7 +76,6 @@ class UnionDuesPage extends StatelessWidget {
             child: Text(AppLocaleKey.pay.tr()),
           ),
         ),
-        const UnionPrototypeNote(),
       ],
     );
   }

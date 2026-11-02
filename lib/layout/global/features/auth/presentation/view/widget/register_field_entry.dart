@@ -1,6 +1,7 @@
 import 'dart:ui' as ui_direction show TextDirection;
 
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/validation/auth_validators.dart';
 
@@ -49,11 +50,7 @@ class _RegisterFieldEntryState extends State<RegisterFieldEntry> {
         Text(
           widget.label,
           textAlign: TextAlign.start,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 16,
-            height: 24 / 16,
-          ),
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol, height: 24 / 16),
         ),
         SizedBox(height: 5),
         Container(
@@ -80,11 +77,7 @@ class _RegisterFieldEntryState extends State<RegisterFieldEntry> {
             // Data-shaped values stay LTR even in the Arabic layout.
             textDirection: widget.ltr ? ui_direction.TextDirection.ltr : null,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 16,
-              height: 26 / 16,
-            ),
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol),
             decoration: InputDecoration(
               isDense: true,
               border: InputBorder.none,

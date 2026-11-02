@@ -1,11 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/constants/display_placeholder.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_action_button.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_prototype_note.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_sub_page.dart';
 
 /// Association initiatives page.
@@ -33,23 +34,19 @@ class UnionInitiativePage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.improveEntrance.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold19.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
-            Text(AppLocaleKey.residentsJoined.tr(), textAlign: TextAlign.right),
+            Text(AppLocaleKey.residentsJoined.tr(), textAlign: TextAlign.start),
             const SizedBox(height: 10),
             const LinearProgressIndicator(
-              value: .7,
+              value: DisplayPlaceholder.progress,
               color: AppColors.petrol,
               backgroundColor: AppColors.mint,
             ),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerEnd,
               child: TextButton(
                 onPressed: onLike,
                 child: Text('${AppLocaleKey.shareIdea.tr()}  •  $likes'),
@@ -61,11 +58,8 @@ class UnionInitiativePage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.initiatives.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
             ),
             UnionLine(
               titleKey: AppLocaleKey.cleaning,
@@ -78,7 +72,6 @@ class UnionInitiativePage extends StatelessWidget {
             ),
           ],
         ),
-        const UnionPrototypeNote(),
       ],
     );
   }

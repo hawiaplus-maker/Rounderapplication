@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_flow.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_screen.dart';
@@ -27,38 +27,42 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
   int _tab = 0;
 
   void _openEmergency() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const EmergencyRequestScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const EmergencyRequestScreen()));
   }
 
   void _openPropertyRating() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const PropertyRatingScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const PropertyRatingScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
     final dashboardState = context.watch<ResidentDashboardCubit>().state;
-    final residentName = dashboardState is DashboardReady
-        ? dashboardState.data.residentName
-        : '';
-    final homeName = dashboardState is DashboardReady
-        ? dashboardState.data.homeName
-        : '';
+    final homeName = dashboardState is DashboardReady ? dashboardState.data.homeName : '';
+    final unitLabel = dashboardState is DashboardReady ? dashboardState.data.unitLabel : '';
+    // Reading the locale here rebuilds this shell on every language change, so
+    // the tabs below get fresh keys and rebuild from scratch: widgets that were
+    // built as `const` (or parked in the IndexedStack) would otherwise keep the
+    // strings they resolved in the previous language.
+    final String localeCode = context.locale.languageCode;
     final pages = <Widget>[
       HomeDashboardBody(
+        key: ValueKey<String>('home-$localeCode'),
         onTalkToAli: () => setState(() => _tab = 1),
         onMoreBalance: () => setState(() => _tab = 3),
         onVisitDetails: () => setState(() => _tab = 3),
         onEmergency: _openEmergency,
         onViewAssessment: _openPropertyRating,
       ),
-      const ServiceJourneyScreen(),
-      const OrdersPrototypeScreen(),
-      const UnionScreen(),
-      AccountFlow(residentName: residentName, homeName: homeName),
+      ServiceJourneyScreen(key: ValueKey<String>('services-$localeCode')),
+      OrdersPrototypeScreen(key: ValueKey<String>('orders-$localeCode')),
+      UnionScreen(key: ValueKey<String>('union-$localeCode')),
+      // The account tab keeps its state: the language is switched from its
+      // settings page, so the resident stays where the switch happened.
+      AccountFlow(homeName: homeName, unitLabel: unitLabel),
     ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -85,9 +89,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
             child: Center(
               heightFactor: 1,
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: HomeSizes.maxContentWidth,
-                ),
+                constraints: const BoxConstraints(maxWidth: HomeSizes.maxContentWidth),
                 child: ResidentDock(
                   selectedIndex: _tab,
                   onSelected: (index) => setState(() => _tab = index),

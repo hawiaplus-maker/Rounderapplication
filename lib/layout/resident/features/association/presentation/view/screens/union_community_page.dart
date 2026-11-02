@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_line.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
@@ -33,16 +34,13 @@ class UnionCommunityPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.unitTitle.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontWeight: FontWeight.w800,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
             ),
             Text(
               AppLocaleKey.residentsJoined.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
             ),
           ],
         ),
@@ -53,7 +51,7 @@ class UnionCommunityPage extends StatelessWidget {
               value: AppLocaleKey.neighborMessageOne.tr(),
             ),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerEnd,
               child: TextButton.icon(
                 onPressed: onLike,
                 icon: const Icon(Icons.favorite_border),
@@ -74,13 +72,13 @@ class UnionCommunityPage extends StatelessWidget {
           children: [
             TextField(
               controller: message,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
               decoration: InputDecoration(
                 hintText: AppLocaleKey.messageHint.tr(),
               ),
             ),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerEnd,
               child: FilledButton(
                 onPressed: onSend,
                 child: Text(AppLocaleKey.sendMessage.tr()),

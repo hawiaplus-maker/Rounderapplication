@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// The property assessment glass card (design تقييم العقار / Content):
@@ -41,64 +42,36 @@ class AssessmentCard extends StatelessWidget {
           Text(
             unitLine,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 18,
-              height: 28 / 18,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingH3.copyWith(color: AppColors.petrol),
           ),
           const SizedBox(height: 8),
           Text(
             score,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 48,
-              height: 64 / 48,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.displayBold48.copyWith(color: AppColors.petrol, height: 64 / 48),
           ),
           const SizedBox(height: 8),
           Text(
             summaryTitle,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 15,
-              height: 22 / 15,
-            ),
+            style: AppTextStyles.bodyRegular15.copyWith(color: AppColors.petrol, height: 22 / 15),
           ),
           const SizedBox(height: 8),
           Text(
             residentialLine,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 16,
-              height: 32 / 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTextStyles.medium16.copyWith(color: AppColors.petrol, height: 32 / 16),
           ),
           Text(
             facilitiesLine,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 16,
-              height: 32 / 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTextStyles.medium16.copyWith(color: AppColors.petrol, height: 32 / 16),
           ),
           const SizedBox(height: 10),
           Text(
             pendingNote,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.teal,
-              fontSize: 14,
-              height: 24 / 14,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: AppColors.teal, height: 24 / 14),
           ),
         ],
       ),

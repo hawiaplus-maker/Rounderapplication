@@ -1,14 +1,28 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rounder_application/core/constants/display_placeholder.dart';
+import 'package:rounder_application/core/locale/app_locale.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/logic/service_schedule_logic.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
+import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/bookings_cubit.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screens/emergency_request_screen.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_additional_page.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_catalog_page.dart';
+import 'package:rounder_application/layout/resident/features/services/data/model/service_category_model.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_ali_assist_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_all_services_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_category_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/services_hub_page.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/features/units/data/model/resident_home_model.dart';
+import 'package:rounder_application/layout/resident/features/units/data/repo/homes_repo.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/cubit/services_cubit.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_detail_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_files_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_followup_page.dart';
@@ -42,7 +56,10 @@ class ServiceJourneyScreen extends StatefulWidget {
 }
 
 enum _Journey {
-  catalog,
+  hub,
+  category,
+  allServices,
+  aliAssist,
   detail,
   schedule,
   providers,
@@ -63,30 +80,43 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       ? _Journey.invoice
       : widget.startOnTracking
       ? _Journey.tracking
-      : _Journey.catalog;
-  late _Journey previous = _Journey.catalog;
+      : _Journey.hub;
+  late _Journey previous = _Journey.hub;
   String service = AppLocaleKey.plumbing, issueType = AppLocaleKey.notSure;
+  int? serviceId;
+  ServiceItem? selectedService;
+  int? selectedSubServiceId;
+  int? selectedProviderId;
   String selectedProvider = AppLocaleKey.providerOne,
-      location = AppLocaleKey.myUnit;
-  double basePrice = 150;
+      location = AppLocaleKey.myUnit;  double basePrice = 0;
+  List<ResidentHome> homes = const [];
+  int? selectedHomeId;
+  bool homesLoading = true;
   DateTime? selectedDate;
-  TimeOfDay selectedTime = const TimeOfDay(hour: 9, minute: 0);
+  TimeOfDay? selectedTime;
   String? orderReference;
   final List<_Journey> _history = [];
   String get _dateLabel => selectedDate == null
-      ? AppLocaleKey.preferredDate.tr()
+      ? AppLocaleKey.pickDate.tr()
       : DateFormat.yMMMd(context.locale.toString()).format(selectedDate!);
-  String get _timeLabel => selectedTime.format(context);
+  String get _timeLabel =>
+      selectedTime?.format(context) ?? AppLocaleKey.pickTime.tr();
   String get _amountLabel =>
-      (basePrice + (acceptedAdditional ? 50 : 0)).toStringAsFixed(2);
+      (basePrice + (acceptedAdditional ? DisplayPlaceholder.number : 0))
+          .toStringAsFixed(2);
+  String? get _referenceLabel =>
+      orderReference == null ? null : DisplayPlaceholder.text;
 
   int mode = 0, stage = 0, stars = 0;
   bool acceptedAdditional = false;
   final List<XFile> _photos = [];
   final _picker = ImagePicker();
-  final query = TextEditingController(),
-      issue = TextEditingController(),
-      notes = TextEditingController();
+  StreamSubscription<Locale>? _localeSubscription;
+  final issue = TextEditingController(), notes = TextEditingController();
+  // Services hub flow state: the catalog snapshot shared with the
+  // all-services screen and the category currently opened.
+  List<ServiceCategory> _hubCategories = const [];
+  ServiceCategory? _selectedCategory;
 
   void go(_Journey next) {
     setState(() {
@@ -98,7 +128,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   void back() {
     setState(() {
-      page = _history.isEmpty ? _Journey.catalog : _history.removeLast();
+      page = _history.isEmpty ? _Journey.hub : _history.removeLast();
     });
   }
 
@@ -116,20 +146,21 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   Future<void> _pickTime() async {
     final value = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: selectedTime ?? const TimeOfDay(hour: 9, minute: 0),
     );
     if (value != null && mounted) setState(() => selectedTime = value);
   }
 
   void _continueSchedule() {
-    if (mode == 0 && selectedDate == null) {
+    if (mode == 0 && (selectedDate == null || selectedTime == null)) {
       _toast(AppLocaleKey.checkFields.tr());
       return;
     }
+    final time = selectedTime ?? const TimeOfDay(hour: 0, minute: 0);
     final schedule = resolveServiceSchedule(
       selectedDate: selectedDate,
-      hour: selectedTime.hour,
-      minute: selectedTime.minute,
+      hour: time.hour,
+      minute: time.minute,
       fastestAvailable: mode == 1,
     );
     if (!isServiceScheduleInFuture(schedule)) {
@@ -139,23 +170,48 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     go(_Journey.providers);
   }
 
-  void _submitPreview() {
+  Future<void> _submitPreview() async {
+    final dashboard = context.read<ResidentDashboardCubit>().state;
+    final homeId = selectedHomeId ??
+        (dashboard is DashboardReady ? dashboard.data.homeId : null);
+    if (homeId == null) {
+      _toast(AppLocaleKey.loginRequired.tr());
+      return;
+    }
+    if (serviceId == null) {
+      _toast(AppLocaleKey.checkFields.tr());
+      return;
+    }
+    final time = selectedTime ?? const TimeOfDay(hour: 0, minute: 0);
+    final scheduledAt = resolveServiceSchedule(
+      selectedDate: selectedDate,
+      hour: time.hour,
+      minute: time.minute,
+      fastestAvailable: mode == 1,
+    );
+    if (!isServiceScheduleInFuture(scheduledAt)) {
+      _toast(AppLocaleKey.checkFields.tr());
+      return;
+    }
     if (orderReference == null) {
-      final scheduledAt = resolveServiceSchedule(
-        selectedDate: selectedDate,
-        hour: selectedTime.hour,
-        minute: selectedTime.minute,
-        fastestAvailable: mode == 1,
-      );
-      final order = sl<PreviewOrdersCubit>().create(
-        serviceKey: service,
-        providerKey: selectedProvider,
-        scheduledAt: scheduledAt,
-        amount: basePrice,
-        locationKey: location,
-        notes: issue.text.trim(),
-      );
-      orderReference = order.reference;
+      try {
+        await sl<ServicesCubit>().book(
+          homeId: homeId,
+          serviceId: serviceId!,
+          date: scheduledAt,
+          subServiceId: selectedSubServiceId,
+          serviceProviderId: selectedProviderId,
+          notes: issue.text.trim().isEmpty ? null : issue.text.trim(),
+          images: _photos,
+        );
+        // Real booking created on the backend; refresh the orders list so it
+        // shows up on the orders screen.
+        sl<BookingsCubit>().load();
+        orderReference = 'booked';
+      } catch (_) {
+        _toast(AppLocaleKey.connectionError.tr());
+        return;
+      }
     }
     go(_Journey.waiting);
   }
@@ -175,6 +231,31 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       issue.text = order.notes;
       if (order.statusKey == AppLocaleKey.serviceComplete) stage = 3;
     }
+    // Unit labels are localized: refetch them when the resident switches
+    // language while this tab stays alive.
+    _localeSubscription = appLocaleChanges.listen((_) => _loadHomes());
+    _loadHomes();
+  }
+
+  Future<void> _loadHomes() async {
+    try {
+      final list = await sl<HomesRepository>().list();
+      if (!mounted) return;
+      final sorted = [...list]..sort((a, b) {
+        final ai = a.id ?? 0;
+        final bi = b.id ?? 0;
+        return ai.compareTo(bi);
+      });
+      setState(() {
+        homes = sorted;
+        homesLoading = false;
+        if (selectedHomeId == null && sorted.isNotEmpty) {
+          selectedHomeId = sorted.first.id;
+        }
+      });
+    } catch (_) {
+      if (mounted) setState(() => homesLoading = false);
+    }
   }
 
   void _activatePreview() {
@@ -193,23 +274,27 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       sl<PreviewOrdersCubit>().update(
         orderReference!,
         AppLocaleKey.serviceComplete,
-        amount: basePrice + (acceptedAdditional ? 50 : 0),
+        amount:
+            basePrice + (acceptedAdditional ? DisplayPlaceholder.number : 0),
       );
     }
   }
 
-  void _selectService(String key) {
+  void _selectService(ServiceItem item) {
     setState(() {
-      service = key;
+      service = item.name;
+      serviceId = item.id;
+      selectedService = item;
       orderReference = null;
       acceptedAdditional = false;
     });
     go(_Journey.detail);
   }
 
-  void _selectProvider(String nameKey, double price) {
+  void _selectProvider(int id, String nameKey, double price) {
     setState(() {
       selectedProvider = nameKey;
+      selectedProviderId = id;
       basePrice = price;
     });
     go(_Journey.review);
@@ -220,7 +305,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       sl<PreviewOrdersCubit>().cancel(orderReference!);
     }
     _toast(AppLocaleKey.requestCancelled.tr());
-    go(_Journey.catalog);
+    go(_Journey.hub);
   }
 
   void _openEmergency() {
@@ -231,7 +316,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   @override
   void dispose() {
-    query.dispose();
+    _localeSubscription?.cancel();
     issue.dispose();
     notes.dispose();
     super.dispose();
@@ -242,14 +327,45 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 180),
       child: switch (page) {
-        _Journey.catalog => JourneyCatalogPage(
-          query: query,
-          onQueryChanged: () => setState(() {}),
+        _Journey.hub => ServicesHubPage(
+          onCategory: (category) {
+            setState(() => _selectedCategory = category);
+            go(_Journey.category);
+          },
+          onAllServices: (categories) {
+            setState(() => _hubCategories = categories);
+            go(_Journey.allServices);
+          },
+          onAliAssist: () => go(_Journey.aliAssist),
+        ),
+        _Journey.category => _selectedCategory == null
+            ? const SizedBox.shrink()
+            : JourneyCategoryPage(
+                category: _selectedCategory!,
+                onBack: back,
+                onSelectService: _selectService,
+              ),
+        _Journey.allServices => JourneyAllServicesPage(
+          categories: _hubCategories,
+          onBack: back,
           onSelectService: _selectService,
+        ),
+        _Journey.aliAssist => JourneyAliAssistPage(
+          onBack: back,
+          onPrepareSummary: () => go(_Journey.allServices),
+          onPrototypeAction: _comingSoon,
+          issue: issue,
+          issueType: issueType,
+          onIssueTypeChanged: (value) => setState(() => issueType = value),
+          onAddPhotos: _pickPhoto,
+          photoCount: _photos.length,
         ),
         _Journey.detail => JourneyDetailPage(
           onBack: back,
           serviceKey: service,
+          subServices: selectedService?.subServices ?? const [],
+          selectedSubServiceId: selectedSubServiceId,
+          onSubServiceChanged: (id) => setState(() => selectedSubServiceId = id),
           issue: issue,
           issueType: issueType,
           onIssueTypeChanged: (key) => setState(() => issueType = key),
@@ -275,10 +391,15 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           onPickDate: _pickDate,
           onPickTime: _pickTime,
           onNext: _continueSchedule,
+          homes: homes,
+          selectedHomeId: selectedHomeId,
+          onHomeChanged: (id) => setState(() => selectedHomeId = id),
+          homesLoading: homesLoading,
         ),
         _Journey.providers => JourneyProvidersPage(
           onBack: back,
           serviceKey: service,
+          serviceId: serviceId,
           onViewCompany: () =>
               showJourneyPicker(context, AppLocaleKey.companyProfile),
           onSelectProvider: _selectProvider,
@@ -295,7 +416,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           totalLabel: '$_amountLabel ${AppLocaleKey.currencySar.tr()}',
           onSummary: () =>
               showJourneyPicker(context, AppLocaleKey.serviceSummary),
-          onSubmit: _submitPreview,
+          onSubmit: () => _submitPreview(),
         ),
         _Journey.waiting => JourneyWaitingPage(
           onBack: back,
@@ -305,7 +426,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         _Journey.tracking => JourneyTrackingPage(
           onBack: back,
           stage: stage,
-          reference: orderReference,
+          reference: _referenceLabel,
           providerLabel: selectedProvider.tr(),
           onChat: () => showJourneyPicker(context, AppLocaleKey.chat),
           onCall: () => showJourneyPicker(context, AppLocaleKey.callTechnician),
@@ -335,7 +456,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         ),
         _Journey.invoice => JourneyInvoicePage(
           onBack: back,
-          reference: orderReference,
+          reference: _referenceLabel,
           basePriceLabel:
               '${basePrice.toStringAsFixed(2)} ${AppLocaleKey.currencySar.tr()}',
           acceptedAdditional: acceptedAdditional,
@@ -368,7 +489,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         _Journey.warranty => JourneyWarrantyPage(
           onBack: back,
           onFollowUp: () => go(_Journey.followup),
-          onHome: () => setState(() => page = _Journey.catalog),
+          onHome: () => setState(() => page = _Journey.hub),
         ),
         _Journey.followup => JourneyFollowupPage(
           onBack: back,

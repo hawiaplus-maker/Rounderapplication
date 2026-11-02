@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Confirms the session-ending action before the logout request is sent.
@@ -23,16 +24,12 @@ Future<bool> confirmSignOut(BuildContext context) async =>
               children: [
                 Text(
                   AppLocaleKey.signOut.tr(),
-                  style: const TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.petrol,
-                  ),
+                  style: AppTextStyles.bodyBold21.copyWith(color: AppColors.petrol),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   AppLocaleKey.signOutConfirm.tr(),
-                  style: const TextStyle(fontSize: 14, color: AppColors.teal),
+                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.teal),
                 ),
                 const SizedBox(height: 28),
                 FilledButton(

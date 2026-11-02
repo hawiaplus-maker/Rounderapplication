@@ -24,11 +24,9 @@ class AccountActionButton extends StatelessWidget {
       style: FilledButton.styleFrom(
         backgroundColor: AppColors.mint,
         foregroundColor: AppColors.petrol,
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerStart,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
   }

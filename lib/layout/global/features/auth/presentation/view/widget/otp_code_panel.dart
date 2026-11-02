@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// White panel with the verification-code field and its resend prompt
@@ -30,12 +31,7 @@ class OtpCodePanel extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 22,
-              height: 34 / 22,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingBold22.copyWith(color: AppColors.petrol, height: 34 / 22),
           ),
           const SizedBox(height: 14),
           TextField(
@@ -46,22 +42,10 @@ class OtpCodePanel extends StatelessWidget {
               LengthLimitingTextInputFormatter(6),
             ],
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 25,
-              height: 38 / 25,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 6,
-            ),
-            decoration: const InputDecoration(
+            style: AppTextStyles.bodyBold25.copyWith(color: AppColors.petrol, height: 38 / 25, letterSpacing: 6),
+            decoration: InputDecoration(
               hintText: '——————',
-              hintStyle: TextStyle(
-                color: AppColors.muted,
-                fontSize: 22,
-                height: 38 / 22,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 6,
-              ),
+              hintStyle: AppTextStyles.headingBold22.copyWith(color: AppColors.muted, height: 38 / 22, letterSpacing: 6),
               filled: true,
               fillColor: AppColors.white,
               enabledBorder: OutlineInputBorder(
@@ -82,12 +66,7 @@ class OtpCodePanel extends StatelessWidget {
           Text(
             prompt,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.teal,
-              fontSize: 12,
-              height: 22 / 12,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.captionBold.copyWith(color: AppColors.teal, height: 22 / 12),
           ),
         ],
       ),

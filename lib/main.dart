@@ -12,8 +12,6 @@ import 'app.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  // The auth session lives in a plain Hive box — opened once at boot,
-  // before any dependency (repository or request interceptor) touches it.
   await Hive.initFlutter();
   await Hive.openBox<String>(authBoxName);
   configureDependencies();

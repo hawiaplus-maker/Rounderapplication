@@ -8,8 +8,8 @@ class ServicesScreen extends StatelessWidget {
   const ServicesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-    create: (_) => sl<ServicesCubit>()..load(),
+  Widget build(BuildContext context) => BlocProvider<ServicesCubit>.value(
+    value: sl<ServicesCubit>()..load(),
     child: const ServicesBody(),
   );
 }

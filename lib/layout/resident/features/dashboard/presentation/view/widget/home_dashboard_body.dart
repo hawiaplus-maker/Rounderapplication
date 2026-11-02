@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rounder_application/core/constants/display_placeholder.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/model/resident_dashboard_model.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
@@ -16,7 +18,6 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_unit_selector.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_visit_cards.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_visits_heading.dart';
-import 'package:rounder_application/layout/resident/features/properties/presentation/view/screens/link_home_screen.dart';
 
 /// The resident dashboard tab: resolves the dashboard state into the approved
 /// home sections (hero, emergency bar, balance/health cards, visits).
@@ -61,7 +62,7 @@ class HomeDashboardBody extends StatelessWidget {
                   Text(
                     state.key.tr(),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.white),
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white),
                   ),
                   const SizedBox(height: 12),
                   FilledButton(
@@ -80,18 +81,9 @@ class HomeDashboardBody extends StatelessWidget {
         }
 
         final data = (state as DashboardReady).data;
-        if (!data.hasHome) return const LinkHomeScreen();
-
         final cubit = context.read<ResidentDashboardCubit>();
-        final isPreview = cubit.isPreview;
-        final HomeVisit? lastVisit = _lastVisit(context, data, isPreview);
-        final HomeNextService? nextService = _nextService(
-          context,
-          data,
-          isPreview,
-        );
-        final showVisits =
-            isPreview || (lastVisit != null && nextService != null);
+        final HomeVisit lastVisit = _lastVisit(data);
+        final HomeNextService nextService = _nextService(context, data);
 
         return RefreshIndicator(
           onRefresh: cubit.load,
@@ -115,9 +107,7 @@ class HomeDashboardBody extends StatelessWidget {
                   const HomeTopBar(),
                   const SizedBox(height: HomeSpacing.block),
                   HomeHeroSection(
-                    residentName: data.residentName.isEmpty
-                        ? AppLocaleKey.resident.tr()
-                        : data.residentName,
+                    residentName: _textOrPlaceholder(data.residentName),
                     onTalk: onTalkToAli,
                   ),
                   const SizedBox(height: HomeSpacing.block),
@@ -125,7 +115,7 @@ class HomeDashboardBody extends StatelessWidget {
                   const SizedBox(height: HomeSpacing.block),
                   const HomeDashboardHeading(),
                   const SizedBox(height: HomeSpacing.block),
-                  HomeUnitSelector(unit: _unit(context, data, isPreview)),
+                  HomeUnitSelector(unit: _unit(context, data)),
                   const SizedBox(height: HomeSpacing.block),
                   HomeSummaryCards(
                     health: _health(context, data),
@@ -133,18 +123,14 @@ class HomeDashboardBody extends StatelessWidget {
                     onViewHealth: onViewAssessment,
                     onMoreBalance: onMoreBalance,
                   ),
-                  if (showVisits &&
-                      lastVisit != null &&
-                      nextService != null) ...<Widget>[
-                    const SizedBox(height: HomeSpacing.block),
-                    const HomeVisitsHeading(),
-                    const SizedBox(height: HomeSpacing.block),
-                    HomeVisitCards(
-                      lastVisit: lastVisit,
-                      nextService: nextService,
-                      onDetails: onVisitDetails,
-                    ),
-                  ],
+                  const SizedBox(height: HomeSpacing.block),
+                  const HomeVisitsHeading(),
+                  const SizedBox(height: HomeSpacing.block),
+                  HomeVisitCards(
+                    lastVisit: lastVisit,
+                    nextService: nextService,
+                    onDetails: onVisitDetails,
+                  ),
                 ],
               ),
             ),
@@ -155,15 +141,12 @@ class HomeDashboardBody extends StatelessWidget {
   }
 }
 
-HomeUnit _unit(BuildContext context, ResidentDashboard data, bool isPreview) {
-  final String name = data.homeName.isNotEmpty
-      ? data.homeName
-      : (isPreview ? AppLocaleKey.unitTitle.tr() : AppLocaleKey.myHome.tr());
-  final String rawUnit = data.unitLabel;
-  final String code = rawUnit.isEmpty
-      ? ''
-      : '${AppLocaleKey.homeUnitWord.tr()} ${_formatUnitLabel(context, rawUnit)}';
-  return HomeUnit(name: name, code: code);
+HomeUnit _unit(BuildContext context, ResidentDashboard data) {
+  final String rawUnit = data.unitLabel.trim();
+  final String code =
+      '${AppLocaleKey.homeUnitWord.tr()} '
+      '${rawUnit.isEmpty ? DisplayPlaceholder.text : _formatUnitLabel(context, rawUnit)}';
+  return HomeUnit(name: _textOrPlaceholder(data.homeName), code: code);
 }
 
 HomeBalance _balance(BuildContext context, ResidentDashboard data) {
@@ -192,82 +175,57 @@ HomeHealth _health(BuildContext context, ResidentDashboard data) {
     metrics: <HomeHealthMetric>[
       HomeHealthMetric(
         label: AppLocaleKey.homeHealthUnitLabel.tr(),
-        value: AppLocaleKey.stateExcellent.tr(),
+        value: DisplayPlaceholder.text,
       ),
       HomeHealthMetric(
         label: AppLocaleKey.homeHealthFacilitiesLabel.tr(),
-        value: AppLocaleKey.stateGood.tr(),
+        value: DisplayPlaceholder.text,
       ),
     ],
     actionLabel: AppLocaleKey.homeViewAssessment.tr(),
   );
 }
 
-HomeVisit? _lastVisit(
-  BuildContext context,
-  ResidentDashboard data,
-  bool isPreview,
-) {
-  if (isPreview) {
-    return HomeVisit(
-      title: AppLocaleKey.homeLastVisitTitle.tr(),
-      badge: AppLocaleKey.sharedFacilities.tr(),
-      service: AppLocaleKey.homeLastVisitService.tr(),
-      serviceIcon: AppImages.homeElevator,
-      provider: AppLocaleKey.homeLastVisitProvider.tr(),
-      time: AppLocaleKey.homeLastVisitTime.tr(),
-      status: AppLocaleKey.homeStatusCompleted.tr(),
-      actionLabel: AppLocaleKey.homeDetails.tr(),
-    );
-  }
-
+HomeVisit _lastVisit(ResidentDashboard data) {
   final DashboardItem? item = data.recentActivity;
-  if (item == null) return null;
-  final List<String> lines = item.subtitle.split('\n');
+  final List<String> lines = item?.subtitle.split('\n') ?? const <String>[];
   final String provider = lines.isEmpty ? '' : lines.first.trim();
   final String time = lines.length > 1 ? lines.sublist(1).join(' ').trim() : '';
   return HomeVisit(
     title: AppLocaleKey.homeLastVisitTitle.tr(),
-    badge: AppLocaleKey.sharedFacilities.tr(),
-    service: item.title,
+    badge: DisplayPlaceholder.text,
+    service: _textOrPlaceholder(item?.title),
     serviceIcon: AppImages.homeElevator,
-    provider: provider,
-    time: time,
-    status: AppLocaleKey.homeStatusCompleted.tr(),
+    provider: _textOrPlaceholder(provider),
+    time: _textOrPlaceholder(time),
+    status: DisplayPlaceholder.text,
     actionLabel: AppLocaleKey.homeDetails.tr(),
   );
 }
 
-HomeNextService? _nextService(
-  BuildContext context,
-  ResidentDashboard data,
-  bool isPreview,
-) {
-  if (isPreview) {
-    return HomeNextService(
-      title: AppLocaleKey.upcomingService.tr(),
-      badge: AppLocaleKey.sharedFacilities.tr(),
-      remainingLabel: AppLocaleKey.homeRemaining.tr(),
-      countdown: AppLocaleKey.homeCountdownValue.tr(),
-      countdownUnit: AppLocaleKey.homeCountdownUnit.tr(),
-      service: AppLocaleKey.homeNextServiceName.tr(),
-      serviceIcon: AppImages.homeSpray,
-      time: AppLocaleKey.homeNextServiceTime.tr(),
-    );
-  }
-
+HomeNextService _nextService(BuildContext context, ResidentDashboard data) {
   final DashboardItem? item = data.upcomingService;
-  if (item == null) return null;
   return HomeNextService(
     title: AppLocaleKey.upcomingService.tr(),
-    badge: AppLocaleKey.sharedFacilities.tr(),
+    badge: DisplayPlaceholder.text,
     remainingLabel: AppLocaleKey.homeRemaining.tr(),
-    countdown: AppLocaleKey.homeCountdownValue.tr(),
+    countdown: _formatCountdown(context),
     countdownUnit: AppLocaleKey.homeCountdownUnit.tr(),
-    service: item.title,
+    service: _textOrPlaceholder(item?.title),
     serviceIcon: AppImages.homeSpray,
-    time: item.subtitle,
+    time: _textOrPlaceholder(item?.subtitle),
   );
+}
+
+String _textOrPlaceholder(String? value) =>
+    value == null || value.trim().isEmpty
+    ? DisplayPlaceholder.text
+    : value.trim();
+
+/// Empty countdown, written with the app's digits: `٠٠:٠٠` / `00:00`.
+String _formatCountdown(BuildContext context) {
+  final String zero = _formatNumber(context, DisplayPlaceholder.number);
+  return '$zero$zero:$zero$zero';
 }
 
 /// Home numbers follow the app language: Arabic-Indic digits with the Arabic

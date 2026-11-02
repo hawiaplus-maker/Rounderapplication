@@ -29,7 +29,9 @@ class PhoneChangeCubit extends Cubit<PhoneChangeState> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (isClosed || state.remaining <= 1) {
         timer.cancel();
-        if (!isClosed) emit(PhoneChangeState(step: state.step, phone: state.phone));
+        if (!isClosed) {
+          emit(PhoneChangeState(step: state.step, phone: state.phone));
+        }
       } else {
         emit(
           PhoneChangeState(

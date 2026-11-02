@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rounder_application/core/locale/app_locale.dart';
+import 'package:rounder_application/core/services/app_toast.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
@@ -10,16 +12,33 @@ import 'package:rounder_application/layout/global/features/auth/presentation/cub
 import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/login_screen.dart';
 import 'package:rounder_application/layout/global/features/splash/presentation/view/screens/splash_screen.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/weather_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screens/resident_home_screen.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/onboarding_intro_screen.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/data/repo/onboarding_repository.dart';
 
-class RounderApp extends StatelessWidget {
+class RounderApp extends StatefulWidget {
   const RounderApp({super.key});
+
+  @override
+  State<RounderApp> createState() => _RounderAppState();
+}
+
+class _RounderAppState extends State<RounderApp> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // easy_localization selects the start/saved language but leaves `Intl`
+    // alone; the API `Accept-Language` header and date/number formats read it,
+    // so keep it on the selected locale before any child loads data.
+    syncIntlLocale(context.locale);
+  }
+
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'Rounder',
     debugShowCheckedModeBanner: false,
+    scaffoldMessengerKey: appMessengerKey,
     theme: AppTheme.light,
     locale: context.locale,
     supportedLocales: context.supportedLocales,
@@ -66,7 +85,9 @@ class _BootGateState extends State<_BootGate> {
         return FutureBuilder<bool>(
           future: _onboardingSeen,
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) return const SplashScreen();
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const SplashScreen();
+            }
             if (snapshot.data == false) {
               return OnboardingIntroScreen(
                 onDone: () async {
@@ -82,7 +103,10 @@ class _BootGateState extends State<_BootGate> {
             if (state is Authenticated) {
               return BlocProvider(
                 create: (_) => sl<ResidentDashboardCubit>()..load(),
-                child: const ResidentHomeScreen(),
+                child: BlocProvider<WeatherCubit>.value(
+                  value: sl<WeatherCubit>()..ensureLoaded(),
+                  child: const ResidentHomeScreen(),
+                ),
               );
             }
             // Login owns a PhoneAuthCubit so its callbacks can read the

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/post_service/presentation/view/widget/aftercare_action_button.dart';
 
@@ -60,11 +61,7 @@ class _StepRow extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.start,
-              style: TextStyle(
-                color: done ? AppColors.petrol : AppColors.muted,
-                fontSize: 14,
-                height: 22 / 14,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(color: done ? AppColors.petrol : AppColors.muted),
             ),
           ),
         ],

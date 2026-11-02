@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Approved alternate sign-in block (design `Alternate sign-in / Divider` +
@@ -30,11 +31,7 @@ class LoginSocialButtons extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               AppLocaleKey.orContinueWith.tr(),
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 12,
-                height: 22 / 12,
-              ),
+              style: AppTextStyles.captionRegular.copyWith(color: AppColors.petrol, height: 22 / 12),
             ),
             const SizedBox(width: 12),
             const Expanded(child: _Rule()),
@@ -81,11 +78,7 @@ class _GoogleButton extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 14,
-                height: 26 / 14,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.petrol, height: 26 / 14),
             ),
           ),
         ],
@@ -123,11 +116,7 @@ class _AppleButton extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 14,
-                height: 26 / 14,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.white, height: 26 / 14),
             ),
           ),
         ],

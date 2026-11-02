@@ -3,6 +3,7 @@ import 'dart:ui' as ui_direction show TextDirection;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Approved legal row (design `Legal / Links`): privacy policy and terms,
@@ -11,7 +12,7 @@ import 'package:rounder_application/core/theme/app_theme.dart';
 class LoginLegalLinks extends StatelessWidget {
   const LoginLegalLinks({super.key});
 
-  static const _labelStyle = TextStyle(color: AppColors.petrol, fontSize: 12, height: 22 / 12);
+  static final _labelStyle = AppTextStyles.captionRegular.copyWith(color: AppColors.petrol, height: 22 / 12);
 
   @override
   Widget build(BuildContext context) {

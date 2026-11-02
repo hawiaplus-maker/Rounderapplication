@@ -15,7 +15,7 @@ class CountdownGauge extends StatelessWidget {
     super.key,
     required this.value,
     required this.unitLabel,
-    this.progress = 0.72,
+    this.progress = 0,
   });
 
   final String value;

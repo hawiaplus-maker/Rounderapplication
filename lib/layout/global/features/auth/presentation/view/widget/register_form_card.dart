@@ -3,6 +3,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/otp_action.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/register_field_entry.dart';
@@ -54,21 +55,12 @@ class RegisterFormCard extends StatelessWidget {
               Text(
                 AppLocaleKey.createAccount.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.petrol,
-                  fontSize: 32,
-                  height: 44 / 32,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: AppTextStyles.displayHero.copyWith(color: AppColors.petrol),
               ),
               Text(
                 AppLocaleKey.registerIntro.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.petrol,
-                  fontSize: 16,
-                  height: 24 / 16,
-                ),
+                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol, height: 24 / 16),
               ),
               const SizedBox(height: 24),
               RegisterFieldEntry(
@@ -117,11 +109,7 @@ class RegisterFormCard extends StatelessWidget {
                 Text(
                   errorText!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.coral,
-                    fontSize: 12,
-                    height: 22 / 12,
-                  ),
+                  style: AppTextStyles.captionRegular.copyWith(color: AppColors.coral, height: 22 / 12),
                 ),
               ],
             ],

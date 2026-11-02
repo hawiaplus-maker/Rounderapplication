@@ -2,6 +2,7 @@ import 'dart:ui' as ui_direction show TextDirection;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Page title bar of the after-service journey screens.
@@ -19,12 +20,7 @@ class AftercareHeader extends StatelessWidget {
           child: Text(
             titleKey.tr(),
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 23,
-              height: 34 / 23,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingBold23.copyWith(color: AppColors.white),
           ),
         ),
         GestureDetector(
@@ -52,7 +48,7 @@ class _BackChevron extends StatelessWidget {
   Widget build(BuildContext context) {
     final rtl = Directionality.of(context) == ui_direction.TextDirection.rtl;
     return Icon(
-      rtl ? Icons.chevron_right : Icons.chevron_left,
+      rtl ? Icons.arrow_back_ios_new : Icons.arrow_back_ios_new,
       size: 22,
       color: AppColors.white,
     );

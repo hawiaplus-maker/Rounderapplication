@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 
 abstract final class AppColors {
   static const petrol = Color(0xFF073B43),
@@ -18,6 +19,8 @@ abstract final class AppColors {
   static const mintDeep = Color(0xFFA8D4CF);
   // Design-system border of the auth fields / rules (login frame 168:2).
   static const stroke = Color(0xFFB9C8C6);
+  // Pale orange wash of the emergency form's warning notice.
+  static const emergencyWash = Color(0xFFFFEEE5);
   // Resident home (Figma 108:44): exact glass alphas, shadows, emergency red,
   // gauge tones and the four-stop page gradient of the dashboard frame.
   static const emergency = Color(0xFFD42E33);
@@ -56,6 +59,23 @@ abstract final class AppTheme {
   static ThemeData get light => ThemeData(
     useMaterial3: true,
     fontFamily: 'Cairo',
+    textTheme: const TextTheme(
+      displayLarge: AppTextStyles.displayHero,
+      displayMedium: AppTextStyles.displayLarge,
+      displaySmall: AppTextStyles.displayBold30,
+      headlineLarge: AppTextStyles.headingH1,
+      headlineMedium: AppTextStyles.headingH2,
+      headlineSmall: AppTextStyles.headingH3,
+      titleLarge: AppTextStyles.headingH4,
+      titleMedium: AppTextStyles.bodyBold15,
+      titleSmall: AppTextStyles.labelAction,
+      bodyLarge: AppTextStyles.bodyLarge,
+      bodyMedium: AppTextStyles.bodyMedium,
+      bodySmall: AppTextStyles.bodySmall,
+      labelLarge: AppTextStyles.labelAction,
+      labelMedium: AppTextStyles.captionBold,
+      labelSmall: AppTextStyles.tinyBold,
+    ),
     scaffoldBackgroundColor: AppColors.canvas,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.petrol,

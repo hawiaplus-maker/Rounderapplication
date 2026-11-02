@@ -16,6 +16,8 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "flutter_secure_storage_darwin", path: "../.packages/flutter_secure_storage_darwin-0.4.3"),
+        .package(name: "geocoding_darwin", path: "../.packages/geocoding_darwin-1.0.3"),
+        .package(name: "geolocator_apple", path: "../.packages/geolocator_apple-2.4.3"),
         .package(name: "image_picker_ios", path: "../.packages/image_picker_ios-0.8.13+13"),
         .package(name: "shared_preferences_foundation", path: "../.packages/shared_preferences_foundation-2.5.7"),
         .package(name: "FlutterFramework", path: "../.packages/FlutterFramework")
@@ -25,6 +27,8 @@ let package = Package(
             name: "FlutterGeneratedPluginSwiftPackage",
             dependencies: [
                 .product(name: "flutter-secure-storage-darwin", package: "flutter_secure_storage_darwin"),
+                .product(name: "geocoding-darwin", package: "geocoding_darwin"),
+                .product(name: "geolocator-apple", package: "geolocator_apple"),
                 .product(name: "image-picker-ios", package: "image_picker_ios"),
                 .product(name: "shared-preferences-foundation", package: "shared_preferences_foundation"),
                 .product(name: "FlutterFramework", package: "FlutterFramework")

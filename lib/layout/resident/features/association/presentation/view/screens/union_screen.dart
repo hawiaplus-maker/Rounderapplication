@@ -24,7 +24,7 @@ class UnionScreen extends StatefulWidget {
 class _UnionScreenState extends State<UnionScreen> {
   UnionSection section = UnionSection.overview;
   final message = TextEditingController();
-  int likes = 14;
+  int likes = 0;
 
   void open(UnionSection value) => setState(() => section = value);
 

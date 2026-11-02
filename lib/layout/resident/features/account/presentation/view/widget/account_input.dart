@@ -20,7 +20,7 @@ class AccountInput extends StatelessWidget {
     return TextField(
       controller: controller,
       keyboardType: keyboard,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.start,
       decoration: InputDecoration(
         labelText: labelKey.tr(),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),

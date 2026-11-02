@@ -1,14 +1,49 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
+import 'package:rounder_application/layout/resident/features/services/data/model/service_provider_model.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/cubit/service_providers_cubit.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 
-/// Providers step: the available providers for the selected service.
+/// Providers step: available providers for the selected service, loaded from
+/// `/resident/service-providers?service_id=...`.
 class JourneyProvidersPage extends StatelessWidget {
   const JourneyProvidersPage({
     super.key,
+    required this.onBack,
+    required this.serviceKey,
+    required this.serviceId,
+    required this.onViewCompany,
+    required this.onSelectProvider,
+  });
+
+  final VoidCallback onBack;
+  final String serviceKey;
+  final int? serviceId;
+  final VoidCallback onViewCompany;
+  final void Function(int id, String name, double price) onSelectProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<ServiceProvidersCubit>()..load(serviceId ?? 0),
+      child: _JourneyProvidersBody(
+        onBack: onBack,
+        serviceKey: serviceKey,
+        onViewCompany: onViewCompany,
+        onSelectProvider: onSelectProvider,
+      ),
+    );
+  }
+}
+
+class _JourneyProvidersBody extends StatelessWidget {
+  const _JourneyProvidersBody({
     required this.onBack,
     required this.serviceKey,
     required this.onViewCompany,
@@ -18,7 +53,7 @@ class JourneyProvidersPage extends StatelessWidget {
   final VoidCallback onBack;
   final String serviceKey;
   final VoidCallback onViewCompany;
-  final void Function(String nameKey, double price) onSelectProvider;
+  final void Function(int id, String name, double price) onSelectProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -29,35 +64,58 @@ class JourneyProvidersPage extends StatelessWidget {
         JourneyPanel(
           children: [
             Text(
-              serviceKey.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
+              serviceKey,
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w800,
                 color: AppColors.petrol,
               ),
             ),
-            Text(
-              '${AppLocaleKey.myUnit.tr()} • ${AppLocaleKey.flatNumber.tr()}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted),
-            ),
           ],
         ),
-        _ProviderCard(
-          nameKey: AppLocaleKey.providerOne,
-          rating: AppLocaleKey.providerOneMeta.tr(),
-          price: '150',
-          icon: Icons.home_repair_service,
-          onViewCompany: onViewCompany,
-          onSelect: () => onSelectProvider(AppLocaleKey.providerOne, 150),
-        ),
-        _ProviderCard(
-          nameKey: AppLocaleKey.providerTwo,
-          rating: AppLocaleKey.providerTwoMeta.tr(),
-          price: '180',
-          icon: Icons.handyman_outlined,
-          onViewCompany: onViewCompany,
-          onSelect: () => onSelectProvider(AppLocaleKey.providerTwo, 180),
+        BlocBuilder<ServiceProvidersCubit, ServiceProvidersState>(
+          builder: (context, state) {
+            if (state is ServiceProvidersLoading) {
+              return const Padding(
+                padding: EdgeInsets.all(40),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+            if (state is ServiceProvidersFailure) {
+              return Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  state.key.tr(),
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+                ),
+              );
+            }
+            if (state is ServiceProvidersReady) {
+              if (state.providers.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    AppLocaleKey.noServices.tr(),
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+                  ),
+                );
+              }
+              return Column(
+                children: state.providers
+                    .map(
+                      (p) => _ProviderCard(
+                        provider: p,
+                        onViewCompany: onViewCompany,
+                        onSelect: () => onSelectProvider(p.id, p.name, p.price ?? 0),
+                      ),
+                    )
+                    .toList(),
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ],
     );
@@ -66,18 +124,12 @@ class JourneyProvidersPage extends StatelessWidget {
 
 class _ProviderCard extends StatelessWidget {
   const _ProviderCard({
-    required this.nameKey,
-    required this.rating,
-    required this.price,
-    required this.icon,
+    required this.provider,
     required this.onViewCompany,
     required this.onSelect,
   });
 
-  final String nameKey;
-  final String rating;
-  final String price;
-  final IconData icon;
+  final ServiceProvider provider;
   final VoidCallback onViewCompany;
   final VoidCallback onSelect;
 
@@ -89,52 +141,60 @@ class _ProviderCard extends StatelessWidget {
           children: [
             CircleAvatar(
               backgroundColor: AppColors.petrol,
-              child: Icon(icon, color: Colors.white),
+              backgroundImage: provider.imageUrl != null ? NetworkImage(provider.imageUrl!) : null,
+              child: provider.imageUrl == null
+                  ? const Icon(Icons.home_repair_service, color: AppColors.white)
+                  : null,
             ),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  nameKey.tr(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.petrol,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    provider.name,
+                    style: AppTextStyles.extraBold18.copyWith(color: AppColors.petrol),
                   ),
-                ),
-                Text(rating, style: const TextStyle(color: AppColors.muted)),
-              ],
+                  if (provider.rating != null)
+                    Text(
+                      provider.rating!,
+                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+                    ),
+                  if (provider.meta != null)
+                    Text(
+                      provider.meta!,
+                      style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
+                    ),
+                ],
+              ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        Text(
-          '$price ${AppLocaleKey.currencySar.tr()} • ${AppLocaleKey.serviceType.tr()}',
-          textAlign: TextAlign.right,
-        ),
-        Text(
-          AppLocaleKey.arrivalInThreeHours.tr(),
-          textAlign: TextAlign.right,
-          style: const TextStyle(color: AppColors.muted, fontSize: 12),
-        ),
+        if (provider.price != null)
+          Text(
+            '${provider.price!.toStringAsFixed(0)} ${AppLocaleKey.currencyEgp.tr()}',
+            textAlign: TextAlign.start,
+          ),
         const SizedBox(height: 8),
         Row(
           children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: onViewCompany,
-                child: Text(AppLocaleKey.viewCompany.tr()),
-              ),
-            ),
-            const SizedBox(width: 8),
+            // Expanded(
+            //   child: OutlinedButton(
+            //     onPressed: onViewCompany,
+            //     child: Text(AppLocaleKey.viewCompany.tr()),
+            //   ),
+            // ),
+            // const SizedBox(width: 8),
             Expanded(
               child: FilledButton(
                 onPressed: onSelect,
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.orange,
+                style: FilledButton.styleFrom(backgroundColor: AppColors.orange),
+                child: Text(
+                  AppLocaleKey.selectProvider.tr(),
+                  style: AppTextStyles.headingH4.copyWith(color: AppColors.white),
                 ),
-                child: Text(AppLocaleKey.selectProvider.tr()),
               ),
             ),
           ],

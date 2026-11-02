@@ -14,6 +14,7 @@ Flutter package: `rounder_application`. This migration reorganizes existing sour
 | lib/core/network | Existing ApiConsumer and DioConsumer |
 | lib/core/services/services_locator.dart | Existing GetIt sl registrations and Dio interceptors |
 | lib/core/theme/app_theme.dart | Existing AppColors and AppTheme |
+| lib/core/theme/app_text_styles.dart | AppTextStyles — the type scale mirrored from the Figma text styles; every text style in the app comes from here (rule: .opencode/skills/rounder-text) |
 
 ## Features
 Authentication is in `lib/layout/global/features/auth`.

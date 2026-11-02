@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Warranty summary card (design مطابقة 882:5138): heading plus the
@@ -24,12 +25,7 @@ class WarrantySummaryCard extends StatelessWidget {
           Text(
             AppLocaleKey.warrantyThisService.tr(),
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 17,
-              height: 26 / 17,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.bodyBold17.copyWith(color: AppColors.petrol),
           ),
           const SizedBox(height: 12),
           for (final row in rows) ...[
@@ -39,23 +35,14 @@ class WarrantySummaryCard extends StatelessWidget {
                   child: Text(
                     row.$1,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(
-                      color: AppColors.muted,
-                      fontSize: 14,
-                      height: 22 / 14,
-                    ),
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.muted),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   row.$2,
                   textAlign: TextAlign.end,
-                  style: const TextStyle(
-                    color: AppColors.petrol,
-                    fontSize: 14,
-                    height: 22 / 14,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppTextStyles.bodyBold14.copyWith(color: AppColors.petrol),
                 ),
               ],
             ),

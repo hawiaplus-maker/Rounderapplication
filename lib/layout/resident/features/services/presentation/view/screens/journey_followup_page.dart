@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
@@ -36,12 +37,8 @@ class JourneyFollowupPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.technicianOnWay.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
             JourneySelectPill(
               label: dateLabel,

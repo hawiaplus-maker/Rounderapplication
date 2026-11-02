@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// One linked-unit card (design current / other unit cards): the mint badge
@@ -58,12 +59,7 @@ class UnitCard extends StatelessWidget {
               Text(
                 name,
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  color: AppColors.petrol,
-                  fontSize: 22,
-                  height: 32 / 22,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: AppTextStyles.headingBold22.copyWith(color: AppColors.petrol),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -77,27 +73,18 @@ class UnitCard extends StatelessWidget {
                 child: Text(
                   isCurrent ? currentBadge : role,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.teal,
-                    fontSize: 12,
-                    height: 18 / 12,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppTextStyles.captionBold.copyWith(color: AppColors.teal, height: 18 / 12),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Text(
-            role,
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.teal,
-              fontSize: 14,
-              height: 20 / 14,
-              fontWeight: FontWeight.w700,
+          if (isCurrent)
+            Text(
+              role,
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyBold14.copyWith(color: AppColors.teal, height: 20 / 14),
             ),
-          ),
           const SizedBox(height: 6),
           _SpecRow(value: unitNo),
           _SpecRow(value: city),
@@ -125,7 +112,6 @@ class UnitCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class _SpecRow extends StatelessWidget {
@@ -140,11 +126,7 @@ class _SpecRow extends StatelessWidget {
     child: Text(
       value,
       textAlign: TextAlign.start,
-      style: TextStyle(
-        color: AppColors.muted,
-        fontSize: small ? 12 : 14,
-        height: small ? 18 / 12 : 22 / 14,
-      ),
+      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted, height: small ? 18 / 12 : 22 / 14),
     ),
   );
 }
@@ -182,12 +164,7 @@ class _Pill extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 13,
-                height: 20 / 13,
-                fontWeight: FontWeight.w700,
-              ),
+              style: AppTextStyles.captionBold13.copyWith(color: AppColors.petrol),
             ),
           ),
         ],

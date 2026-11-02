@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_action_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
@@ -27,12 +28,8 @@ class AccountHelpPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.faqTitle.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             AccountActionButton(
@@ -58,8 +55,8 @@ class AccountHelpPage extends StatelessWidget {
             ),
             Text(
               AppLocaleKey.faqHint.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted, fontSize: 12),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
             ),
           ],
         ),
@@ -79,19 +76,16 @@ class _FaqTile extends StatelessWidget {
     tilePadding: EdgeInsets.zero,
     title: Text(
       questionKey.tr(),
-      textAlign: TextAlign.right,
-      style: const TextStyle(
-        color: AppColors.petrol,
-        fontWeight: FontWeight.w700,
-      ),
+      textAlign: TextAlign.start,
+      style: AppTextStyles.bodyBold15.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol),
     ),
     children: [
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Text(
           answerKey.tr(),
-          textAlign: TextAlign.right,
-          style: const TextStyle(color: AppColors.muted, height: 1.5),
+          textAlign: TextAlign.start,
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted, height: 1.5),
         ),
       ),
     ],

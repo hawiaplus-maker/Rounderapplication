@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Top bar of the welcome flow with the close action.
@@ -17,11 +18,7 @@ class WelcomeFlowHeader extends StatelessWidget {
         children: [
           Text(
             AppLocaleKey.welcome.tr(),
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingH4.copyWith(color: AppColors.white),
           ),
           const Spacer(),
           IconButton(

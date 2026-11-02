@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Completion state of the welcome-gift selection.
@@ -35,17 +36,13 @@ class WelcomeGiftSuccessView extends StatelessWidget {
           Text(
             AppLocaleKey.giftSaved.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
-            ),
+            style: AppTextStyles.extraBold24.copyWith(color: AppColors.white),
           ),
           const SizedBox(height: 8),
           Text(
             giftTitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.white),
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white),
           ),
           const SizedBox(height: 22),
           FilledButton(

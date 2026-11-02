@@ -22,7 +22,7 @@ class JourneyNextButton extends StatelessWidget {
         onPressed: onPressed,
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.orange,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.white,
         ),
         child: Text(labelKey.tr()),
       ),

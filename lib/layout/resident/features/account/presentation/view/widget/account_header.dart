@@ -1,18 +1,17 @@
+import 'dart:ui' as ui_direction;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Title bar shared by all account pages.
 class AccountHeader extends StatelessWidget {
-  const AccountHeader({
-    super.key,
-    required this.titleKey,
-    this.onBack,
-    this.showBack = false,
-  }) : assert(!showBack || onBack != null);
+  const AccountHeader({super.key, required this.titleKey, this.onBack, this.showBack = false})
+    : assert(!showBack || onBack != null);
 
   final String titleKey;
   final VoidCallback? onBack;
@@ -27,29 +26,30 @@ class AccountHeader extends StatelessWidget {
           if (showBack)
             TextButton.icon(
               onPressed: onBack,
-              icon: const Icon(Icons.chevron_left, color: AppColors.white),
+              icon: const _BackChevron(),
               label: Text(
                 AppLocaleKey.back.tr(),
-                style: const TextStyle(color: AppColors.white),
+                style: AppTextStyles.labelAction.copyWith(color: AppColors.white),
               ),
             )
           else
-            Text(
-              titleKey.tr(),
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+            Text(titleKey.tr(), style: AppTextStyles.bodyBold17.copyWith(color: AppColors.white)),
           const Spacer(),
-          SvgPicture.asset(
-            AppImages.rounderIcon,
-            height: 28,
-            fit: BoxFit.contain,
-          ),
+          SvgPicture.asset(AppImages.rounderIcon, height: 28, fit: BoxFit.contain),
         ],
       ),
     );
+  }
+}
+
+class _BackChevron extends StatelessWidget {
+  const _BackChevron();
+
+  @override
+  Widget build(BuildContext context) {
+    // In RTL the back arrow points toward the previous (right-side) screen —
+    // mirrored with the layout direction.
+    final rtl = Directionality.of(context) == ui_direction.TextDirection.rtl;
+    return Icon(rtl ? Icons.arrow_back_ios_new : Icons.arrow_back_ios_new, color: AppColors.white);
   }
 }

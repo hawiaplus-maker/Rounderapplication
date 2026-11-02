@@ -3,6 +3,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_legal_links.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_phone_entry.dart';
@@ -50,21 +51,12 @@ class LoginFormCard extends StatelessWidget {
               Text(
                 AppLocaleKey.loginGreeting.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.petrol,
-                  fontSize: 32,
-                  height: 44 / 32,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: AppTextStyles.displayHero.copyWith(color: AppColors.petrol),
               ),
               Text(
                 AppLocaleKey.loginTagline.tr(),
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.petrol,
-                  fontSize: 16,
-                  height: 24 / 16,
-                ),
+                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol, height: 24 / 16),
               ),
               const SizedBox(height: 24),
               LoginPhoneEntry(

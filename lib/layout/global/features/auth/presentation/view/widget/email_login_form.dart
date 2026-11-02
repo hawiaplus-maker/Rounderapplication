@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/email_login_field.dart';
@@ -101,7 +102,7 @@ class EmailLoginForm extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               AppLocaleKey.passwordRule.tr(),
-              style: const TextStyle(fontSize: 12, color: AppColors.muted),
+              style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
             ),
           ),
         ],
@@ -114,7 +115,7 @@ class EmailLoginForm extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
                     state.messageKey.tr(),
-                    style: const TextStyle(color: AppColors.coral),
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.coral),
                   ),
                 ),
               SizedBox(

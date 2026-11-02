@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// The units screens' empty journey (design: پیش from حوار same screen):
@@ -35,32 +36,19 @@ class UnitsEmptyState extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 20,
-              height: 30 / 20,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingH2.copyWith(color: AppColors.petrol),
           ),
           const SizedBox(height: 10),
           Text(
             body,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.teal,
-              fontSize: 15,
-              height: 26 / 15,
-            ),
+            style: AppTextStyles.bodyRegular15.copyWith(color: AppColors.teal, height: 26 / 15),
           ),
           const SizedBox(height: 6),
           Text(
             hint,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.muted,
-              fontSize: 12,
-              height: 20 / 12,
-            ),
+            style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
           ),
           const SizedBox(height: 18),
           FilledButton(
@@ -76,12 +64,7 @@ class UnitsEmptyState extends StatelessWidget {
             child: Text(
               actionLabel,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 14,
-                height: 22 / 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: AppTextStyles.bodyBold14.copyWith(color: AppColors.petrol),
             ),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/model/welcome_gift_option.dart';
 
@@ -31,11 +32,7 @@ class WelcomeGiftDetailsView extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           AppLocaleKey.giftDetails.tr(),
-          style: const TextStyle(
-            color: AppColors.white,
-            fontSize: 26,
-            fontWeight: FontWeight.w900,
-          ),
+          style: AppTextStyles.extraBold26.copyWith(color: AppColors.white),
         ),
         const SizedBox(height: 10),
         Card(
@@ -47,21 +44,17 @@ class WelcomeGiftDetailsView extends StatelessWidget {
               children: [
                 Text(
                   option.titleKey.tr(),
-                  style: const TextStyle(
-                    color: AppColors.petrol,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   option.descriptionKey.tr(),
-                  style: const TextStyle(height: 1.7),
+                  style: AppTextStyles.bodyMedium.copyWith(height: 1.7),
                 ),
                 const SizedBox(height: 20),
                 Text(
                   AppLocaleKey.giftTerms.tr(),
-                  style: const TextStyle(color: AppColors.muted),
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
                 ),
               ],
             ),
@@ -84,7 +77,7 @@ class WelcomeGiftDetailsView extends StatelessWidget {
           onPressed: onBack,
           child: Text(
             AppLocaleKey.back.tr(),
-            style: const TextStyle(color: AppColors.petrol),
+            style: AppTextStyles.labelAction.copyWith(color: AppColors.petrol),
           ),
         ),
       ],

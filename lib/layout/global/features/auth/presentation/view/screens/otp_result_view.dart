@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/otp_action.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/otp_header.dart';
@@ -42,22 +43,13 @@ class OtpResultView extends StatelessWidget {
             Text(
               AppLocaleKey.otpVerifiedTitle.tr(),
               textAlign: TextAlign.start,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 20,
-                height: 30 / 20,
-                fontWeight: FontWeight.w700,
-              ),
+              style: AppTextStyles.headingH2.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             Text(
               AppLocaleKey.otpVerifiedBody.tr(),
               textAlign: TextAlign.start,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 15,
-                height: 26 / 15,
-              ),
+              style: AppTextStyles.bodyRegular15.copyWith(color: AppColors.petrol, height: 26 / 15),
             ),
             const SizedBox(height: 18),
             OtpAction(

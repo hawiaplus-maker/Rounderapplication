@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Bottom bar of an intro step: 3 progress pills lit right-to-left (RTL
@@ -45,12 +46,7 @@ class WelcomeIntroFooter extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.petrol,
-              fontSize: 19,
-              height: 32 / 19,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.bodyBold19.copyWith(color: AppColors.petrol, height: 32 / 19),
           ),
         ),
       ],

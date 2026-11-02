@@ -1,14 +1,14 @@
+import 'dart:ui' as ui_direction;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Title bar shared by all service journey pages.
 class JourneyHeader extends StatelessWidget {
-  const JourneyHeader({
-    super.key,
-    required this.titleKey,
-    this.onBack,
-    this.backButton = true,
-  }) : assert(!backButton || onBack != null);
+  const JourneyHeader({super.key, required this.titleKey, this.onBack, this.backButton = true})
+    : assert(!backButton || onBack != null);
 
   final String titleKey;
   final VoidCallback? onBack;
@@ -23,25 +23,19 @@ class JourneyHeader extends StatelessWidget {
           if (backButton)
             IconButton(
               onPressed: onBack,
-              icon: const Icon(Icons.chevron_left, color: Colors.white),
+              icon: Icon(
+                Directionality.of(context) == ui_direction.TextDirection.rtl
+                    ? Icons.arrow_back_ios_new
+                    : Icons.arrow_back_ios_new,
+                color: AppColors.white,
+              ),
             )
           else
             const SizedBox(width: 8),
           const Spacer(),
-          Text(
-            titleKey.tr(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 21,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
+          Text(titleKey.tr(), style: AppTextStyles.extraBold21.copyWith(color: AppColors.white)),
           const SizedBox(width: 8),
-          if (!backButton)
-            const Icon(
-              Icons.home_repair_service_outlined,
-              color: Colors.white,
-            ),
+          if (!backButton) const Icon(Icons.home_repair_service_outlined, color: AppColors.white),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:ui' as ui_direction show TextDirection;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Setup checklist shown after the onboarding intro.
@@ -33,17 +34,12 @@ class WelcomeTasksView extends StatelessWidget {
       children: [
         Text(
           AppLocaleKey.welcomeSteps.tr(),
-          style: TextStyle(color: AppColors.white.withValues(alpha: .7)),
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white.withValues(alpha: .7)),
         ),
         const SizedBox(height: 8),
         Text(
           AppLocaleKey.welcomeGiftTitle.tr(),
-          style: const TextStyle(
-            color: AppColors.white,
-            fontSize: 30,
-            height: 1.2,
-            fontWeight: FontWeight.w900,
-          ),
+          style: AppTextStyles.extraBold30.copyWith(color: AppColors.white, height: 1.2),
         ),
         const SizedBox(height: 18),
         _TaskCard(
@@ -71,9 +67,7 @@ class WelcomeTasksView extends StatelessWidget {
             backgroundColor: AppColors.coral,
             foregroundColor: AppColors.petrol,
             minimumSize: const Size.fromHeight(56),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
           child: Text(AppLocaleKey.pickWelcomeGift.tr()),
         ),
@@ -81,7 +75,7 @@ class WelcomeTasksView extends StatelessWidget {
           onPressed: onContinueLater,
           child: Text(
             AppLocaleKey.continueLater.tr(),
-            style: const TextStyle(color: AppColors.petrol),
+            style: AppTextStyles.labelAction.copyWith(color: AppColors.petrol),
           ),
         ),
       ],
@@ -116,20 +110,18 @@ class _TaskCard extends StatelessWidget {
       ),
       title: Text(
         titleKey.tr(),
-        style: const TextStyle(
+        style: AppTextStyles.bodyBold15.copyWith(
           fontWeight: FontWeight.w800,
           color: AppColors.petrol,
         ),
       ),
-      subtitle: Text(
-        complete ? AppLocaleKey.taskComplete.tr() : AppLocaleKey.taskAction.tr(),
-      ),
+      subtitle: Text(complete ? AppLocaleKey.taskComplete.tr() : AppLocaleKey.taskAction.tr()),
       trailing: Icon(
         complete
             ? Icons.check_circle
             : (Directionality.of(context) == ui_direction.TextDirection.rtl
-                  ? Icons.chevron_left
-                  : Icons.chevron_right),
+                  ? Icons.arrow_back_ios_new
+                  : Icons.arrow_back_ios_new),
         color: complete ? AppColors.teal : AppColors.coral,
       ),
     ),

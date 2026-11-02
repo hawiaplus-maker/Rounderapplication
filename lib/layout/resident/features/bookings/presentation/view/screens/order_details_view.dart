@@ -1,6 +1,9 @@
+import 'dart:ui' as ui_direction;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/model/order_data.dart';
 
@@ -32,16 +35,17 @@ class OrderDetailsView extends StatelessWidget {
           children: [
             IconButton(
               onPressed: onBack,
-              icon: const Icon(Icons.chevron_left, color: AppColors.white),
+              icon: Icon(
+                Directionality.of(context) == ui_direction.TextDirection.rtl
+                    ? Icons.arrow_back_ios_new
+                    : Icons.arrow_back_ios_new,
+                color: AppColors.white,
+              ),
             ),
             const Spacer(),
             Text(
               AppLocaleKey.orderDetails.tr(),
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-              ),
+              style: AppTextStyles.extraBold22.copyWith(color: AppColors.white),
             ),
           ],
         ),
@@ -60,34 +64,22 @@ class OrderDetailsView extends StatelessWidget {
                   children: [
                     Text(
                       data.titleKey.tr(),
-                      style: const TextStyle(
-                        color: AppColors.petrol,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                      ),
+                      style: AppTextStyles.extraBold18.copyWith(color: AppColors.petrol),
                     ),
                     Text(
                       data.reference,
-                      style: const TextStyle(color: AppColors.muted),
+                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
                     ),
                   ],
                 ),
               ],
             ),
             const Divider(height: 24),
-            _DetailRow(
-              label: AppLocaleKey.orderStatus.tr(),
-              value: data.statusKey.tr(),
-            ),
-            _DetailRow(
-              label: AppLocaleKey.orderPlace.tr(),
-              value: data.locationKey.tr(),
-            ),
+            _DetailRow(label: AppLocaleKey.orderStatus.tr(), value: data.statusKey.tr()),
+            _DetailRow(label: AppLocaleKey.orderPlace.tr(), value: data.locationKey.tr()),
             _DetailRow(
               label: AppLocaleKey.orderDate.tr(),
-              value: DateFormat.yMd(
-                context.locale.toString(),
-              ).add_jm().format(data.scheduledAt),
+              value: DateFormat.yMd(context.locale.toString()).add_jm().format(data.scheduledAt),
             ),
             _DetailRow(
               label: AppLocaleKey.orderAmount.tr(),
@@ -99,12 +91,8 @@ class OrderDetailsView extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.orderProgress.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 17,
-                fontWeight: FontWeight.w900,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold17.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 12),
             _ProgressStep(labelKey: AppLocaleKey.requestSent, done: true),
@@ -163,7 +151,7 @@ class OrderDetailsView extends StatelessWidget {
             onPressed: onCancel,
             child: Text(
               AppLocaleKey.cancelBooking.tr(),
-              style: const TextStyle(color: Colors.red),
+              style: AppTextStyles.labelAction.copyWith(color: AppColors.emergency),
             ),
           ),
         ],
@@ -185,10 +173,7 @@ class _Panel extends StatelessWidget {
       color: AppColors.white.withValues(alpha: .96),
       borderRadius: BorderRadius.circular(22),
     ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: children,
-    ),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
   );
 }
 
@@ -206,18 +191,18 @@ class _DetailRow extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            textAlign: TextAlign.left,
-            style: const TextStyle(
-              color: AppColors.petrol,
+            textAlign: TextAlign.end,
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
+              color: AppColors.petrol,
             ),
           ),
         ),
         const SizedBox(width: 10),
         Text(
           label,
-          textAlign: TextAlign.right,
-          style: const TextStyle(color: AppColors.muted),
+          textAlign: TextAlign.start,
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
         ),
       ],
     ),
@@ -237,15 +222,15 @@ class _ProgressStep extends StatelessWidget {
       children: [
         Icon(
           done ? Icons.check_circle : Icons.radio_button_unchecked,
-          color: done ? Colors.green : AppColors.muted,
+          color: done ? AppColors.healthGaugeEnd : AppColors.muted,
           size: 18,
         ),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
             labelKey.tr(),
-            textAlign: TextAlign.right,
-            style: TextStyle(
+            textAlign: TextAlign.start,
+            style: AppTextStyles.bodyMedium.copyWith(
               color: done ? AppColors.petrol : AppColors.muted,
             ),
           ),

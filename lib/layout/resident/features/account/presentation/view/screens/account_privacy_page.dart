@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_action_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
@@ -37,16 +38,12 @@ class AccountPrivacyPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.privacyData.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 12),
             SwitchListTile(
-              tileColor: Colors.white,
+              tileColor: AppColors.white,
               contentPadding: EdgeInsets.zero,
               title: Text(AppLocaleKey.serviceAddress.tr()),
               subtitle: Text(AppLocaleKey.privacyAddressBody.tr()),
@@ -55,7 +52,7 @@ class AccountPrivacyPage extends StatelessWidget {
               onChanged: onAddressUseChanged,
             ),
             SwitchListTile(
-              tileColor: Colors.white,
+              tileColor: AppColors.white,
               contentPadding: EdgeInsets.zero,
               title: Text(AppLocaleKey.requestContact.tr()),
               subtitle: Text(AppLocaleKey.privacyContactBody.tr()),
@@ -65,8 +62,8 @@ class AccountPrivacyPage extends StatelessWidget {
             ),
             Text(
               AppLocaleKey.optionalOffers.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted, fontSize: 12),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/post_service/presentation/view/widget/aftercare_action_button.dart';
 import 'package:rounder_application/layout/resident/features/post_service/presentation/view/widget/claim_summary_card.dart';
@@ -38,11 +39,7 @@ class ClaimPageBody extends StatelessWidget {
         Text(
           AppLocaleKey.claimCoverageNote.tr(),
           textAlign: TextAlign.start,
-          style: TextStyle(
-            color: AppColors.white.withValues(alpha: .85),
-            fontSize: 13,
-            height: 22 / 13,
-          ),
+          style: AppTextStyles.captionRegular13.copyWith(color: AppColors.white.withValues(alpha: .85), height: 22 / 13),
         ),
         const SizedBox(height: 12),
         AftercareActionButton(

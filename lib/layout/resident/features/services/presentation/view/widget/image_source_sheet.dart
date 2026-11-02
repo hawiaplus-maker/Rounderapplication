@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Source chooser of the service journey's photo entries. Returns the picked
@@ -22,11 +23,7 @@ Future<ImageSource?> showImageSourceSheet(BuildContext context) =>
               Text(
                 AppLocaleKey.addPhotos.tr(),
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  color: AppColors.petrol,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
               ),
               const SizedBox(height: 8),
               ListTile(

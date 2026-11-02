@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Prototype-only links kept below the approved login layout: the working
@@ -18,7 +19,7 @@ class LoginPrototypeLinks extends StatelessWidget {
   final VoidCallback onWelcomeSteps;
   final VoidCallback onLanguage;
 
-  static const _linkStyle = TextStyle(color: AppColors.petrol, fontSize: 13);
+  static final _linkStyle = AppTextStyles.captionRegular13.copyWith(color: AppColors.petrol);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class LoginPrototypeLinks extends StatelessWidget {
         Text(
           AppLocaleKey.prototypeData.tr(),
           textAlign: TextAlign.center,
-          style: TextStyle(color: AppColors.petrol.withValues(alpha: .55), fontSize: 11, height: 20 / 11),
+          style: AppTextStyles.tinyRegular.copyWith(color: AppColors.petrol.withValues(alpha: .55), height: 20 / 11),
         ),
         Wrap(
           alignment: WrapAlignment.center,

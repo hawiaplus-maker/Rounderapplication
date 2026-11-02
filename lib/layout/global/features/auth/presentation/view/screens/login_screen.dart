@@ -4,10 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/data/model/validate_mobile_model.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/phone_auth_cubit.dart';
-import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/email_login_screen.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/otp_flow_screen.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/register_screen.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/auth_gradient_backdrop.dart';
@@ -18,7 +16,7 @@ import 'package:rounder_application/layout/global/features/auth/presentation/vie
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screens/resident_home_screen.dart';
-import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/resident_welcome_flow.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/weather_cubit.dart';
 import 'package:rounder_application/logic/phone_number_logic.dart';
 
 /// Approved login (design `00 — تسجيل الدخول • APPROVED`): brand wordmark,
@@ -99,44 +97,19 @@ class _LoginScreenState extends State<LoginScreen> {
     _browseAsGuest();
   }
 
-  void _openEmailSignIn() => _push(const EmailLoginScreen());
-
-  void _openWelcomeSteps() => _push(const ResidentWelcomeFlow());
-
   void _browseAsGuest() => _push(
-    BlocProvider(
-      create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
+        ),
+         BlocProvider<WeatherCubit>.value(
+           value: sl<WeatherCubit>()..ensureLoaded(),
+        ),
+      ],
       child: const ResidentHomeScreen(),
     ),
   );
-
-  Future<void> _chooseLanguage() async {
-    final selected = await showModalBottomSheet<Locale>(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: AppColors.white,
-      builder: (sheetContext) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text(AppLocaleKey.arabic.tr()),
-              onTap: () => Navigator.pop(sheetContext, const Locale('ar')),
-            ),
-            ListTile(
-              title: Text(AppLocaleKey.english.tr()),
-              onTap: () => Navigator.pop(sheetContext, const Locale('en')),
-            ),
-            ListTile(
-              title: Text(AppLocaleKey.urdu.tr()),
-              onTap: () => Navigator.pop(sheetContext, const Locale('ur')),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (selected != null && mounted) context.setLocale(selected);
-  }
 
   /// The frame top is brand petrol, so the system status icons must be light.
   static const _overlayStyle = SystemUiOverlayStyle(
@@ -201,12 +174,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 12),
                           LoginGuestAction(onTap: _browseAsGuest),
-                          const SizedBox(height: 12),
-                          // LoginPrototypeLinks(
-                          //   onEmailSignIn: _openEmailSignIn,
-                          //   onWelcomeSteps: _openWelcomeSteps,
-                          //   onLanguage: _chooseLanguage,
-                          // ),
                         ],
                       ),
                     ),

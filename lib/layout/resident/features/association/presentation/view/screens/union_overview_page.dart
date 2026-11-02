@@ -1,11 +1,14 @@
+import 'dart:ui' as ui_direction;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/constants/display_placeholder.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/model/union_section.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_header.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_panel.dart';
-import 'package:rounder_application/layout/resident/features/association/presentation/view/widget/union_prototype_note.dart';
 
 /// Association overview: balance, due amount, active initiative and entries.
 class UnionOverviewPage extends StatelessWidget {
@@ -24,8 +27,8 @@ class UnionOverviewPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             AppLocaleKey.unitTitle.tr(),
-            textAlign: TextAlign.right,
-            style: const TextStyle(color: Colors.white70),
+            textAlign: TextAlign.start,
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white.withValues(alpha: .7)),
           ),
         ),
         UnionPanel(
@@ -33,34 +36,29 @@ class UnionOverviewPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.account_balance_wallet_outlined,
-                  color: Colors.white,
-                ),
+                const Icon(Icons.account_balance_wallet_outlined, color: AppColors.white),
                 const Spacer(),
                 Text(
                   AppLocaleKey.availableBalance.tr(),
-                  style: const TextStyle(color: Colors.white70),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.white.withValues(alpha: .7),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(
-              '25,000 ${AppLocaleKey.currencySar.tr()}',
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-              ),
+              '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold28.copyWith(color: AppColors.white),
             ),
-            const Divider(color: Colors.white54),
+            Divider(color: AppColors.white.withValues(alpha: .54)),
             TextButton.icon(
               onPressed: () => onOpen(UnionSection.finances),
-              icon: const Icon(Icons.chevron_left, color: Colors.white),
+              icon: const _ForwardChevron(color: AppColors.white),
               label: Text(
                 AppLocaleKey.financialDetails.tr(),
-                style: const TextStyle(color: Colors.white),
+                style: AppTextStyles.labelAction.copyWith(color: AppColors.white),
               ),
             ),
           ],
@@ -71,14 +69,11 @@ class UnionOverviewPage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.receipt_long_outlined,
-                    color: AppColors.petrol,
-                  ),
+                  const Icon(Icons.receipt_long_outlined, color: AppColors.petrol),
                   const Spacer(),
                   Text(
                     AppLocaleKey.dueAmount.tr(),
-                    style: const TextStyle(
+                    style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w800,
                       color: AppColors.petrol,
                     ),
@@ -92,7 +87,7 @@ class UnionOverviewPage extends StatelessWidget {
                     onPressed: () => onOpen(UnionSection.dues),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.orange,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppColors.white,
                     ),
                     child: Text(AppLocaleKey.pay.tr()),
                   ),
@@ -101,19 +96,12 @@ class UnionOverviewPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '300 ${AppLocaleKey.currencySar.tr()}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.petrol,
-                        ),
+                        '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+                        style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
                       ),
                       Text(
                         AppLocaleKey.dueDate.tr(),
-                        style: const TextStyle(
-                          color: AppColors.muted,
-                          fontSize: 12,
-                        ),
+                        style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
                       ),
                     ],
                   ),
@@ -126,29 +114,16 @@ class UnionOverviewPage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.workTogether.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             ListTile(
-              tileColor: Colors.white,
+              tileColor: AppColors.white,
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(
-                Icons.meeting_room_outlined,
-                color: AppColors.orange,
-              ),
-              title: Text(
-                AppLocaleKey.improveEntrance.tr(),
-                textAlign: TextAlign.right,
-              ),
-              subtitle: Text(
-                AppLocaleKey.residentsJoined.tr(),
-                textAlign: TextAlign.right,
-              ),
+              leading: const Icon(Icons.meeting_room_outlined, color: AppColors.orange),
+              title: Text(AppLocaleKey.improveEntrance.tr(), textAlign: TextAlign.start),
+              subtitle: Text(AppLocaleKey.residentsJoined.tr(), textAlign: TextAlign.start),
               trailing: TextButton(
                 onPressed: () => onOpen(UnionSection.initiative),
                 child: Text(AppLocaleKey.shareIdea.tr()),
@@ -157,7 +132,7 @@ class UnionOverviewPage extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: const LinearProgressIndicator(
-                value: .7,
+                value: DisplayPlaceholder.progress,
                 minHeight: 7,
                 color: AppColors.petrol,
                 backgroundColor: AppColors.mint,
@@ -204,20 +179,13 @@ class UnionOverviewPage extends StatelessWidget {
             ),
           ],
         ),
-        const UnionPrototypeNote(
-          padding: EdgeInsets.fromLTRB(22, 4, 22, 14),
-        ),
       ],
     );
   }
 }
 
 class _NavRow extends StatelessWidget {
-  const _NavRow({
-    required this.labelKey,
-    required this.icon,
-    required this.onTap,
-  });
+  const _NavRow({required this.labelKey, required this.icon, required this.onTap});
 
   final String labelKey;
   final IconData icon;
@@ -225,7 +193,7 @@ class _NavRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    tileColor: Colors.white,
+    tileColor: AppColors.white,
     contentPadding: EdgeInsets.zero,
     leading: CircleAvatar(
       backgroundColor: AppColors.mint,
@@ -233,13 +201,26 @@ class _NavRow extends StatelessWidget {
     ),
     title: Text(
       labelKey.tr(),
-      textAlign: TextAlign.right,
-      style: const TextStyle(
+      textAlign: TextAlign.start,
+      style: AppTextStyles.bodyBold15.copyWith(
         fontWeight: FontWeight.w700,
         color: AppColors.petrol,
       ),
     ),
-    trailing: const Icon(Icons.chevron_left),
+    trailing: const _ForwardChevron(),
     onTap: onTap,
   );
+}
+
+class _ForwardChevron extends StatelessWidget {
+  const _ForwardChevron({this.color});
+
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    // Forward affordance: in RTL it points left, mirrored in LTR.
+    final rtl = Directionality.of(context) == ui_direction.TextDirection.rtl;
+    return Icon(rtl ? Icons.arrow_back_ios_new : Icons.arrow_back_ios_new, color: color);
+  }
 }

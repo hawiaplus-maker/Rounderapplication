@@ -1,11 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_select_pill.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/units/data/model/resident_home_model.dart';
 
 /// Schedule step: service location, visit mode, date and time.
 class JourneySchedulePage extends StatelessWidget {
@@ -22,6 +24,10 @@ class JourneySchedulePage extends StatelessWidget {
     required this.onPickDate,
     required this.onPickTime,
     required this.onNext,
+    this.homes = const [],
+    this.selectedHomeId,
+    this.onHomeChanged,
+    this.homesLoading = false,
   });
 
   final VoidCallback onBack;
@@ -35,6 +41,10 @@ class JourneySchedulePage extends StatelessWidget {
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
   final VoidCallback onNext;
+  final List<ResidentHome> homes;
+  final int? selectedHomeId;
+  final ValueChanged<int>? onHomeChanged;
+  final bool homesLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -46,36 +56,79 @@ class JourneySchedulePage extends StatelessWidget {
           children: [
             Text(
               AppLocaleKey.whereService.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
-            JourneySelectPill(
-              label: AppLocaleKey.myUnit.tr(),
-              icon: Icons.apartment_outlined,
-              selected: location == AppLocaleKey.myUnit,
-              onTap: () => onLocationChanged(AppLocaleKey.myUnit),
-            ),
-            JourneySelectPill(
-              label: AppLocaleKey.sharedFacilities.tr(),
-              icon: Icons.groups_outlined,
-              selected: location == AppLocaleKey.sharedFacilities,
-              onTap: () => onLocationChanged(AppLocaleKey.sharedFacilities),
-            ),
+            if (homesLoading)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              )
+            else if (homes.isEmpty)
+              ...<Widget>[
+                JourneySelectPill(
+                  label: AppLocaleKey.myUnit.tr(),
+                  icon: Icons.apartment_outlined,
+                  selected: location == AppLocaleKey.myUnit,
+                  onTap: () => onLocationChanged(AppLocaleKey.myUnit),
+                ),
+                JourneySelectPill(
+                  label: AppLocaleKey.sharedFacilities.tr(),
+                  icon: Icons.groups_outlined,
+                  selected: location == AppLocaleKey.sharedFacilities,
+                  onTap: () => onLocationChanged(AppLocaleKey.sharedFacilities),
+                ),
+              ]
+            else
+              ...<Widget>[
+                ...homes.map((ResidentHome home) {
+                  final String name = (home.name).toString();
+                  final String unitLabel = (home.unitLabel).toString();
+                  final String city = (home.city).toString();
+                  final String address = (home.address).toString();
+                  final String district = (home.district).toString();
+                  final String addr = [address, district]
+                      .whereType<String>()
+                      .where((String s) => s.trim().isNotEmpty)
+                      .join(', ');
+                  final String label = name.isNotEmpty
+                      ? (addr.isNotEmpty ? '$name ($addr)' : name)
+                      : (unitLabel.isNotEmpty
+                            ? (addr.isNotEmpty ? '$unitLabel ($addr)' : unitLabel)
+                            : AppLocaleKey.myUnit.tr());
+                  return JourneySelectPill(
+                    label: label,
+                    icon: Icons.apartment_outlined,
+                    selected: selectedHomeId == home.id,
+                    subtitle: city.trim().isEmpty ? null : city,
+                    onTap: () {
+                      if (home.id != null) onHomeChanged?.call(home.id!);
+                      onLocationChanged(AppLocaleKey.myUnit);
+                    },
+                  );
+                }),
+                JourneySelectPill(
+                  label: AppLocaleKey.sharedFacilities.tr(),
+                  icon: Icons.groups_outlined,
+                  selected: location == AppLocaleKey.sharedFacilities,
+                  onTap: () => onLocationChanged(AppLocaleKey.sharedFacilities),
+                ),
+              ],
           ],
         ),
         JourneyPanel(
           children: [
             Text(
               AppLocaleKey.whenService.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -125,8 +178,8 @@ class JourneySchedulePage extends StatelessWidget {
             ),
             Text(
               AppLocaleKey.providerTiming.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted, fontSize: 11),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.tinyRegular.copyWith(color: AppColors.muted),
             ),
           ],
         ),
@@ -163,6 +216,6 @@ class _ModeChip extends StatelessWidget {
     selected: selected,
     onSelected: (_) => onTap(),
     selectedColor: AppColors.mint,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.white,
   );
 }

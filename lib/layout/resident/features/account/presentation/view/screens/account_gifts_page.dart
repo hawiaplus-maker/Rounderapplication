@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
@@ -50,18 +51,14 @@ class AccountGiftsPage extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               AppLocaleKey.chooseWelcomeGiftTitle.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             Text(
               AppLocaleKey.chooseWelcomeGiftBody.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted, height: 1.6),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted, height: 1.6),
             ),
             const SizedBox(height: 14),
             FilledButton.icon(
@@ -70,7 +67,7 @@ class AccountGiftsPage extends StatelessWidget {
               label: Text(AppLocaleKey.discoverGifts.tr()),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.orange,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
               ),
             ),
           ],
@@ -85,11 +82,8 @@ class AccountGiftsPage extends StatelessWidget {
                   Expanded(
                     child: Text(
                       gift.$1.tr(),
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        color: AppColors.petrol,
-                        fontWeight: FontWeight.w800,
-                      ),
+                      textAlign: TextAlign.start,
+                      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
                     ),
                   ),
                 ],
@@ -97,8 +91,8 @@ class AccountGiftsPage extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 gift.$2.tr(),
-                textAlign: TextAlign.right,
-                style: const TextStyle(color: AppColors.muted),
+                textAlign: TextAlign.start,
+                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
               ),
             ],
           ),

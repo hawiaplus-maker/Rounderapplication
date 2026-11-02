@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Label/value row of the service journey summaries.
@@ -17,17 +18,14 @@ class JourneyKv extends StatelessWidget {
         Flexible(
           child: Text(
             value,
-            style: const TextStyle(
+            style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.petrol,
             ),
           ),
         ),
-        const Spacer(),
-        Text(
-          labelKey.tr(),
-          style: const TextStyle(color: AppColors.muted),
-        ),
+
+        Text(labelKey.tr(), style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted)),
       ],
     ),
   );

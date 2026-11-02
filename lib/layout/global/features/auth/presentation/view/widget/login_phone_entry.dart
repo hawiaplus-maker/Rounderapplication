@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/logic/phone_number_logic.dart';
 
@@ -30,11 +31,7 @@ class LoginPhoneEntry extends StatelessWidget {
         Text(
           AppLocaleKey.phoneNumber.tr(),
           textAlign: TextAlign.start,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 16,
-            height: 24 / 16,
-          ),
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol, height: 24 / 16),
         ),
         Container(
           height: 56,
@@ -64,13 +61,9 @@ class LoginPhoneEntry extends StatelessWidget {
         Text(
           errorText ?? AppLocaleKey.phoneVerifyHint.tr(),
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: errorText == null
+          style: AppTextStyles.captionRegular.copyWith(color: errorText == null
                 ? AppColors.ink.withValues(alpha: .7)
-                : AppColors.coral,
-            fontSize: 12,
-            height: 22 / 12,
-          ),
+                : AppColors.coral, height: 22 / 12),
         ),
       ],
     );
@@ -93,23 +86,15 @@ class _CountryBlock extends StatelessWidget {
             Text(
               AppLocaleKey.saudiArabia.tr(),
               maxLines: 1,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 10,
-                height: 18 / 10,
-              ),
+              style: AppTextStyles.tinyRegular10.copyWith(color: AppColors.petrol, height: 18 / 10),
             ),
-            const Text(
+            Text(
               '+966',
               maxLines: 1,
               // Dial codes are LTR data even inside an Arabic layout; without
               // this the leading "+" is reordered to the end.
               textDirection: ui_direction.TextDirection.ltr,
-              style: TextStyle(
-                color: AppColors.petrol,
-                fontSize: 15,
-                height: 24 / 15,
-              ),
+              style: AppTextStyles.bodyRegular15.copyWith(color: AppColors.petrol),
             ),
           ],
         ),
@@ -139,21 +124,13 @@ class _NumberField extends StatelessWidget {
     inputFormatters: [_SaudiLocalMobileFormatter()],
     textDirection: ui_direction.TextDirection.ltr,
     textAlign: TextAlign.center,
-    style: const TextStyle(
-      color: AppColors.petrol,
-      fontSize: 16,
-      height: 26 / 16,
-    ),
+    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol),
     decoration: InputDecoration(
       isDense: true,
       border: InputBorder.none,
       contentPadding: const EdgeInsetsDirectional.symmetric(horizontal: 12),
       hintText: AppLocaleKey.phonePlaceholder.tr(),
-      hintStyle: TextStyle(
-        color: AppColors.ink.withValues(alpha: .6),
-        fontSize: 16,
-        height: 26 / 16,
-      ),
+      hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.ink.withValues(alpha: .6)),
     ),
   );
 }

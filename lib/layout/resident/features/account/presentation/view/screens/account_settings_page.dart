@@ -1,11 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_action_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_logout_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Communication settings page of the account.
 class AccountSettingsPage extends StatelessWidget {
@@ -19,6 +17,7 @@ class AccountSettingsPage extends StatelessWidget {
     required this.onEditProfile,
     required this.onPrivacy,
     required this.onLogout,
+    required this.onLanguage,
   });
 
   final VoidCallback onBack;
@@ -33,59 +32,65 @@ class AccountSettingsPage extends StatelessWidget {
   /// clears the cached token before the boot gate reveals the login screen.
   final VoidCallback onLogout;
 
+  /// Opens the language picker so the user can switch the app locale.
+  final VoidCallback onLanguage;
+
   @override
   Widget build(BuildContext context) {
     return AccountSubPage(
       titleKey: AppLocaleKey.settingsTitle,
       onBack: onBack,
       children: [
-        AccountPanel(
-          children: [
-            Text(
-              AppLocaleKey.aliHelps.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocaleKey.changeAnytime.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.muted),
-            ),
-            SwitchListTile(
-              tileColor: Colors.white,
-              contentPadding: EdgeInsets.zero,
-              title: Text(AppLocaleKey.requestUpdates.tr()),
-              subtitle: Text(
-                orderUpdates ? AppLocaleKey.on.tr() : AppLocaleKey.off.tr(),
-              ),
-              value: orderUpdates,
-              activeThumbColor: AppColors.orange,
-              onChanged: onOrderUpdatesChanged,
-            ),
-            SwitchListTile(
-              tileColor: Colors.white,
-              contentPadding: EdgeInsets.zero,
-              title: Text(AppLocaleKey.offersAndGifts.tr()),
-              subtitle: Text(
-                offers ? AppLocaleKey.on.tr() : AppLocaleKey.off.tr(),
-              ),
-              value: offers,
-              activeThumbColor: AppColors.orange,
-              onChanged: onOffersChanged,
-            ),
-          ],
-        ),
+        // AccountPanel(
+        //   children: [
+        //     Text(
+        //       AppLocaleKey.aliHelps.tr(),
+        //       textAlign: TextAlign.start,
+        //       style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
+        //     ),
+        //     const SizedBox(height: 8),
+        //     Text(
+        //       AppLocaleKey.changeAnytime.tr(),
+        //       textAlign: TextAlign.start,
+        //       style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+        //     ),
+        //     SwitchListTile(
+        //       tileColor: AppColors.white,
+        //       contentPadding: EdgeInsets.zero,
+        //       title: Text(AppLocaleKey.requestUpdates.tr()),
+        //       subtitle: Text(
+        //         orderUpdates ? AppLocaleKey.on.tr() : AppLocaleKey.off.tr(),
+        //       ),
+        //       value: orderUpdates,
+        //       activeThumbColor: AppColors.orange,
+        //       onChanged: onOrderUpdatesChanged,
+        //     ),
+        //     SwitchListTile(
+        //       tileColor: AppColors.white,
+        //       contentPadding: EdgeInsets.zero,
+        //       title: Text(AppLocaleKey.offersAndGifts.tr()),
+        //       subtitle: Text(
+        //         offers ? AppLocaleKey.on.tr() : AppLocaleKey.off.tr(),
+        //       ),
+        //       value: offers,
+        //       activeThumbColor: AppColors.orange,
+        //       onChanged: onOffersChanged,
+        //     ),
+        //   ],
+        // ),
+
         AccountPanel(
           children: [
             AccountActionButton(
               labelKey: AppLocaleKey.editProfile,
               icon: Icons.edit_outlined,
               onTap: onEditProfile,
+            ),
+            const SizedBox(height: 9),
+            AccountActionButton(
+              labelKey: AppLocaleKey.language,
+              icon: Icons.language_outlined,
+              onTap: onLanguage,
             ),
             const SizedBox(height: 9),
             AccountActionButton(

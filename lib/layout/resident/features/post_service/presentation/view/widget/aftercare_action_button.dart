@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Full-width action of the after-service journey pages.
@@ -29,12 +30,7 @@ class AftercareActionButton extends StatelessWidget {
         textAlign: TextAlign.center,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          color: AppColors.petrol,
-          fontSize: 14,
-          height: 22 / 14,
-          fontWeight: FontWeight.w700,
-        ),
+        style: AppTextStyles.bodyBold14.copyWith(color: AppColors.petrol),
       ),
     );
   }

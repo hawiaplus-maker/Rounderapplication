@@ -4,11 +4,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/features/services/data/model/service_category_model.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_action_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
 /// Service details step: problem description, issue type and photos entry.
 class JourneyDetailPage extends StatelessWidget {
@@ -16,6 +18,9 @@ class JourneyDetailPage extends StatelessWidget {
     super.key,
     required this.onBack,
     required this.serviceKey,
+    this.subServices = const [],
+    this.selectedSubServiceId,
+    this.onSubServiceChanged,
     required this.issue,
     required this.issueType,
     required this.onIssueTypeChanged,
@@ -26,6 +31,9 @@ class JourneyDetailPage extends StatelessWidget {
 
   final VoidCallback onBack;
   final String serviceKey;
+  final List<ServiceSubItem> subServices;
+  final int? selectedSubServiceId;
+  final ValueChanged<int?>? onSubServiceChanged;
   final TextEditingController issue;
   final String issueType;
   final ValueChanged<String> onIssueTypeChanged;
@@ -35,13 +43,6 @@ class JourneyDetailPage extends StatelessWidget {
   /// as thumbnails on this same step (no page change).
   final List<XFile> photos;
   final VoidCallback onNext;
-
-  static const _issueTypes = <String>[
-    AppLocaleKey.waterLeak,
-    AppLocaleKey.drainBlock,
-    AppLocaleKey.installation,
-    AppLocaleKey.notSure,
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +65,14 @@ class JourneyDetailPage extends StatelessWidget {
                     children: [
                       Text(
                         AppLocaleKey.greetingAli.tr(),
-                        style: const TextStyle(
+                        style: AppTextStyles.bodyMedium.copyWith(
                           fontWeight: FontWeight.w800,
                           color: AppColors.petrol,
                         ),
                       ),
                       Text(
                         AppLocaleKey.describeProblem.tr(),
-                        style: const TextStyle(color: AppColors.muted),
+                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
                       ),
                     ],
                   ),
@@ -80,46 +81,48 @@ class JourneyDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              serviceKey.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: AppColors.petrol,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-              ),
+              serviceKey,
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold18.copyWith(color: AppColors.petrol),
             ),
+            if (subServices.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              JourneyPanel(
+                children: [
+                  Text(
+                    AppLocaleKey.issueType.tr(),
+                    textAlign: TextAlign.start,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.petrol,
+                    ),
+                  ),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: subServices
+                        .map(
+                          (s) => ChoiceChip(
+                            label: Text(s.name ?? ''),
+                            selected: selectedSubServiceId == s.id,
+                            onSelected: (_) => onSubServiceChanged?.call(s.id),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 10),
+        JourneyPanel(
+          children: [
             TextField(
               controller: issue,
               maxLines: 3,
-              textAlign: TextAlign.right,
-              decoration: InputDecoration(
-                hintText: AppLocaleKey.problemHint.tr(),
-              ),
-            ),
-          ],
-        ),
-        JourneyPanel(
-          children: [
-            Text(
-              AppLocaleKey.issueType.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
-            ),
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              children: _issueTypes
-                  .map(
-                    (key) => ChoiceChip(
-                      label: Text(key.tr()),
-                      selected: issueType == key,
-                      onSelected: (_) => onIssueTypeChanged(key),
-                    ),
-                  )
-                  .toList(),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(hintText: AppLocaleKey.problemHint.tr()),
             ),
           ],
         ),
@@ -137,20 +140,13 @@ class JourneyDetailPage extends StatelessWidget {
               for (final photo in photos)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    File(photo.path),
-                    width: 72,
-                    height: 72,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.file(File(photo.path), width: 72, height: 72, fit: BoxFit.cover),
                 ),
             ],
           ),
         ],
-        JourneyNextButton(
-          labelKey: AppLocaleKey.nextProviders,
-          onPressed: onNext,
-        ),
+        JourneyNextButton(labelKey: AppLocaleKey.nextProviders, onPressed: onNext),
+        SizedBox(height: MediaQuery.of(context).padding.bottom + 12),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'dart:ui' as ui_direction show TextDirection;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Read-only display of the phone being registered (`validate-mobile`'s
@@ -20,11 +21,7 @@ class RegisterPhoneSummary extends StatelessWidget {
         Text(
           AppLocaleKey.phone.tr(),
           textAlign: TextAlign.start,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 16,
-            height: 24 / 16,
-          ),
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol, height: 24 / 16),
         ),
         const SizedBox(height: 6),
         Text(
@@ -33,12 +30,7 @@ class RegisterPhoneSummary extends StatelessWidget {
           // leading "+" reorders to the end.
           textDirection: ui_direction.TextDirection.ltr,
           textAlign: TextAlign.start,
-          style: const TextStyle(
-            color: AppColors.petrol,
-            fontSize: 17,
-            height: 26 / 17,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppTextStyles.bodyBold17.copyWith(color: AppColors.petrol),
         ),
       ],
     );

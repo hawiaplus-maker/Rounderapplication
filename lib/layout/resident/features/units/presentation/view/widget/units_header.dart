@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rounder_application/core/images/app_images.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Header of units and My Units-style screens (design Back / Account): the
@@ -27,19 +28,10 @@ class UnitsHeader extends StatelessWidget {
           child: Text(
             title,
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 23,
-              height: 34 / 23,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.headingBold23.copyWith(color: AppColors.white),
           ),
         ),
-        SvgPicture.asset(
-          AppImages.rounderIcon,
-          height: 24,
-          fit: BoxFit.contain,
-        ),
+        SvgPicture.asset(AppImages.rounderIcon, height: 24, fit: BoxFit.contain),
       ],
     );
   }
@@ -51,7 +43,7 @@ class _DirectionalBackChevron extends StatelessWidget {
     // back affordance on the trailing edge: RTL points right, LTR points left.
     final rtl = Directionality.of(context) == TextDirection.rtl;
     return Icon(
-      rtl ? Icons.chevron_right : Icons.chevron_left,
+      rtl ? Icons.arrow_back_ios_new : Icons.arrow_back_ios_new,
       size: 26,
       color: AppColors.white,
     );

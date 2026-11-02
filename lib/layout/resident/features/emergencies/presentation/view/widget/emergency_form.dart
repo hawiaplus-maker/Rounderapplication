@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/features/emergencies/data/model/emergency_type_model.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/widget/emergency_input.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/validation/emergency_validators.dart';
 
@@ -14,6 +16,7 @@ class EmergencyForm extends StatelessWidget {
     required this.phone,
     required this.location,
     required this.details,
+    required this.types,
     required this.selectedType,
     required this.onTypeChanged,
     required this.confirmed,
@@ -25,21 +28,23 @@ class EmergencyForm extends StatelessWidget {
   final TextEditingController phone;
   final TextEditingController location;
   final TextEditingController details;
+  final List<EmergencyType> types;
   final String? selectedType;
   final ValueChanged<String?> onTypeChanged;
   final bool confirmed;
   final ValueChanged<bool> onConfirmedChanged;
   final VoidCallback onSubmit;
 
-  static const _types = <(String, IconData)>[
-    (AppLocaleKey.emergencyTypeFire, Icons.local_fire_department_outlined),
-    (AppLocaleKey.emergencyTypeMedical, Icons.medical_services_outlined),
-    (AppLocaleKey.emergencyTypeGas, Icons.local_gas_station_outlined),
-    (AppLocaleKey.emergencyTypeElectrical, Icons.electrical_services_outlined),
-    (AppLocaleKey.emergencyTypeWater, Icons.water_damage_outlined),
-    (AppLocaleKey.emergencyTypeElevator, Icons.elevator_outlined),
-    (AppLocaleKey.emergencyTypeSecurity, Icons.shield_outlined),
-  ];
+  static IconData _icon(String code) => switch (code) {
+        'fire' => Icons.local_fire_department_outlined,
+        'medical' => Icons.medical_services_outlined,
+        'gas_leak' => Icons.local_gas_station_outlined,
+        'electrical_hazard' => Icons.electrical_services_outlined,
+        'water_leak' => Icons.water_damage_outlined,
+        'elevator' => Icons.elevator_outlined,
+        'security' => Icons.shield_outlined,
+        _ => Icons.warning_outlined,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -50,122 +55,121 @@ class EmergencyForm extends StatelessWidget {
         onChanged: onTypeChanged,
         child: ListView(
           padding: const EdgeInsets.all(20),
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFEEE5),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: AppColors.orange.withValues(alpha: .35),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.emergencyWash,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.orange.withValues(alpha: .35),
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: AppColors.orange,
                 ),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.warning_amber_rounded,
-                    color: AppColors.orange,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      AppLocaleKey.emergencyIntro.tr(),
-                      style: const TextStyle(height: 1.45),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              AppLocaleKey.emergencySafety.tr(),
-              style: const TextStyle(color: AppColors.muted, fontSize: 12),
-            ),
-            const SizedBox(height: 22),
-            Text(
-              AppLocaleKey.emergencyType.tr(),
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
-            ),
-            const SizedBox(height: 10),
-            ..._types.map((item) {
-              final selected = selectedType == item.$1;
-              return Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: RadioListTile<String>(
-                  tileColor: Colors.white,
-                  value: item.$1,
-                  secondary: Icon(
-                    item.$2,
-                    color: selected ? AppColors.orange : AppColors.petrol,
-                  ),
-                  title: Text(item.$1.tr()),
-                  activeColor: AppColors.orange,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    AppLocaleKey.emergencyIntro.tr(),
+                    style: AppTextStyles.bodyMedium.copyWith(height: 1.45),
                   ),
                 ),
-              );
-            }),
-            const SizedBox(height: 10),
-            EmergencyInput(
-              controller: phone,
-              label: AppLocaleKey.emergencyContact.tr(),
-              icon: Icons.phone_outlined,
-              keyboardType: TextInputType.phone,
-              validator: EmergencyValidators.contactPhone,
+              ],
             ),
-            const SizedBox(height: 12),
-            EmergencyInput(
-              controller: location,
-              label: AppLocaleKey.emergencyLocation.tr(),
-              icon: Icons.location_on_outlined,
-              validator: EmergencyValidators.location,
-              maxLength: 255,
-            ),
-            const SizedBox(height: 12),
-            EmergencyInput(
-              controller: details,
-              label: AppLocaleKey.emergencyDetails.tr(),
-              icon: Icons.notes_outlined,
-              validator: EmergencyValidators.details,
-              maxLength: 3000,
-              maxLines: 4,
-            ),
-            const SizedBox(height: 8),
-            CheckboxListTile(
-              tileColor: Colors.white,
-              contentPadding: EdgeInsets.zero,
-              value: confirmed,
-              onChanged: (value) => onConfirmedChanged(value ?? false),
-              controlAffinity: ListTileControlAffinity.leading,
-              activeColor: AppColors.petrol,
-              title: Text(
-                AppLocaleKey.confirmEmergency.tr(),
-                style: const TextStyle(fontSize: 13),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            AppLocaleKey.emergencySafety.tr(),
+            style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
+          ),
+          const SizedBox(height: 22),
+          Text(
+            AppLocaleKey.emergencyType.tr(),
+            style: AppTextStyles.extraBold17.copyWith(color: AppColors.petrol),
+          ),
+          const SizedBox(height: 10),
+          ...types.map((type) {
+            final selected = selectedType == type.id.toString();
+            return Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: RadioListTile<String>(
+                tileColor: AppColors.white,
+                value: type.id.toString(),
+                secondary: Icon(
+                  _icon(type.code),
+                  color: selected ? AppColors.orange : AppColors.petrol,
+                ),
+                title: Text(
+                  type.name,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                activeColor: AppColors.orange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
+            );
+          }),
+          const SizedBox(height: 10),
+          EmergencyInput(
+            controller: phone,
+            label: AppLocaleKey.emergencyContact.tr(),
+            icon: Icons.phone_outlined,
+            keyboardType: TextInputType.phone,
+            validator: EmergencyValidators.contactPhone,
+          ),
+          const SizedBox(height: 12),
+          EmergencyInput(
+            controller: location,
+            label: AppLocaleKey.emergencyLocation.tr(),
+            icon: Icons.location_on_outlined,
+            validator: EmergencyValidators.location,
+            maxLength: 255,
+          ),
+          const SizedBox(height: 12),
+          EmergencyInput(
+            controller: details,
+            label: AppLocaleKey.emergencyDetails.tr(),
+            icon: Icons.notes_outlined,
+            validator: EmergencyValidators.details,
+            maxLength: 3000,
+            maxLines: 4,
+          ),
+          const SizedBox(height: 8),
+          CheckboxListTile(
+            tileColor: AppColors.white,
+            contentPadding: EdgeInsets.zero,
+            value: confirmed,
+            onChanged: (value) => onConfirmedChanged(value ?? false),
+            controlAffinity: ListTileControlAffinity.leading,
+            activeColor: AppColors.petrol,
+            title: Text(
+              AppLocaleKey.confirmEmergency.tr(),
+              style: AppTextStyles.captionRegular13,
             ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              onPressed: onSubmit,
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.orange,
-                foregroundColor: Colors.white,
-                minimumSize: const Size.fromHeight(54),
-              ),
-              icon: const Icon(Icons.sos),
-              label: Text(
-                AppLocaleKey.sendEmergency.tr(),
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
+          ),
+          const SizedBox(height: 12),
+          FilledButton.icon(
+            onPressed: onSubmit,
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.orange,
+              foregroundColor: AppColors.white,
+              minimumSize: const Size.fromHeight(54),
             ),
-          ],
-        ),
+            icon: const Icon(Icons.sos),
+            label: Text(
+              AppLocaleKey.sendEmergency.tr(),
+              style: AppTextStyles.labelAction.copyWith(fontWeight: FontWeight.w800),
+            ),
+          ),
+        ],
       ),
-    );
+    ),
+  );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_action_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_kv.dart';
@@ -36,14 +37,10 @@ class JourneyWarrantyPage extends StatelessWidget {
             ),
             Text(
               AppLocaleKey.warranty.tr(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              textAlign: TextAlign.start,
+              style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
-            Text(AppLocaleKey.serviceComplete.tr(), textAlign: TextAlign.right),
+            Text(AppLocaleKey.serviceComplete.tr(), textAlign: TextAlign.start),
             JourneyKv(
               labelKey: AppLocaleKey.followUp,
               value: AppLocaleKey.days30.tr(),

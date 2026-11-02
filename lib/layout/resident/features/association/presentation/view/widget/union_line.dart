@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 
 /// Label/value row used in association lists.
@@ -16,16 +17,13 @@ class UnionLine extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       title: Text(
         titleKey.tr(),
-        textAlign: TextAlign.right,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
-          color: AppColors.petrol,
-        ),
+        textAlign: TextAlign.start,
+        style: AppTextStyles.bodyBold15.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol),
       ),
       subtitle: Text(
         value,
-        textAlign: TextAlign.right,
-        style: const TextStyle(color: AppColors.muted),
+        textAlign: TextAlign.start,
+        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
       ),
     );
   }
