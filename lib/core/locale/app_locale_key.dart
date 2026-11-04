@@ -247,11 +247,16 @@ abstract final class AppLocaleKey {
   static const paymentComplete = 'payment_complete';
   static const rateExperience = 'rate_experience';
   static const ratingPrompt = 'rating_prompt';
+  static const ratingTagQuality = 'rating_tag_quality';
+  static const ratingTagPunctuality = 'rating_tag_punctuality';
+  static const ratingTagTreatment = 'rating_tag_treatment';
   static const sendRating = 'send_rating';
   static const later = 'later';
   static const followUp = 'follow_up';
   static const orderHistory = 'order_history';
   static const noOrdersYet = 'no_orders_yet';
+  static const filterUnit = 'filter_unit';
+  static const allUnits = 'all_units';
   static const emergencyOrders = 'emergency_orders';
   static const noEmergencyOrders = 'no_emergency_orders';
   static const orderActive = 'order_active';

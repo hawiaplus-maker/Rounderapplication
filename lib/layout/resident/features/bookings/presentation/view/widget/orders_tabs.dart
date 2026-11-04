@@ -11,7 +11,9 @@ class OrdersTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabBar(
-      isScrollable: true,
+      // Fixed tabs fill the bar evenly; a scrollable bar left empty space on
+      // the trailing side once the four labels ran out.
+      isScrollable: false,
       labelColor: AppColors.petrol,
       unselectedLabelColor: AppColors.white,
       indicatorSize: TabBarIndicatorSize.tab,

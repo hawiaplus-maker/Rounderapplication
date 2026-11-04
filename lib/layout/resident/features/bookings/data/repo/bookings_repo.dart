@@ -40,4 +40,23 @@ class BookingsRepository {
   Future<void> cancel(int id, String reason) async {
     await api.post('/resident/bookings/$id/cancel', data: {'reason': reason});
   }
+
+  /// Rates a completed booking: the stars picked on the rating step, the
+  /// optional comment and the quick-feedback tags (`/resident/bookings/{id}/rating`).
+  /// Tag texts go as they are displayed to the resident.
+  Future<void> rate({
+    required int id,
+    required int rating,
+    required String comment,
+    required List<String> tags,
+  }) async {
+    final r = await api.post<Map<String, dynamic>>(
+      '/resident/bookings/$id/rating',
+      data: {'rating': rating, 'comment': comment, 'tags': tags},
+    );
+    final body = r.data ?? const <String, dynamic>{};
+    if (body['status'] == false) {
+      throw ApiFailure(body['message']?.toString() ?? '');
+    }
+  }
 }

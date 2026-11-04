@@ -18,7 +18,7 @@ class ServicesCubit extends LocaleAwareCubit<ServicesState> {
     }
   }
 
-  Future<void> book({
+  Future<int?> book({
     required int homeId,
     required int serviceId,
     required DateTime date,

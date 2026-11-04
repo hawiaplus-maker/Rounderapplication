@@ -7,8 +7,9 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
-/// Rating step: stars, note and the skip entry. The star selection validates
-/// inline under the stars (rounder-validation) — no snackbar.
+/// Rating step: stars, note, quick-feedback tags and the skip entry. The star
+/// selection validates inline under the stars (rounder-validation) — no
+/// snackbar. `onSend` carries `{rating, comment, tags}` to the journey.
 class JourneyRatingPage extends StatefulWidget {
   const JourneyRatingPage({
     super.key,
@@ -16,7 +17,10 @@ class JourneyRatingPage extends StatefulWidget {
     required this.providerLabel,
     required this.stars,
     required this.notes,
+    required this.tags,
+    required this.selectedTags,
     required this.onStar,
+    required this.onTagToggle,
     required this.onSend,
     required this.onLater,
   });
@@ -25,7 +29,13 @@ class JourneyRatingPage extends StatefulWidget {
   final String providerLabel;
   final int stars;
   final TextEditingController notes;
+
+  /// Quick-feedback tag keys (AppLocaleKey) shown as multi-select chips;
+  /// what is displayed is what the payload's `tags` carry.
+  final List<String> tags;
+  final List<String> selectedTags;
   final ValueChanged<int> onStar;
+  final ValueChanged<String> onTagToggle;
   final VoidCallback onSend;
   final VoidCallback onLater;
 
@@ -90,6 +100,24 @@ class _JourneyRatingPageState extends State<JourneyRatingPage> {
               ),
             ),
             const SizedBox(height: 8),
+            // The rating design's "Quick feedback" row: three selectable
+            // chips — multi-select, sent as the payload's `tags` exactly as
+            // they are displayed.
+            Row(
+              children: [
+                for (final String tag in widget.tags) ...[
+                  if (tag != widget.tags.first) const SizedBox(width: 8),
+                  Expanded(
+                    child: _RatingTagChip(
+                      labelKey: tag,
+                      selected: widget.selectedTags.contains(tag),
+                      onTap: () => widget.onTagToggle(tag),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 8),
             JourneyActionButton(
               labelKey: AppLocaleKey.sendRating,
               icon: Icons.send_outlined,
@@ -104,4 +132,40 @@ class _JourneyRatingPageState extends State<JourneyRatingPage> {
       ],
     );
   }
+}
+
+/// One quick-feedback chip of the rating step (the design's "Quick feedback"
+/// row): outlined neutral, petrol-filled once picked.
+class _RatingTagChip extends StatelessWidget {
+  const _RatingTagChip({
+    required this.labelKey,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String labelKey;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+      decoration: BoxDecoration(
+        color: selected ? AppColors.petrol : AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: selected ? AppColors.petrol : AppColors.mint),
+      ),
+      child: Text(
+        labelKey.tr(),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: AppTextStyles.captionBold13.copyWith(
+          color: selected ? AppColors.white : AppColors.petrol,
+        ),
+      ),
+    ),
+  );
 }

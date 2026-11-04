@@ -20,6 +20,8 @@ class OrderData {
     this.subServiceName,
     this.providerName,
     this.mediaUrls = const <String>[],
+    this.homeId,
+    this.homeName,
   });
 
   factory OrderData.fromPreview(PreviewOrder order) => OrderData(
@@ -52,6 +54,8 @@ class OrderData {
       subServiceName: booking.subServiceName,
       providerName: booking.providerName,
       mediaUrls: booking.mediaUrls,
+      homeId: booking.homeId,
+      homeName: booking.homeName,
     );
   }
 
@@ -84,4 +88,9 @@ class OrderData {
   final String? subServiceName;
   final String? providerName;
   final List<String> mediaUrls;
+
+  /// Unit (home) the order belongs to. Session preview orders have none, so
+  /// they stay visible under the every-unit default of the unit filter.
+  final int? homeId;
+  final String? homeName;
 }

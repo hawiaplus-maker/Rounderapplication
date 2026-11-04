@@ -12,6 +12,7 @@ import 'package:rounder_application/layout/global/widgets/brand_gradient_backdro
 import 'package:rounder_application/logic/service_schedule_logic.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/bookings_cubit.dart';
+import 'package:rounder_application/layout/resident/features/bookings/data/repo/bookings_repo.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screens/emergency_request_screen.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_additional_page.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_category_model.dart';
@@ -100,6 +101,19 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   String? orderReference;
+
+  /// Backend id of the booking this journey just created (`data.id` of the
+  /// book call) — the rating step targets it; null keeps the prototype mode.
+  int? bookedBookingId;
+
+  /// Quick-feedback tag keys of the rating step, in the design's order;
+  /// resolved to their displayed text at send time.
+  static const List<String> _ratingTagKeys = [
+    AppLocaleKey.ratingTagQuality,
+    AppLocaleKey.ratingTagPunctuality,
+    AppLocaleKey.ratingTagTreatment,
+  ];
+
   final List<_Journey> _history = [];
   String get _dateLabel => selectedDate == null
       ? AppLocaleKey.pickDate.tr()
@@ -114,6 +128,9 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   int mode = 0, stage = 0, stars = 0;
   bool acceptedAdditional = false;
+
+  /// Picked quick-feedback keys of the rating step.
+  List<String> selectedRatingTags = [];
   /// Inline schedule-rule flag (rounder-validation): shown under the
   /// schedule step's date/time pills instead of a toast.
   bool scheduleError = false;
@@ -152,6 +169,18 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       _history.clear();
       page = _Journey.hub;
       previous = _Journey.hub;
+    });
+  }
+
+  /// Empties every text input of the flow (the problem description and the
+  /// post-work notes). Closing an order's completed block calls it, so no
+  /// text of a finished order stays behind and leaks into the next one —
+  /// the review step reads `issue.text`, and the rating/additional steps
+  /// share the `notes` controller.
+  void _clearJourneyTextFields() {
+    setState(() {
+      issue.clear();
+      notes.clear();
     });
   }
 
@@ -253,7 +282,9 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     }
     if (orderReference == null) {
       try {
-        await sl<ServicesCubit>().book(
+        // book() returns the created booking's id — kept for the rating
+        // step once the service is finished.
+        bookedBookingId = await sl<ServicesCubit>().book(
           homeId: homeId,
           serviceId: serviceId!,
           date: scheduledAt,
@@ -353,6 +384,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       selectedPriceId = null;
       orderReference = null;
       acceptedAdditional = false;
+      // A fresh order has nothing to rate yet: the previous booking's id and
+      // its quick-feedback picks do not carry over.
+      bookedBookingId = null;
+      selectedRatingTags = [];
       // Inline snapshot already includes the truncated first pages; further
       // pages continue after the loaded count.
       _subServices = List.of(subs);
@@ -406,6 +441,42 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     }
     _toast(AppLocaleKey.requestCancelled.tr());
     go(_Journey.hub);
+  }
+
+  /// Sends the rating of the finished service for the booking this journey
+  /// created: `{rating, comment, tags}` on `/resident/bookings/{id}/rating`.
+  /// A session preview order carries no booking id — the rating stays in its
+  /// prototype mode and the flow moves on without the API call. On failure
+  /// the step stays so the resident can retry.
+  Future<void> _submitRating() async {
+    final int? bookingId = bookedBookingId;
+    if (bookingId == null) {
+      go(_Journey.warranty);
+      return;
+    }
+    try {
+      await sl<BookingsRepository>().rate(
+        id: bookingId,
+        rating: stars,
+        comment: notes.text.trim(),
+        tags: [for (final String key in selectedRatingTags) key.tr()],
+      );
+      if (!mounted) return;
+      go(_Journey.warranty);
+    } catch (_) {
+      if (mounted) _toast(AppLocaleKey.connectionError.tr());
+    }
+  }
+
+  /// Toggles one quick-feedback key of the rating step.
+  void _toggleRatingTag(String key) {
+    setState(() {
+      if (selectedRatingTags.contains(key)) {
+        selectedRatingTags.remove(key);
+      } else {
+        selectedRatingTags.add(key);
+      }
+    });
   }
 
   void _openEmergency() {
@@ -596,15 +667,23 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           providerLabel: selectedProvider.tr(),
           stars: stars,
           notes: notes,
+          tags: _ratingTagKeys,
+          selectedTags: selectedRatingTags,
           onStar: (value) => setState(() => stars = value),
+          onTagToggle: _toggleRatingTag,
           // The star rule is validated inline inside the rating page.
-          onSend: () => go(_Journey.warranty),
+          onSend: _submitRating,
           onLater: () => go(_Journey.warranty),
         ),
         _Journey.warranty => JourneyWarrantyPage(
           onBack: back,
           onFollowUp: () => go(_Journey.followup),
-          onHome: () => setState(() => page = _Journey.hub),
+          // Order complete and block closed: pick the next service from a
+          // clean flow — no problem text or notes from this order remain.
+          onHome: () {
+            _returnToServices();
+            _clearJourneyTextFields();
+          },
         ),
         _Journey.followup => JourneyFollowupPage(
           onBack: back,

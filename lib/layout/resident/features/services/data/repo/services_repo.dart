@@ -78,7 +78,10 @@ class ServicesRepository {
     return data.whereType<Map<String, dynamic>>().map(ServiceProvider.fromJson).toList();
   }
 
-  Future<void> book({
+  /// Creates the booking and returns its backend id (parsed from the
+  /// response's `data.id` / `booking_id`); null when the body omits it — the
+  /// rating step then keeps working in its prototype mode.
+  Future<int?> book({
     required int homeId,
     required int serviceId,
     required DateTime date,
@@ -109,6 +112,11 @@ class ServicesRepository {
     if (body['status'] == false) {
       throw ApiFailure(body['message']?.toString() ?? '');
     }
+    final Object? data = body['data'];
+    final Object? rawId = data is Map && data['booking'] is Map
+        ? (data['id'] ?? data['booking_id'] ?? (data['booking'] as Map)['id'])
+        : body['booking_id'];
+    return int.tryParse('${rawId ?? ''}');
   }
 
   String get errorKey => 'connection_error';

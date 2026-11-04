@@ -11,6 +11,8 @@ class BookingItem {
     this.subServiceName,
     this.providerName,
     this.mediaUrls = const <String>[],
+    this.homeId,
+    this.homeName,
   });
 
   final int id;
@@ -22,6 +24,8 @@ class BookingItem {
   final String? subServiceName;
   final String? providerName;
   final List<String> mediaUrls;
+  final int? homeId;
+  final String? homeName;
 
   bool get canCancel => statusCode == 'pending' || statusCode == 'confirmed';
 
@@ -81,6 +85,7 @@ class BookingItem {
     final String? providerName = flatProviderName.isNotEmpty
         ? flatProviderName
         : provider['company_name']?.toString();
+    final String homeName = (j['home_name'] ?? '').toString();
 
     return BookingItem(
       id: int.tryParse('${j['id'] ?? ''}') ?? 0,
@@ -92,6 +97,8 @@ class BookingItem {
       subServiceName: subServiceName,
       providerName: providerName,
       mediaUrls: media,
+      homeId: int.tryParse('${j['home_id'] ?? ''}'),
+      homeName: homeName.isEmpty ? null : homeName,
     );
   }
 }
