@@ -1,3 +1,16 @@
+/// One page of the paginated `/resident/sub-services` endpoint: the fetched
+/// sub-services and whether further pages may exist. The endpoint is paged
+/// (page, per_page, service_id) so the catalog only truncates its inline
+/// sub-services and the details step loads the rest on demand.
+class ServiceSubItemPage {
+  const ServiceSubItemPage({this.items = const [], this.hasMore = false});
+
+  final List<ServiceSubItem> items;
+
+  /// `true` while further pages may exist.
+  final bool hasMore;
+}
+
 /// Models for the `/resident/service-categories` endpoint: a category groups
 /// a list of services, each service carrying its own id used for booking.
 class ServiceCategory {

@@ -88,6 +88,12 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.w700,
     height: 24 / 16,
   );
+  static const TextStyle headingH5 = TextStyle(
+    fontFamily: cairo,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    height: 24 / 14,
+  );
   static const TextStyle headingRegular20 = TextStyle(
     fontFamily: cairo,
     fontSize: 20,

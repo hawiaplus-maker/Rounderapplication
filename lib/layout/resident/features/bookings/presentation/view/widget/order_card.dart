@@ -73,11 +73,9 @@ class OrderCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Directionality.of(context) == ui_direction.TextDirection.rtl
-                      ? Icons.arrow_back_ios_new
-                      : Icons.arrow_back_ios_new,
-                  color: AppColors.petrol,
+                Directionality(
+                  textDirection: ui_direction.TextDirection.ltr,
+                  child: Icon(Icons.arrow_back_ios_new, color: AppColors.petrol),
                 ),
               ],
             ),

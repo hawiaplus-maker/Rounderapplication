@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/layout/global/widgets/state_panel.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_category_model.dart';
@@ -41,9 +40,12 @@ class JourneyCategoryPage extends StatelessWidget {
         else
           JourneyPanel(
             children: category.services.map((service) {
-              return JourneyServicePill(
-                label: service.name,
-                onTap: () => onSelectService(service),
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: JourneyServicePill(
+                  label: service.name,
+                  onTap: () => onSelectService(service),
+                ),
               );
             }).toList(),
           ),

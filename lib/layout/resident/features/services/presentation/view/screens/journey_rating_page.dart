@@ -7,8 +7,9 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_sub_page.dart';
 
-/// Rating step: stars, note and the skip entry.
-class JourneyRatingPage extends StatelessWidget {
+/// Rating step: stars, note and the skip entry. The star selection validates
+/// inline under the stars (rounder-validation) — no snackbar.
+class JourneyRatingPage extends StatefulWidget {
   const JourneyRatingPage({
     super.key,
     required this.onBack,
@@ -29,10 +30,25 @@ class JourneyRatingPage extends StatelessWidget {
   final VoidCallback onLater;
 
   @override
+  State<JourneyRatingPage> createState() => _JourneyRatingPageState();
+}
+
+class _JourneyRatingPageState extends State<JourneyRatingPage> {
+  bool _sendPressed = false;
+
+  void _send() {
+    if (widget.stars == 0) {
+      setState(() => _sendPressed = true);
+      return;
+    }
+    widget.onSend();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return JourneySubPage(
       titleKey: AppLocaleKey.rateExperience,
-      onBack: onBack,
+      onBack: widget.onBack,
       children: [
         JourneyPanel(
           children: [
@@ -41,24 +57,32 @@ class JourneyRatingPage extends StatelessWidget {
               textAlign: TextAlign.start,
               style: AppTextStyles.extraBold22.copyWith(color: AppColors.petrol),
             ),
-            Text(providerLabel, textAlign: TextAlign.start),
+            Text(widget.providerLabel, textAlign: TextAlign.start),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 5,
                 (index) => IconButton(
-                  onPressed: () => onStar(index + 1),
+                  onPressed: () => widget.onStar(index + 1),
                   icon: Icon(
                     Icons.star_rounded,
-                    color: index < stars ? AppColors.orange : AppColors.muted,
+                    color: index < widget.stars ? AppColors.orange : AppColors.muted,
                     size: 33,
                   ),
                 ),
               ),
             ),
+            // Inline star-rule message: shown after the first failed send and
+            // gone as soon as a star is picked (the count re-evaluates).
+            if (_sendPressed && widget.stars == 0)
+              Text(
+                AppLocaleKey.requiredField.tr(),
+                textAlign: TextAlign.start,
+                style: AppTextStyles.tinyRegular.copyWith(color: AppColors.emergency),
+              ),
             TextField(
-              controller: notes,
+              controller: widget.notes,
               maxLines: 3,
               textAlign: TextAlign.start,
               decoration: InputDecoration(
@@ -69,10 +93,10 @@ class JourneyRatingPage extends StatelessWidget {
             JourneyActionButton(
               labelKey: AppLocaleKey.sendRating,
               icon: Icons.send_outlined,
-              onAction: onSend,
+              onAction: _send,
             ),
             TextButton(
-              onPressed: onLater,
+              onPressed: widget.onLater,
               child: Text(AppLocaleKey.later.tr()),
             ),
           ],

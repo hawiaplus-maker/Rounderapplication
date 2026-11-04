@@ -19,7 +19,11 @@ class DioConsumer implements ApiConsumer {
   Future<Response<T>> put<T>(String path, {Object? data}) =>
       _withApiMessage(dio.put<T>(path, data: data));
 
-  /// Write-request feedback: every successful POST/PUT carrying the
+  @override
+  Future<Response<T>> delete<T>(String path) =>
+      _withApiMessage(dio.delete<T>(path));
+
+  /// Write-request feedback: every successful POST/PUT/DELETE carrying the
   /// `{status, message, data}` envelope's `message` is surfaced once here,
   /// instead of being repeated in each cubit/screen.
   Future<Response<T>> _withApiMessage<T>(Future<Response<T>> request) async {

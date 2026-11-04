@@ -14,11 +14,13 @@ class JourneyWaitingPage extends StatelessWidget {
     required this.onBack,
     required this.onCancel,
     required this.onAccept,
+    required this.onServices,
   });
 
   final VoidCallback onBack;
   final VoidCallback onCancel;
   final VoidCallback onAccept;
+  final VoidCallback onServices;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,11 @@ class JourneyWaitingPage extends StatelessWidget {
           ],
         ),
         JourneyActionButton(labelKey: AppLocaleKey.cancel, icon: Icons.close, onAction: onCancel),
+        JourneyActionButton(
+          labelKey: AppLocaleKey.services,
+          icon: Icons.home_repair_service_outlined,
+          onAction: onServices,
+        ),
         // JourneyNextButton(
         //   labelKey: AppLocaleKey.providerAccepted,
         //   onPressed: onAccept,

@@ -11,13 +11,15 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
 
 /// Providers step: available providers for the selected service, loaded from
-/// `/resident/service-providers?service_id=...`.
+/// `/resident/service-providers` filtered by service, sub-service, and home.
 class JourneyProvidersPage extends StatelessWidget {
   const JourneyProvidersPage({
     super.key,
     required this.onBack,
     required this.serviceKey,
     required this.serviceId,
+    required this.subServiceId,
+    required this.homeId,
     required this.onViewCompany,
     required this.onSelectProvider,
   });
@@ -25,13 +27,20 @@ class JourneyProvidersPage extends StatelessWidget {
   final VoidCallback onBack;
   final String serviceKey;
   final int? serviceId;
+  final int? subServiceId;
+  final int? homeId;
   final VoidCallback onViewCompany;
-  final void Function(int id, String name, double price) onSelectProvider;
+  final void Function(int id, String name, double price, int? priceId)
+      onSelectProvider;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ServiceProvidersCubit>()..load(serviceId ?? 0),
+      create: (_) => sl<ServiceProvidersCubit>()..load(
+        serviceId: serviceId ?? 0,
+        subServiceId: subServiceId,
+        homeId: homeId,
+      ),
       child: _JourneyProvidersBody(
         onBack: onBack,
         serviceKey: serviceKey,
@@ -53,7 +62,8 @@ class _JourneyProvidersBody extends StatelessWidget {
   final VoidCallback onBack;
   final String serviceKey;
   final VoidCallback onViewCompany;
-  final void Function(int id, String name, double price) onSelectProvider;
+  final void Function(int id, String name, double price, int? priceId)
+      onSelectProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +118,8 @@ class _JourneyProvidersBody extends StatelessWidget {
                       (p) => _ProviderCard(
                         provider: p,
                         onViewCompany: onViewCompany,
-                        onSelect: () => onSelectProvider(p.id, p.name, p.price ?? 0),
+                        onSelect: () =>
+                            onSelectProvider(p.id, p.name, p.price ?? 0, p.priceId),
                       ),
                     )
                     .toList(),

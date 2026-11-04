@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -38,12 +37,11 @@ class JourneyAllServicesPage extends StatelessWidget {
         else
           JourneyPanel(
             children: [
-              for (final category in categories) ..._categorySectionWidgets(
-                category: category,
-                onSelectService: onSelectService,
-              ),
+              for (final category in categories)
+                ..._categorySectionWidgets(category: category, onSelectService: onSelectService),
             ],
           ),
+        SizedBox(height: 120),
       ],
     );
   }
@@ -66,10 +64,7 @@ List<Widget> _categorySectionWidgets({
     ),
     for (final service in category.services) ...[
       const SizedBox(height: 12),
-      JourneyServicePill(
-        label: service.name,
-        onTap: () => onSelectService(service),
-      ),
+      JourneyServicePill(label: service.name, onTap: () => onSelectService(service)),
     ],
     const SizedBox(height: 24),
   ];

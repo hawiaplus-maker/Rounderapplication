@@ -50,4 +50,5 @@ abstract final class AppImages {
   static const homeNavUnion = '$_home/nav-union.svg';
   static const homeNavUser = '$_home/nav-user.svg';
   static const rounderIcon = 'assets/svg/rounder.svg';
+  static const aliCircle = 'assets/images/ali/aliCircle.png';
 }

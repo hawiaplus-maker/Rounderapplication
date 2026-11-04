@@ -17,11 +17,17 @@ class UnitsBody extends StatelessWidget {
     required this.unitLabel,
     required this.onOpenUnit,
     required this.onAddUnit,
+    required this.onDeleteUnit,
+    this.busyId,
   });
 
   final List<ResidentHome> homes;
   final String homeName, unitLabel;
   final VoidCallback onOpenUnit, onAddUnit;
+  final ValueChanged<ResidentHome> onDeleteUnit;
+
+  /// The unit whose deletion is in flight (null when none).
+  final int? busyId;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +50,8 @@ class UnitsBody extends StatelessWidget {
           homes: linked,
           onOpenUnit: (_) => onOpenUnit(),
           onAddUnit: onAddUnit,
+          onDeleteUnit: onDeleteUnit,
+          busyId: busyId,
         ),
       ],
     );

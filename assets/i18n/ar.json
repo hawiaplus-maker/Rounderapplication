@@ -261,6 +261,7 @@
   "take_photo": "التقط صورة",
   "image_pick_failed": "تعذر اختيار الصورة",
   "next_providers": "عرض مقدمي الخدمة",
+  "load_more": "تحميل المزيد",
   "when_service": "موعد الخدمة",
   "where_service": "مكان الخدمة",
   "my_unit": "وحدتي السكنية",
@@ -273,6 +274,7 @@
   "pick_time": "اختر الوقت",
   "morning": "صباحًا",
   "provider_timing": "سيؤكد مقدم الخدمة وقت الوصول",
+  "service_date_time_required": "مطلوب تحديد الوقت والتاريخ لتنفيذ الخدمة",
   "available_providers": "مقدمو الخدمة المتاحون",
   "provider_one": "----",
   "provider_two": "----",
@@ -329,6 +331,8 @@
   "track_order": "متابعة الطلب",
   "order_history": "سجل الطلبات",
   "no_orders_yet": "لا توجد طلبات بعد",
+  "emergency_orders": "طلبات الطوارئ",
+  "no_emergency_orders": "لا توجد طلبات طوارئ بعد",
   "emergency_title": "طلب طوارئ",
   "emergency_intro": "أرسل طلبًا عاجلًا لإدارة العقار. في الحالات التي تهدد الحياة، اتصل بخدمات الطوارئ المحلية مباشرة.",
   "emergency_type": "نوع الطوارئ",
@@ -625,5 +629,10 @@
   "ownershipOwner": "مالك",
   "saveUnitResidence": "احفظ عنوان سكنك",
   "completeLater": "أكمل لاحقًا",
-  "areaApprovedValue": "المساحة المعتمدة: {area} م²"
+  "areaApprovedValue": "المساحة المعتمدة: {area} م²",
+  "deleteUnit": "حذف الوحدة",
+  "deleteUnitQuestion": "هل تريد حذف هذه الوحدة؟",
+  "keepUnit": "الإبقاء على الوحدة",
+  "deleteUnitFailed": "تعذّر حذف هذه الوحدة",
+  "servicePlaceImage": "صورة مكان الخدمة"
 }

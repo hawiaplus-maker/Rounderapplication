@@ -28,3 +28,13 @@ class HomesFailure extends HomesState {
 
   final String message;
 }
+
+/// The list's rows while one unit is being deleted: the page stays
+/// populated and the row's delete pill spins instead of flashing a full
+/// loading panel for a single action.
+class HomesDeleting extends HomesState {
+  const HomesDeleting(this.homes, this.deletingId);
+
+  final List<ResidentHome> homes;
+  final int deletingId;
+}

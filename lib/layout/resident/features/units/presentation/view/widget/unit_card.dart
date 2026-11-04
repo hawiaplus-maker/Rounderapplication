@@ -19,6 +19,9 @@ class UnitCard extends StatelessWidget {
     required this.onPrimary,
     this.secondaryLabel,
     this.onSecondary,
+    this.secondaryIcon,
+    this.secondaryDestructive = false,
+    this.busy = false,
   });
 
   final bool isCurrent;
@@ -32,6 +35,16 @@ class UnitCard extends StatelessWidget {
   final VoidCallback onPrimary;
   final String? secondaryLabel;
   final VoidCallback? onSecondary;
+
+  /// The delete pill's leading icon (home for an action, trash for removal).
+  final IconData? secondaryIcon;
+
+  /// Tints the secondary pill as a destructive (removal) action.
+  final bool secondaryDestructive;
+
+  /// While an action is in flight the pills turn inert and the delete
+  /// (secondary) pill spins in place.
+  final bool busy;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +72,9 @@ class UnitCard extends StatelessWidget {
               Text(
                 name,
                 textAlign: TextAlign.start,
-                style: AppTextStyles.headingBold22.copyWith(color: AppColors.petrol),
+                style: AppTextStyles.headingBold22.copyWith(
+                  color: AppColors.petrol,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -73,7 +88,10 @@ class UnitCard extends StatelessWidget {
                 child: Text(
                   isCurrent ? currentBadge : role,
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.captionBold.copyWith(color: AppColors.teal, height: 18 / 12),
+                  style: AppTextStyles.captionBold.copyWith(
+                    color: AppColors.teal,
+                    height: 18 / 12,
+                  ),
                 ),
               ),
             ],
@@ -83,7 +101,10 @@ class UnitCard extends StatelessWidget {
             Text(
               role,
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyBold14.copyWith(color: AppColors.teal, height: 20 / 14),
+              style: AppTextStyles.bodyBold14.copyWith(
+                color: AppColors.teal,
+                height: 20 / 14,
+              ),
             ),
           const SizedBox(height: 6),
           _SpecRow(value: unitNo),
@@ -97,14 +118,18 @@ class UnitCard extends StatelessWidget {
               if (secondaryLabel != null)
                 _Pill(
                   label: secondaryLabel!,
-                  fill: AppColors.mintLight,
-                  icon: Icons.home_outlined,
-                  onTap: onSecondary,
+                  fill: secondaryDestructive
+                      ? AppColors.emergencyWash
+                      : AppColors.mintLight,
+                  icon: secondaryIcon ?? Icons.home_outlined,
+                  tint: secondaryDestructive ? AppColors.emergency : null,
+                  busy: busy,
+                  onTap: busy ? null : onSecondary,
                 ),
               _Pill(
                 label: primaryLabel,
                 fill: isCurrent ? AppColors.coral : AppColors.sand,
-                onTap: onPrimary,
+                onTap: busy ? null : onPrimary,
               ),
             ],
           ),
@@ -126,7 +151,10 @@ class _SpecRow extends StatelessWidget {
     child: Text(
       value,
       textAlign: TextAlign.start,
-      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted, height: small ? 18 / 12 : 22 / 14),
+      style: AppTextStyles.bodyMedium.copyWith(
+        color: AppColors.muted,
+        height: small ? 18 / 12 : 22 / 14,
+      ),
     ),
   );
 }
@@ -137,12 +165,20 @@ class _Pill extends StatelessWidget {
     required this.fill,
     required this.onTap,
     this.icon,
+    this.tint,
+    this.busy = false,
   });
 
   final String label;
   final Color fill;
   final VoidCallback? onTap;
   final IconData? icon;
+
+  /// The pill's text/icon color when it deviates from the petroleum default.
+  final Color? tint;
+
+  /// A spinner in place of the icon while the pill's action is in flight.
+  final bool busy;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -156,15 +192,25 @@ class _Pill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: 16, color: AppColors.petrol),
+          if (busy)
+            SizedBox.square(
+              dimension: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: tint ?? AppColors.petrol,
+              ),
+            )
+          else if (icon != null) ...[
+            Icon(icon, size: 16, color: tint ?? AppColors.petrol),
             const SizedBox(width: 6),
           ],
           Flexible(
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: AppTextStyles.captionBold13.copyWith(color: AppColors.petrol),
+              style: AppTextStyles.captionBold13.copyWith(
+                color: tint ?? AppColors.petrol,
+              ),
             ),
           ),
         ],

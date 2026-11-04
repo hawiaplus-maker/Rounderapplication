@@ -9,18 +9,25 @@ import 'package:rounder_application/layout/resident/features/units/presentation/
 import 'package:rounder_application/logic/number_text_logic.dart';
 
 /// The resident's linked homes plus the "add unit" action (design 536:943):
-/// the current home first, then the remaining homes under their section label.
+/// the current home first, then the remaining homes under their section
+/// label. Each card carries the remove action of `DELETE /resident/homes/{id}`.
 class UnitsLinkedList extends StatelessWidget {
   const UnitsLinkedList({
     super.key,
     required this.homes,
     required this.onOpenUnit,
     required this.onAddUnit,
+    required this.onDeleteUnit,
+    this.busyId,
   });
 
   final List<ResidentHome> homes;
   final ValueChanged<ResidentHome> onOpenUnit;
+  final ValueChanged<ResidentHome> onDeleteUnit;
   final VoidCallback onAddUnit;
+
+  /// The unit whose deletion is in flight: its card's pills turn inert.
+  final int? busyId;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,9 @@ class UnitsLinkedList extends StatelessWidget {
         _HomeCard(
           home: current,
           isCurrent: true,
+          busy: busyId != null && current.id == busyId,
           onOpen: () => onOpenUnit(current),
+          onDelete: () => onDeleteUnit(current),
         ),
         if (others.isNotEmpty) ...[
           const SizedBox(height: 18),
@@ -49,7 +58,12 @@ class UnitsLinkedList extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           for (final ResidentHome home in others) ...[
-            _HomeCard(home: home, onOpen: () => onOpenUnit(home)),
+            _HomeCard(
+              home: home,
+              busy: busyId != null && home.id == busyId,
+              onOpen: () => onOpenUnit(home),
+              onDelete: () => onDeleteUnit(home),
+            ),
             const SizedBox(height: 12),
           ],
         ],
@@ -81,12 +95,16 @@ class _HomeCard extends StatelessWidget {
   const _HomeCard({
     required this.home,
     required this.onOpen,
+    required this.onDelete,
     this.isCurrent = false,
+    this.busy = false,
   });
 
   final ResidentHome home;
   final VoidCallback onOpen;
+  final VoidCallback onDelete;
   final bool isCurrent;
+  final bool busy;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +112,7 @@ class _HomeCard extends StatelessWidget {
     final String unit = home.unitLabel.trim();
     return UnitCard(
       isCurrent: isCurrent,
+      busy: busy,
       name: home.name.isEmpty ? DisplayPlaceholder.text : home.name,
       role: (home.isOwner ? AppLocaleKey.ownerRole : AppLocaleKey.tenantRole)
           .tr(),
@@ -110,6 +129,10 @@ class _HomeCard extends StatelessWidget {
       currentBadge: AppLocaleKey.currentUnit.tr(),
       primaryLabel: AppLocaleKey.viewUnit.tr(),
       onPrimary: onOpen,
+      secondaryLabel: AppLocaleKey.deleteUnit.tr(),
+      secondaryIcon: Icons.delete_outline,
+      secondaryDestructive: true,
+      onSecondary: onDelete,
     );
   }
 }

@@ -113,6 +113,11 @@ class AddUnitForm extends StatelessWidget {
                     ),
                   )
                 : DropdownButtonFormField<int>(
+                    // Keyed by the selection so every state change (the
+                    // auto-pick listener included) rebuilds the field with
+                    // the current value — the validator's inline rule must
+                    // never disagree with `selectedCityId`.
+                    key: ValueKey(selectedCityId),
                     initialValue: selectedCityId,
                     isExpanded: true,
                     decoration: InputDecoration(
@@ -130,7 +135,7 @@ class AddUnitForm extends StatelessWidget {
                         )
                         .toList(),
                     onChanged: onCityChanged,
-                    validator: (v) => v == null ? AppLocaleKey.requiredField.tr() : null,
+                    validator: UnitsValidators.city,
                   ),
             const SizedBox(height: 16),
             Text(

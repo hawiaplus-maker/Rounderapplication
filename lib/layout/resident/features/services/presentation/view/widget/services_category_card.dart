@@ -1,7 +1,6 @@
 import 'dart:ui' as ui_text_direction;
 
 import 'package:flutter/material.dart';
-
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -24,8 +23,7 @@ class ServicesCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool rtl =
-        Directionality.of(context) == ui_text_direction.TextDirection.rtl;
+    final bool rtl = Directionality.of(context) == ui_text_direction.TextDirection.rtl;
     return Material(
       color: AppColors.glassCardFill,
       shape: RoundedRectangleBorder(
@@ -100,9 +98,9 @@ class _OpenCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: AlignmentDirectional.bottomStart,
+      alignment: AlignmentDirectional.bottomEnd,
       child: Padding(
-        padding: const EdgeInsetsDirectional.only(start: 16),
+        padding: const EdgeInsetsDirectional.only(end: 16),
         child: Container(
           width: 36,
           height: 36,

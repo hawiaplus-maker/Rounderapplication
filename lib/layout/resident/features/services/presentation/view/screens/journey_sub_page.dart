@@ -23,11 +23,9 @@ class JourneySubPage extends StatelessWidget {
         JourneyHeader(titleKey: titleKey, onBack: onBack),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
         ),
+        SizedBox(height: MediaQuery.of(context).padding.bottom + 54),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_flow.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_screen.dart';
@@ -12,6 +13,7 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/resident_dock.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screens/emergency_request_screen.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/service_journey_screen.dart';
+import 'package:rounder_application/layout/resident/features/units/data/repo/selected_home_store.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/property_rating_screen.dart';
 
 /// Resident application shell. The selected tab stays alive as a local
@@ -27,9 +29,19 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
   int _tab = 0;
 
   void _openEmergency() {
+    final dashboardState = context.read<ResidentDashboardCubit>().state;
+    // The unit picked on the dashboard's selector leads the request; without
+    // a pick the dashboard's own home is used.
+    final homeId =
+        sl<SelectedHomeStore>().readId() ??
+        (dashboardState is DashboardReady ? dashboardState.data.homeId : null);
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const EmergencyRequestScreen()));
+    ).push(
+      MaterialPageRoute<void>(
+        builder: (_) => EmergencyRequestScreen(residentHomeId: homeId),
+      ),
+    );
   }
 
   void _openPropertyRating() {

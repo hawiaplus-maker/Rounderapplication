@@ -11,9 +11,13 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_action_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_panel.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_sub_services_section.dart';
+import 'package:rounder_application/layout/resident/features/services/validation/services_validators.dart';
 
 /// Service details step: problem description, issue type and photos entry.
-class JourneyDetailPage extends StatelessWidget {
+/// The problem text validates inline under the field (rounder-validation) —
+/// no snackbar.
+class JourneyDetailPage extends StatefulWidget {
   const JourneyDetailPage({
     super.key,
     required this.onBack,
@@ -21,6 +25,9 @@ class JourneyDetailPage extends StatelessWidget {
     this.subServices = const [],
     this.selectedSubServiceId,
     this.onSubServiceChanged,
+    this.subServicesHasMore = false,
+    this.subServicesLoading = false,
+    this.onLoadMoreSubServices,
     required this.issue,
     required this.issueType,
     required this.onIssueTypeChanged,
@@ -34,6 +41,12 @@ class JourneyDetailPage extends StatelessWidget {
   final List<ServiceSubItem> subServices;
   final int? selectedSubServiceId;
   final ValueChanged<int?>? onSubServiceChanged;
+
+  /// Further pages of [subServices] may exist — [onLoadMoreSubServices]
+  /// fetches the next one while [subServicesLoading] is in flight.
+  final bool subServicesHasMore;
+  final bool subServicesLoading;
+  final VoidCallback? onLoadMoreSubServices;
   final TextEditingController issue;
   final String issueType;
   final ValueChanged<String> onIssueTypeChanged;
@@ -45,10 +58,27 @@ class JourneyDetailPage extends StatelessWidget {
   final VoidCallback onNext;
 
   @override
+  State<JourneyDetailPage> createState() => _JourneyDetailPageState();
+}
+
+class _JourneyDetailPageState extends State<JourneyDetailPage> {
+  /// Inline validation of the problem description: the first failed
+  /// "next" reveals the message under the field, then typing re-validates
+  /// live so the note disappears as the text becomes valid.
+  final _formKey = GlobalKey<FormState>();
+  bool _submitted = false;
+
+  void _next() {
+    setState(() => _submitted = true);
+    final ok = _formKey.currentState?.validate() ?? false;
+    if (ok) widget.onNext();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return JourneySubPage(
       titleKey: AppLocaleKey.serviceDetails,
-      onBack: onBack,
+      onBack: widget.onBack,
       children: [
         JourneyPanel(
           children: [
@@ -81,71 +111,63 @@ class JourneyDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              serviceKey,
+              widget.serviceKey,
               textAlign: TextAlign.start,
               style: AppTextStyles.extraBold18.copyWith(color: AppColors.petrol),
             ),
-            if (subServices.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              JourneyPanel(
-                children: [
-                  Text(
-                    AppLocaleKey.issueType.tr(),
+            const SizedBox(height: 10),
+            JourneyPanel(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: widget.issue,
+                    maxLines: 3,
                     textAlign: TextAlign.start,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.petrol,
+                    autovalidateMode: _submitted
+                        ? AutovalidateMode.onUserInteraction
+                        : AutovalidateMode.disabled,
+                    decoration: InputDecoration(hintText: AppLocaleKey.problemHint.tr()),
+                    validator: ServicesValidators.issue,
+                  ),
+                ),
+              ],
+            ),
+            JourneyActionButton(
+              labelKey: AppLocaleKey.addPhotos,
+              icon: Icons.add_a_photo_outlined,
+              onAction: widget.onAddPhotos,
+            ),
+            if (widget.photos.isNotEmpty) ...<Widget>[
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final photo in widget.photos)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.file(File(photo.path), width: 72, height: 72, fit: BoxFit.cover),
                     ),
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 6,
-                    children: subServices
-                        .map(
-                          (s) => ChoiceChip(
-                            label: Text(s.name ?? ''),
-                            selected: selectedSubServiceId == s.id,
-                            onSelected: (_) => onSubServiceChanged?.call(s.id),
-                          ),
-                        )
-                        .toList(),
-                  ),
                 ],
+              ),
+            ],
+
+            if (widget.subServices.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              JourneySubServicesSection(
+                subServices: widget.subServices,
+                selectedSubServiceId: widget.selectedSubServiceId,
+                onSubServiceChanged: widget.onSubServiceChanged,
+                hasMore: widget.subServicesHasMore,
+                loading: widget.subServicesLoading,
+                onLoadMore: widget.onLoadMoreSubServices,
               ),
             ],
           ],
         ),
-        const SizedBox(height: 10),
-        JourneyPanel(
-          children: [
-            TextField(
-              controller: issue,
-              maxLines: 3,
-              textAlign: TextAlign.start,
-              decoration: InputDecoration(hintText: AppLocaleKey.problemHint.tr()),
-            ),
-          ],
-        ),
-        JourneyActionButton(
-          labelKey: AppLocaleKey.addPhotos,
-          icon: Icons.add_a_photo_outlined,
-          onAction: onAddPhotos,
-        ),
-        if (photos.isNotEmpty) ...<Widget>[
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final photo in photos)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(File(photo.path), width: 72, height: 72, fit: BoxFit.cover),
-                ),
-            ],
-          ),
-        ],
-        JourneyNextButton(labelKey: AppLocaleKey.nextProviders, onPressed: onNext),
+
+        JourneyNextButton(labelKey: AppLocaleKey.nextProviders, onPressed: _next),
         SizedBox(height: MediaQuery.of(context).padding.bottom + 12),
       ],
     );

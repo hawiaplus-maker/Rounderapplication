@@ -78,12 +78,14 @@ class _AddUnitBodyState extends State<_AddUnitBody> {
   }
 
   Future<void> submit() async {
+    // Form validation is inline (rounder-validation): the city dropdown's
+    // rule shows under the field — no snackbar.
     if (!form.currentState!.validate()) return;
-    final cityId = selectedCityId;
-    if (cityId == null || cityId == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocaleKey.city.tr())));
-      return;
-    }
+    // The keyed dropdown mirrors this state, so a passed validate means the
+    // pick is a real id; this guard only protects the cast.
+    final int? pickedCity = selectedCityId;
+    if (pickedCity == null || pickedCity == 0) return;
+    final int cityId = pickedCity;
     setState(() => busy = true);
     try {
       await context.read<AddUnitCubit>().submit(

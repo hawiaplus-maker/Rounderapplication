@@ -22,12 +22,10 @@ class UnionSubPage extends StatelessWidget {
       children: [
         UnionHeader(titleKey: titleKey, onBack: onBack, showBack: true),
         Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 54),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
         ),
+        SizedBox(height: MediaQuery.of(context).padding.bottom + 54),
       ],
     );
   }

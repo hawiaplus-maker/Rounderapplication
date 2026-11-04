@@ -54,7 +54,7 @@ class _AliPortrait extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      AppImages.aliSalute,
+      AppImages.aliHomePresenting,
       width: 170,
       height: 236,
       fit: BoxFit.contain,
@@ -82,6 +82,13 @@ class _AliCommandPill extends StatelessWidget {
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 13),
             child: Row(
               children: [
+                SvgIcon(
+                  AppImages.homeMic,
+                  size: 23,
+                  color: AppColors.orange,
+                  semanticLabel: AppLocaleKey.aliAtYourCommand.tr(),
+                ),
+
                 Expanded(
                   child: Text(
                     AppLocaleKey.aliAtYourCommand.tr(),
@@ -90,13 +97,6 @@ class _AliCommandPill extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.bodyMedium15.copyWith(color: AppColors.white),
                   ),
-                ),
-                const SizedBox(width: 8),
-                SvgIcon(
-                  AppImages.homeMic,
-                  size: 23,
-                  color: AppColors.white,
-                  semanticLabel: AppLocaleKey.aliAtYourCommand.tr(),
                 ),
               ],
             ),

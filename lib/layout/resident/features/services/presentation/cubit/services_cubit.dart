@@ -24,6 +24,7 @@ class ServicesCubit extends LocaleAwareCubit<ServicesState> {
     required DateTime date,
     int? subServiceId,
     int? serviceProviderId,
+    int? priceId,
     String? notes,
     List<XFile>? images,
   }) async => repository.book(
@@ -32,6 +33,7 @@ class ServicesCubit extends LocaleAwareCubit<ServicesState> {
     date: date,
     subServiceId: subServiceId,
     serviceProviderId: serviceProviderId,
+    priceId: priceId,
     notes: notes,
     images: images,
   );

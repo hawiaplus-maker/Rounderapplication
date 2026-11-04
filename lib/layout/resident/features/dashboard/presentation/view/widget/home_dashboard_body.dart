@@ -15,13 +15,19 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_hero_section.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_summary_cards.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_top_bar.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_unit_picker_sheet.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_unit_selector.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_visit_cards.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/widget/home_visits_heading.dart';
+import 'package:rounder_application/layout/resident/features/units/data/model/resident_home_model.dart';
+import 'package:rounder_application/layout/resident/features/units/data/repo/homes_repo.dart';
+import 'package:rounder_application/layout/resident/features/units/data/repo/selected_home_store.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/add_unit_screen.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
 
 /// The resident dashboard tab: resolves the dashboard state into the approved
 /// home sections (hero, emergency bar, balance/health cards, visits).
-class HomeDashboardBody extends StatelessWidget {
+class HomeDashboardBody extends StatefulWidget {
   const HomeDashboardBody({
     super.key,
     required this.onTalkToAli,
@@ -36,6 +42,83 @@ class HomeDashboardBody extends StatelessWidget {
   final VoidCallback onVisitDetails;
   final VoidCallback onEmergency;
   final VoidCallback onViewAssessment;
+
+  @override
+  State<HomeDashboardBody> createState() => _HomeDashboardBodyState();
+}
+
+class _HomeDashboardBodyState extends State<HomeDashboardBody> {
+  /// The unit picked locally on the unit selector: overrides the dashboard's
+  /// displayed home and leads the booking journey's unit choice.
+  ResidentHome? _pickedHome;
+
+  @override
+  void initState() {
+    super.initState();
+    _restorePickedHome();
+  }
+
+  /// A pick made in an earlier session stays displayed: the stored unit (if
+  /// it still exists) takes over the selector label; on failure the
+  /// dashboard's own home keeps showing.
+  Future<void> _restorePickedHome() async {
+    final int? stored = sl<SelectedHomeStore>().readId();
+    if (stored == null) return;
+    try {
+      final List<ResidentHome> homes = await sl<HomesRepository>().list();
+      final List<ResidentHome> matches = homes
+          .where((ResidentHome h) => h.id == stored)
+          .toList();
+      if (matches.isEmpty || !mounted) return;
+      setState(() => _pickedHome = matches.first);
+    } catch (_) {
+      /* keep the dashboard's own home on display */
+    }
+  }
+
+  /// Opens the saved-homes sheet from the repo's cache — the endpoint is not
+  /// re-fetched per tap; `addUnit`/`deleteHome` invalidate the cache, so the
+  /// list refreshes exactly after an add or a delete. Without any home yet
+  /// the resident is taken straight to the add-unit screen, and the first
+  /// newly added unit becomes the local pick, mirroring the booking
+  /// journey's behavior.
+  Future<void> _pickUnit() async {
+    List<ResidentHome> homes;
+    try {
+      homes = await sl<HomesRepository>().list();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocaleKey.unitsLoadFailed.tr())),
+      );
+      return;
+    }
+    if (!mounted) return;
+    if (homes.isEmpty) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const AddUnitScreen()),
+      );
+      try {
+        homes = await sl<HomesRepository>().list();
+      } catch (_) {
+        return;
+      }
+      if (!mounted || homes.isEmpty || homes.first.id == null) return;
+      await sl<SelectedHomeStore>().writeId(homes.first.id);
+      if (!mounted) return;
+      setState(() => _pickedHome = homes.first);
+      return;
+    }
+    final ResidentHome? picked = await showHomeUnitPicker(
+      context,
+      homes: homes,
+      selectedId: _pickedHome?.id ?? sl<SelectedHomeStore>().readId(),
+    );
+    if (!mounted || picked == null || picked.id == null) return;
+    await sl<SelectedHomeStore>().writeId(picked.id);
+    if (!mounted) return;
+    setState(() => _pickedHome = picked);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,20 +191,23 @@ class HomeDashboardBody extends StatelessWidget {
                   const SizedBox(height: HomeSpacing.block),
                   HomeHeroSection(
                     residentName: _textOrPlaceholder(data.residentName),
-                    onTalk: onTalkToAli,
+                    onTalk: widget.onTalkToAli,
                   ),
                   const SizedBox(height: HomeSpacing.block),
-                  HomeEmergencyBar(onTap: onEmergency),
+                  HomeEmergencyBar(onTap: widget.onEmergency),
                   const SizedBox(height: HomeSpacing.block),
                   const HomeDashboardHeading(),
                   const SizedBox(height: HomeSpacing.block),
-                  HomeUnitSelector(unit: _unit(context, data)),
+                  HomeUnitSelector(
+                    unit: _unit(context, data, _pickedHome),
+                    onTap: _pickUnit,
+                  ),
                   const SizedBox(height: HomeSpacing.block),
                   HomeSummaryCards(
                     health: _health(context, data),
                     balance: _balance(context, data),
-                    onViewHealth: onViewAssessment,
-                    onMoreBalance: onMoreBalance,
+                    onViewHealth: widget.onViewAssessment,
+                    onMoreBalance: widget.onMoreBalance,
                   ),
                   const SizedBox(height: HomeSpacing.block),
                   const HomeVisitsHeading(),
@@ -129,7 +215,7 @@ class HomeDashboardBody extends StatelessWidget {
                   HomeVisitCards(
                     lastVisit: lastVisit,
                     nextService: nextService,
-                    onDetails: onVisitDetails,
+                    onDetails: widget.onVisitDetails,
                   ),
                 ],
               ),
@@ -141,12 +227,22 @@ class HomeDashboardBody extends StatelessWidget {
   }
 }
 
-HomeUnit _unit(BuildContext context, ResidentDashboard data) {
-  final String rawUnit = data.unitLabel.trim();
+HomeUnit _unit(
+  BuildContext context,
+  ResidentDashboard data,
+  ResidentHome? pickedHome,
+) {
+  final String name = _textOrPlaceholder(
+    pickedHome?.name ?? data.homeName,
+  );
+  final String rawUnit = pickedHome != null &&
+          pickedHome.unitLabel.trim().isNotEmpty
+      ? pickedHome.unitLabel
+      : data.unitLabel.trim();
   final String code =
       '${AppLocaleKey.homeUnitWord.tr()} '
       '${rawUnit.isEmpty ? DisplayPlaceholder.text : _formatUnitLabel(context, rawUnit)}';
-  return HomeUnit(name: _textOrPlaceholder(data.homeName), code: code);
+  return HomeUnit(name: name, code: code);
 }
 
 HomeBalance _balance(BuildContext context, ResidentDashboard data) {

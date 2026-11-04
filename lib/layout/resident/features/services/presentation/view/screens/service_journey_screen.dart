@@ -15,6 +15,7 @@ import 'package:rounder_application/layout/resident/features/bookings/presentati
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/screens/emergency_request_screen.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_additional_page.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_category_model.dart';
+import 'package:rounder_application/layout/resident/features/services/data/repo/services_repo.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_ali_assist_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_all_services_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_category_page.dart';
@@ -22,6 +23,7 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/data/model/resident_home_model.dart';
 import 'package:rounder_application/layout/resident/features/units/data/repo/homes_repo.dart';
+import 'package:rounder_application/layout/resident/features/units/data/repo/selected_home_store.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/cubit/services_cubit.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_detail_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_files_page.dart';
@@ -29,7 +31,9 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_invoice_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_payment_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/image_source_sheet.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_add_home_dialog.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_picker_sheet.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/add_unit_screen.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_providers_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_rating_page.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/screens/journey_review_page.dart';
@@ -87,6 +91,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   ServiceItem? selectedService;
   int? selectedSubServiceId;
   int? selectedProviderId;
+  int? selectedPriceId;
   String selectedProvider = AppLocaleKey.providerOne,
       location = AppLocaleKey.myUnit;  double basePrice = 0;
   List<ResidentHome> homes = const [];
@@ -109,6 +114,9 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
 
   int mode = 0, stage = 0, stars = 0;
   bool acceptedAdditional = false;
+  /// Inline schedule-rule flag (rounder-validation): shown under the
+  /// schedule step's date/time pills instead of a toast.
+  bool scheduleError = false;
   final List<XFile> _photos = [];
   final _picker = ImagePicker();
   StreamSubscription<Locale>? _localeSubscription;
@@ -117,6 +125,13 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   // all-services screen and the category currently opened.
   List<ServiceCategory> _hubCategories = const [];
   ServiceCategory? _selectedCategory;
+  // Sub-services of the selected service come in pages: the inline snapshot
+  // (truncated by subServicesLimit in the categories call) seeds the first
+  // pages, the details step loads the rest on demand.
+  List<ServiceSubItem> _subServices = const [];
+  int _subServicesPage = 0;
+  bool _subServicesHasMore = false;
+  bool _subServicesLoading = false;
 
   void go(_Journey next) {
     setState(() {
@@ -132,6 +147,14 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     });
   }
 
+  void _returnToServices() {
+    setState(() {
+      _history.clear();
+      page = _Journey.hub;
+      previous = _Journey.hub;
+    });
+  }
+
   Future<void> _pickDate() async {
     final now = DateTime.now();
     final value = await showDatePicker(
@@ -140,7 +163,13 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       firstDate: DateTime(now.year, now.month, now.day),
       lastDate: now.add(const Duration(days: 365)),
     );
-    if (value != null && mounted) setState(() => selectedDate = value);
+    if (value != null && mounted) {
+      setState(() {
+        selectedDate = value;
+        // A fresh pick invalidates the inline schedule error.
+        scheduleError = false;
+      });
+    }
   }
 
   Future<void> _pickTime() async {
@@ -148,12 +177,24 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       context: context,
       initialTime: selectedTime ?? const TimeOfDay(hour: 9, minute: 0),
     );
-    if (value != null && mounted) setState(() => selectedTime = value);
+    if (value != null && mounted) {
+      setState(() {
+        selectedTime = value;
+        // A fresh pick invalidates the inline schedule error.
+        scheduleError = false;
+      });
+    }
   }
 
+  /// Confirms a valid in-future schedule and moves to the provider step. A
+  /// booking is always assigned to a home, so with no home linked yet the
+  /// resident is routed to the add-unit screen first. A failing schedule is
+  /// flagged inline under the date/time pills — no snackbar.
   void _continueSchedule() {
-    if (mode == 0 && (selectedDate == null || selectedTime == null)) {
-      _toast(AppLocaleKey.checkFields.tr());
+    final bool valid = mode != 0 ||
+        (selectedDate != null && selectedTime != null);
+    if (!valid) {
+      setState(() => scheduleError = true);
       return;
     }
     final time = selectedTime ?? const TimeOfDay(hour: 0, minute: 0);
@@ -164,10 +205,27 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       fastestAvailable: mode == 1,
     );
     if (!isServiceScheduleInFuture(schedule)) {
-      _toast(AppLocaleKey.checkFields.tr());
+      setState(() => scheduleError = true);
       return;
     }
+    if (!homesLoading && selectedHomeId == null) {
+      _promptAddHome();
+      return;
+    }
+    setState(() => scheduleError = false);
     go(_Journey.providers);
+  }
+
+  /// Explains the missing home, opens the add-unit screen, and refetches the
+  /// homes the resident returns to this journey — a freshly added unit is
+  /// then auto-selected by [_loadHomes] and "continue" re-opens providers.
+  Future<void> _promptAddHome() async {
+    final open = await showJourneyAddHomeDialog(context);
+    if (!open || !mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const AddUnitScreen()),
+    );
+    if (mounted) _loadHomes(force: true);
   }
 
   Future<void> _submitPreview() async {
@@ -201,6 +259,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           date: scheduledAt,
           subServiceId: selectedSubServiceId,
           serviceProviderId: selectedProviderId,
+          priceId: selectedPriceId,
           notes: issue.text.trim().isEmpty ? null : issue.text.trim(),
           images: _photos,
         );
@@ -237,9 +296,9 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     _loadHomes();
   }
 
-  Future<void> _loadHomes() async {
+  Future<void> _loadHomes({bool force = false}) async {
     try {
-      final list = await sl<HomesRepository>().list();
+      final list = await sl<HomesRepository>().list(force: force);
       if (!mounted) return;
       final sorted = [...list]..sort((a, b) {
         final ai = a.id ?? 0;
@@ -249,8 +308,13 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       setState(() {
         homes = sorted;
         homesLoading = false;
+        // The unit picked on the dashboard's unit selector leads the order;
+        // without a pick (or when it no longer exists) the first home wins.
         if (selectedHomeId == null && sorted.isNotEmpty) {
-          selectedHomeId = sorted.first.id;
+          final int? stored = sl<SelectedHomeStore>().readId();
+          final bool storedExists = stored != null &&
+              sorted.any((ResidentHome h) => h.id == stored);
+          selectedHomeId = storedExists ? stored : sorted.first.id;
         }
       });
     } catch (_) {
@@ -281,20 +345,56 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   }
 
   void _selectService(ServiceItem item) {
+    final List<ServiceSubItem> subs = item.subServices;
     setState(() {
       service = item.name;
       serviceId = item.id;
       selectedService = item;
+      selectedPriceId = null;
       orderReference = null;
       acceptedAdditional = false;
+      // Inline snapshot already includes the truncated first pages; further
+      // pages continue after the loaded count.
+      _subServices = List.of(subs);
+      _subServicesPage =
+          (subs.length / ServicesRepository.subServicesPerPage).ceil();
+      _subServicesHasMore =
+          subs.length >= ServicesRepository.subServicesLimit;
     });
     go(_Journey.detail);
   }
 
-  void _selectProvider(int id, String nameKey, double price) {
+  /// The details step's load-more: appends the next page of the service's
+  /// sub-services (deduped by id in case the shapes overlap) and keeps the
+  /// button only while the endpoint still reports more pages.
+  Future<void> _loadMoreSubServices() async {
+    if (serviceId == null || _subServicesLoading || !_subServicesHasMore) return;
+    setState(() => _subServicesLoading = true);
+    try {
+      final ServiceSubItemPage page = await sl<ServicesRepository>()
+          .subServices(serviceId: serviceId!, page: _subServicesPage + 1);
+      if (!mounted) return;
+      setState(() {
+        final known = <int>{for (final s in _subServices) s.id};
+        _subServices = [
+          ..._subServices,
+          ...page.items.where((s) => !known.contains(s.id)),
+        ];
+        _subServicesPage++;
+        _subServicesHasMore = page.hasMore;
+      });
+    } catch (_) {
+      if (mounted) _toast(AppLocaleKey.connectionError.tr());
+    } finally {
+      if (mounted) setState(() => _subServicesLoading = false);
+    }
+  }
+
+  void _selectProvider(int id, String nameKey, double price, int? priceId) {
     setState(() {
       selectedProvider = nameKey;
       selectedProviderId = id;
+      selectedPriceId = priceId;
       basePrice = price;
     });
     go(_Journey.review);
@@ -309,8 +409,16 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   }
 
   void _openEmergency() {
+    final dashboardState = context.read<ResidentDashboardCubit>().state;
+    // The unit picked in this journey (or on the dashboard) leads the request.
+    final homeId =
+        selectedHomeId ??
+        sl<SelectedHomeStore>().readId() ??
+        (dashboardState is DashboardReady ? dashboardState.data.homeId : null);
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const EmergencyRequestScreen()),
+      MaterialPageRoute<void>(
+        builder: (_) => EmergencyRequestScreen(residentHomeId: homeId),
+      ),
     );
   }
 
@@ -363,7 +471,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         _Journey.detail => JourneyDetailPage(
           onBack: back,
           serviceKey: service,
-          subServices: selectedService?.subServices ?? const [],
+          subServices: _subServices,
+          subServicesHasMore: _subServicesHasMore,
+          subServicesLoading: _subServicesLoading,
+          onLoadMoreSubServices: _loadMoreSubServices,
           selectedSubServiceId: selectedSubServiceId,
           onSubServiceChanged: (id) => setState(() => selectedSubServiceId = id),
           issue: issue,
@@ -371,13 +482,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           onIssueTypeChanged: (key) => setState(() => issueType = key),
           onAddPhotos: _pickPhoto,
           photos: _photos,
-          onNext: () {
-            if (issue.text.trim().length < 5) {
-              _toast(AppLocaleKey.requiredField.tr());
-              return;
-            }
-            go(_Journey.schedule);
-          },
+          // The description rule is validated inline inside the page.
+          onNext: () => go(_Journey.schedule),
         ),
         _Journey.schedule => JourneySchedulePage(
           onBack: back,
@@ -386,20 +492,33 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           dateLabel: _dateLabel,
           timeLabel: _timeLabel,
           onLocationChanged: (value) => setState(() => location = value),
-          onModeChanged: (value) => setState(() => mode = value),
+          onModeChanged: (value) {
+            setState(() {
+              mode = value;
+              // Switching the visit mode clears the inline schedule error.
+              scheduleError = false;
+            });
+          },
           onEmergency: _openEmergency,
           onPickDate: _pickDate,
           onPickTime: _pickTime,
           onNext: _continueSchedule,
           homes: homes,
           selectedHomeId: selectedHomeId,
-          onHomeChanged: (id) => setState(() => selectedHomeId = id),
+          onHomeChanged: (id) {
+            setState(() => selectedHomeId = id);
+            // Manual pick also becomes the local default for the next order.
+            sl<SelectedHomeStore>().writeId(id);
+          },
           homesLoading: homesLoading,
+          scheduleError: scheduleError,
         ),
         _Journey.providers => JourneyProvidersPage(
           onBack: back,
           serviceKey: service,
           serviceId: serviceId,
+          subServiceId: selectedSubServiceId,
+          homeId: selectedHomeId,
           onViewCompany: () =>
               showJourneyPicker(context, AppLocaleKey.companyProfile),
           onSelectProvider: _selectProvider,
@@ -422,6 +541,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           onBack: back,
           onCancel: _cancelPreview,
           onAccept: _activatePreview,
+          onServices: _returnToServices,
         ),
         _Journey.tracking => JourneyTrackingPage(
           onBack: back,
@@ -477,13 +597,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           stars: stars,
           notes: notes,
           onStar: (value) => setState(() => stars = value),
-          onSend: () {
-            if (stars == 0) {
-              _toast(AppLocaleKey.requiredField.tr());
-              return;
-            }
-            go(_Journey.warranty);
-          },
+          // The star rule is validated inline inside the rating page.
+          onSend: () => go(_Journey.warranty),
           onLater: () => go(_Journey.warranty),
         ),
         _Journey.warranty => JourneyWarrantyPage(

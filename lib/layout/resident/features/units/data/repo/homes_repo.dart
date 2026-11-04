@@ -26,6 +26,7 @@ class HomesRepository {
     _cachedAt = null;
     _cachedLocale = null;
   }
+
   static const Duration _cacheAge = Duration(minutes: 5);
 
   Future<List<ResidentHome>> list({bool force = false}) async {
@@ -77,12 +78,9 @@ class HomesRepository {
     final List<Object?> values = data is List
         ? data
         : (data is Map && data['data'] is List)
-            ? data['data'] as List
-            : const <Object?>[];
-    return values
-        .whereType<Map<String, dynamic>>()
-        .map(City.fromJson)
-        .toList();
+        ? data['data'] as List
+        : const <Object?>[];
+    return values.whereType<Map<String, dynamic>>().map(City.fromJson).toList();
   }
 
   /// Creates a new residence unit.
@@ -112,6 +110,22 @@ class HomesRepository {
         'unit_number': unitNumber,
         'is_primary': isPrimary,
       },
+    );
+    final Map<String, dynamic> body =
+        response.data ?? const <String, dynamic>{};
+    if (body['status'] == false) {
+      throw ApiFailure(body['message']?.toString() ?? '');
+    }
+    _cachedHomes = null;
+    _cachedAt = null;
+    _cachedLocale = null;
+  }
+
+  /// Removes one linked unit. A business failure (`status: false`, e.g. the
+  /// backend refusing the unit's removal) raises [ApiFailure] with its text.
+  Future<void> deleteHome(int id) async {
+    final response = await api.delete<Map<String, dynamic>>(
+      EndPoints.homeDelete(id),
     );
     final Map<String, dynamic> body =
         response.data ?? const <String, dynamic>{};

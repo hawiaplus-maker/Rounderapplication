@@ -27,6 +27,7 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/cubit/service_providers_cubit.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/cubit/services_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/data/repo/homes_repo.dart';
+import 'package:rounder_application/layout/resident/features/units/data/repo/selected_home_store.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/cubit/homes_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/cubit/add_unit_cubit.dart';
 
@@ -92,13 +93,21 @@ void configureDependencies() {
   sl.registerLazySingleton(() => ProfileRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => NotificationsRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => HomesRepository(sl<ApiConsumer>()));
+  sl.registerLazySingleton(
+    () => SelectedHomeStore(Hive.box<String>(authBoxName)),
+  );
   sl.registerFactory(() => ResidentDashboardCubit(sl<ResidentRepository>()));
   sl.registerLazySingleton(() => ServicesCubit(sl<ServicesRepository>()));
   sl.registerFactory(() => ServiceCatalogCubit(sl<ServicesRepository>()));
   sl.registerFactory(() => ServiceProvidersCubit(sl<ServicesRepository>()));
-  sl.registerLazySingleton(() => BookingsCubit(sl<BookingsRepository>()));  sl.registerFactory(() => ProfileCubit(sl<ProfileRepository>()));
-  sl.registerLazySingleton(() => NotificationsCubit(sl<NotificationsRepository>()));
-  sl.registerFactory(() => HomesCubit(sl<HomesRepository>()));
+  sl.registerLazySingleton(() => BookingsCubit(sl<BookingsRepository>()));
+  sl.registerFactory(() => ProfileCubit(sl<ProfileRepository>()));
+  sl.registerLazySingleton(
+    () => NotificationsCubit(sl<NotificationsRepository>()),
+  );
+  sl.registerFactory(
+    () => HomesCubit(sl<HomesRepository>(), sl<SelectedHomeStore>()),
+  );
   sl.registerFactory(() => AddUnitCubit(sl<HomesRepository>()));
   sl.registerLazySingleton(() => EmergencyRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => EmergencyCubit(sl<EmergencyRepository>()));

@@ -28,6 +28,7 @@ class JourneySchedulePage extends StatelessWidget {
     this.selectedHomeId,
     this.onHomeChanged,
     this.homesLoading = false,
+    this.scheduleError = false,
   });
 
   final VoidCallback onBack;
@@ -45,6 +46,11 @@ class JourneySchedulePage extends StatelessWidget {
   final int? selectedHomeId;
   final ValueChanged<int>? onHomeChanged;
   final bool homesLoading;
+
+  /// Inline schedule rule (rounder-validation): true while the picked
+  /// date/time are missing or in the past — renders under the pills, no
+  /// snackbar.
+  final bool scheduleError;
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +182,14 @@ class JourneySchedulePage extends StatelessWidget {
                 ),
               ],
             ),
+            // Inline schedule rule: message under the date/time pills in
+            // place of the former snackbar.
+            if (scheduleError)
+              Text(
+                AppLocaleKey.serviceDateTimeRequired.tr(),
+                textAlign: TextAlign.start,
+                style: AppTextStyles.tinyRegular.copyWith(color: AppColors.emergency),
+              ),
             Text(
               AppLocaleKey.providerTiming.tr(),
               textAlign: TextAlign.start,

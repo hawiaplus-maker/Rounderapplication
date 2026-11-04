@@ -9,4 +9,8 @@ abstract final class UnitsValidators {
       value == null || value.trim().isEmpty
       ? AppLocaleKey.requiredField.tr()
       : null;
+
+  /// The unit's city: a picked id (0 is the API's unset placeholder).
+  static String? city(int? value) =>
+      value == null || value == 0 ? AppLocaleKey.requiredField.tr() : null;
 }

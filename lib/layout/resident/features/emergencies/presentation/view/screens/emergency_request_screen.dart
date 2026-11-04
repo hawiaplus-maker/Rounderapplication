@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
-import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/data/model/emergency_type_model.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/cubit/emergency_cubit.dart';
 import 'package:rounder_application/layout/resident/features/emergencies/presentation/view/widget/emergency_form.dart';
@@ -13,7 +12,9 @@ import 'package:rounder_application/layout/resident/features/emergencies/present
 /// Standalone emergency-request flow: picks a type fetched from the backend,
 /// then submits to `/resident/emergency-requests`.
 class EmergencyRequestScreen extends StatefulWidget {
-  const EmergencyRequestScreen({super.key});
+  const EmergencyRequestScreen({super.key, required this.residentHomeId});
+
+  final int? residentHomeId;
   @override
   State<EmergencyRequestScreen> createState() => _EmergencyRequestScreenState();
 }
@@ -27,6 +28,11 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
   bool _confirmed = false;
   String? _reference;
 
+  /// Inline rule flags (rounder-validation): true while the type/confirm
+  /// is outstanding — rendered under the controls, no snackbar.
+  bool _typeMissing = false;
+  bool _confirmMissing = false;
+
   /// Shared, long-lived cubit: loading it here also triggers the types fetch.
   final EmergencyCubit _cubit = sl<EmergencyCubit>()..load();
 
@@ -39,14 +45,15 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate() || _typeId == null || !_confirmed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocaleKey.emergencyRequired.tr())),
-      );
+    final bool formValid = _formKey.currentState?.validate() ?? false;
+    if (!formValid || _typeId == null || !_confirmed) {
+      setState(() {
+        _typeMissing = _typeId == null;
+        _confirmMissing = !_confirmed;
+      });
       return;
     }
-    final dashboardState = context.read<ResidentDashboardCubit>().state;
-    final homeId = dashboardState is DashboardReady ? dashboardState.data.homeId : null;
+    final homeId = widget.residentHomeId;
     if (homeId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocaleKey.loginRequired.tr())),
@@ -95,6 +102,7 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
     ),
     body: SafeArea(
       child: BlocBuilder<EmergencyCubit, EmergencyState>(
+        bloc: _cubit,
         builder: (context, state) {
           final types = state is EmergencyReady ? state.types : const <EmergencyType>[];
           return _reference == null
@@ -105,9 +113,18 @@ class _EmergencyRequestScreenState extends State<EmergencyRequestScreen> {
                   details: _details,
                   types: types,
                   selectedType: _typeId,
-                  onTypeChanged: (value) => setState(() => _typeId = value),
+                  typeMissing: _typeMissing,
+                  onTypeChanged: (value) => setState(() {
+                    _typeId = value;
+                    // A pick clears the inline type error.
+                    _typeMissing = false;
+                  }),
                   confirmed: _confirmed,
-                  onConfirmedChanged: (value) => setState(() => _confirmed = value),
+                  confirmMissing: _confirmMissing,
+                  onConfirmedChanged: (value) => setState(() {
+                    _confirmed = value;
+                    _confirmMissing = !value;
+                  }),
                   onSubmit: _submit,
                 )
               : EmergencySuccessView(

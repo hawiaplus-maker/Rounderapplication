@@ -50,6 +50,28 @@ class OrderDetailsView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
+        if (data.mediaUrls.isNotEmpty)
+          _Panel(
+            children: [
+              Text(
+                AppLocaleKey.servicePlaceImage.tr(),
+                textAlign: TextAlign.start,
+                style: AppTextStyles.extraBold17.copyWith(color: AppColors.petrol),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  data.mediaUrls.first,
+                  width: double.infinity,
+                  height: MediaQuery.sizeOf(context).height * 0.3,
+
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _iconBox(),
+                ),
+              ),
+            ],
+          ),
+        const SizedBox(height: 12),
         _Panel(
           children: [
             Row(
@@ -112,38 +134,38 @@ class OrderDetailsView extends StatelessWidget {
             ),
           ],
         ),
-        FilledButton.icon(
-          onPressed: onTrack,
-          icon: const Icon(Icons.location_searching_rounded),
-          label: Text(AppLocaleKey.trackOrder.tr()),
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.orange,
-            foregroundColor: AppColors.white,
-            minimumSize: const Size.fromHeight(52),
-          ),
-        ),
-        const SizedBox(height: 8),
-        OutlinedButton.icon(
-          onPressed: onInvoice,
-          icon: const Icon(Icons.receipt_long_outlined),
-          label: Text(AppLocaleKey.invoice.tr()),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.petrol,
-            minimumSize: const Size.fromHeight(50),
-          ),
-        ),
-        if (data.statusKey == AppLocaleKey.serviceComplete) ...[
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
-            onPressed: onWarranty,
-            icon: const Icon(Icons.verified_outlined),
-            label: Text(AppLocaleKey.warranty.tr()),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.teal,
-              minimumSize: const Size.fromHeight(50),
-            ),
-          ),
-        ],
+        // FilledButton.icon(
+        //   onPressed: onTrack,
+        //   icon: const Icon(Icons.location_searching_rounded),
+        //   label: Text(AppLocaleKey.trackOrder.tr()),
+        //   style: FilledButton.styleFrom(
+        //     backgroundColor: AppColors.orange,
+        //     foregroundColor: AppColors.white,
+        //     minimumSize: const Size.fromHeight(52),
+        //   ),
+        // ),
+        // const SizedBox(height: 8),
+        // OutlinedButton.icon(
+        //   onPressed: onInvoice,
+        //   icon: const Icon(Icons.receipt_long_outlined),
+        //   label: Text(AppLocaleKey.invoice.tr()),
+        //   style: OutlinedButton.styleFrom(
+        //     foregroundColor: AppColors.petrol,
+        //     minimumSize: const Size.fromHeight(50),
+        //   ),
+        // ),
+        // if (data.statusKey == AppLocaleKey.serviceComplete) ...[
+        //   const SizedBox(height: 8),
+        //   OutlinedButton.icon(
+        //     onPressed: onWarranty,
+        //     icon: const Icon(Icons.verified_outlined),
+        //     label: Text(AppLocaleKey.warranty.tr()),
+        //     style: OutlinedButton.styleFrom(
+        //       foregroundColor: AppColors.teal,
+        //       minimumSize: const Size.fromHeight(50),
+        //     ),
+        //   ),
+        // ],
         if (data.statusKey != AppLocaleKey.serviceComplete &&
             data.statusKey != AppLocaleKey.requestCancelled) ...[
           const SizedBox(height: 8),
@@ -159,6 +181,13 @@ class OrderDetailsView extends StatelessWidget {
     );
   }
 }
+
+Widget _iconBox() => Container(
+  width: 56,
+  height: 56,
+  decoration: BoxDecoration(color: AppColors.mint, borderRadius: BorderRadius.circular(12)),
+  child: const Icon(Icons.home_repair_service_outlined, color: AppColors.petrol),
+);
 
 class _Panel extends StatelessWidget {
   const _Panel({required this.children});

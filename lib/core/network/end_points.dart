@@ -16,9 +16,15 @@ class EndPoints {
   static const String notifications = '$baseUrl/api/v1/resident/notifications';
   static String notificationRead(int id) => '$notifications/$id/read';
 
-  /// Resident linked homes: `GET` lists them; linking a new one is the
-  /// dashboard's `POST /resident/homes/link`.
+  /// Resident linked homes: `GET` lists them, `DELETE {id}` removes one;
+  /// linking a new one is [linkHome].
   static const String homes = '$baseUrl/api/v1/resident/homes';
+
+  /// Removes one linked unit (`DELETE`).
+  static String homeDelete(int id) => '$homes/$id';
+
+  /// Link a residence to the account (POST): property_code, unit_label.
+  static const String linkHome = '$baseUrl/api/v1/resident/homes/link';
 
   /// Add a new residence unit (POST). Body: name, address, district, city_id,
   /// residence_type, area_sqm, floor_number, ownership_type, unit_number,
@@ -28,14 +34,42 @@ class EndPoints {
   /// Cities list (GET) — paginated; used by the add-unit screen's city picker.
   static const String cities = '$baseUrl/api/v1/resident/cities';
 
+  /// Resident dashboard summary (GET) — the home screen payload.
+  static const String dashboard = '$baseUrl/api/v1/resident/dashboard';
+
   static const String getServiceCategories =
       '$baseUrl/api/v1/resident/service-categories';
+
+  /// Bookable services catalog (GET).
+  static const String services = '$baseUrl/api/v1/resident/services';
+
+  /// Sub-services of one service (GET) — paginated with `page`, `per_page`
+  /// and `service_id` query parameters.
+  static const String subServices = '$baseUrl/api/v1/resident/sub-services';
+
+  /// Service providers (GET) — filtered by `service_id`, `sub_service` and
+  /// `home_id` query parameters.
+  static const String serviceProviders =
+      '$baseUrl/api/v1/resident/service-providers';
 
   /// Emergency types: `GET` lists the available emergency categories.
   static const String emergencyTypes =
       '$baseUrl/api/v1/resident/emergency-types';
 
-  /// Emergency requests: `POST` creates a new emergency request.
+  /// Emergency requests: `GET` lists requests and `POST` creates one.
   static const String emergencyRequests =
       '$baseUrl/api/v1/resident/emergency-requests';
+
+  /// Bookings: `GET` lists them, `POST` creates one (multipart: home_id,
+  /// service_id, sub_service_id, service_provider_id, price_id, scheduled_at,
+  /// notes, images[]).
+  static const String bookings = '$baseUrl/api/v1/resident/bookings';
+
+  /// Cancel a booking (POST) with a `{reason}` body.
+  static String bookingCancel(int id) => '$bookings/$id/cancel';
+
+  /// Third-party Open-Meteo current weather (external, key-less): `latitude`,
+  /// `longitude`, `current` and `timezone` query parameters.
+  static const String weatherForecast =
+      'https://api.open-meteo.com/v1/forecast';
 }

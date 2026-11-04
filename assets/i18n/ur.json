@@ -252,6 +252,7 @@
   "take_photo": "تصویر بنائیں",
   "image_pick_failed": "تصویر منتخب نہیں ہو سکی",
   "next_providers": "سروس فراہم کنندگان دیکھیں",
+  "load_more": "مزید لوڈ کریں",
   "when_service": "سروس کا وقت",
   "where_service": "سروس کی جگہ",
   "my_unit": "میرا یونٹ",
@@ -264,6 +265,7 @@
   "pick_time": "وقت منتخب کریں",
   "morning": "صبح",
   "provider_timing": "فراہم کنندہ آمد کا وقت بتائے گا",
+  "service_date_time_required": "خدمت کے لیے تاریخ اور وقت کا تعین ضروری ہے",
   "available_providers": "دستیاب فراہم کنندگان",
   "provider_one": "----",
   "provider_two": "----",
@@ -320,6 +322,8 @@
   "track_order": "آرڈر ٹریک کریں",
   "order_history": "آرڈر ہسٹری",
   "no_orders_yet": "ابھی کوئی آرڈر نہیں",
+  "emergency_orders": "ہنگامی درخواستیں",
+  "no_emergency_orders": "ابھی کوئی ہنگامی درخواست نہیں",
   "emergency_title": "ہنگامی درخواست",
   "emergency_intro": "پراپرٹی مینجمنٹ کو فوری درخواست بھیجیں۔ جان لیوا ہنگامی حالت میں مقامی ایمرجنسی سروسز سے براہ راست رابطہ کریں۔",
   "emergency_type": "ہنگامی صورتحال کی قسم",
@@ -607,5 +611,10 @@
   "ownershipOwner": "مالک",
   "saveUnitResidence": "اپنی رہائش محفوظ کریں",
   "completeLater": "بعد میں مکمل کریں",
-  "areaApprovedValue": "منظور شدہ رقبہ: {area} م²"
+  "areaApprovedValue": "منظور شدہ رقبہ: {area} م²",
+  "deleteUnit": "وحدہ حذف کریں",
+  "deleteUnitQuestion": "کیا آپ اس وحدے کو حذف کرنا چاہتے ہیں؟",
+  "keepUnit": "وحدہ محفوظ رکھیں",
+  "deleteUnitFailed": "اس وحدے کو حذف نہیں کیا جا سکا",
+  "servicePlaceImage": "سروس کا مقام کی تصویر"
 }

@@ -11,12 +11,24 @@ class ServiceProvidersCubit extends LocaleAwareCubit<ServiceProvidersState> {
 
   /// The service whose providers are on screen, kept for locale reloads.
   int? _serviceId;
+  int? _subServiceId;
+  int? _homeId;
 
-  Future<void> load(int serviceId) async {
+  Future<void> load({
+    required int serviceId,
+    int? subServiceId,
+    int? homeId,
+  }) async {
     _serviceId = serviceId;
+    _subServiceId = subServiceId;
+    _homeId = homeId;
     emit(const ServiceProvidersLoading());
     try {
-      emit(ServiceProvidersReady(await repo.serviceProviders(serviceId)));
+      emit(ServiceProvidersReady(await repo.serviceProviders(
+        serviceId: serviceId,
+        subServiceId: subServiceId,
+        homeId: homeId,
+      )));
     } catch (_) {
       emit(ServiceProvidersFailure(repo.errorKey));
     }
@@ -26,6 +38,12 @@ class ServiceProvidersCubit extends LocaleAwareCubit<ServiceProvidersState> {
   @override
   Future<void> reloadForLocale() async {
     final int? serviceId = _serviceId;
-    if (serviceId != null) await load(serviceId);
+    if (serviceId != null) {
+      await load(
+        serviceId: serviceId,
+        subServiceId: _subServiceId,
+        homeId: _homeId,
+      );
+    }
   }
 }

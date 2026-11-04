@@ -194,6 +194,7 @@ abstract final class AppLocaleKey {
       takePhoto = 'take_photo',
       imagePickFailed = 'image_pick_failed';
   static const nextProviders = 'next_providers';
+  static const loadMore = 'load_more';
   static const whenService = 'when_service';
   static const whereService = 'where_service';
   static const myUnit = 'my_unit';
@@ -204,6 +205,7 @@ abstract final class AppLocaleKey {
   static const preferredDate = 'preferred_date';
   static const morning = 'morning';
   static const providerTiming = 'provider_timing';
+  static const serviceDateTimeRequired = 'service_date_time_required';
   static const availableProviders = 'available_providers';
   static const providerOne = 'provider_one';
   static const providerTwo = 'provider_two';
@@ -250,6 +252,8 @@ abstract final class AppLocaleKey {
   static const followUp = 'follow_up';
   static const orderHistory = 'order_history';
   static const noOrdersYet = 'no_orders_yet';
+  static const emergencyOrders = 'emergency_orders';
+  static const noEmergencyOrders = 'no_emergency_orders';
   static const orderActive = 'order_active';
   static const orderScheduled = 'order_scheduled';
   static const trackOrder = 'track_order';
@@ -500,4 +504,12 @@ abstract final class AppLocaleKey {
   static const saveUnitResidence = 'saveUnitResidence';
   static const completeLater = 'completeLater';
   static const areaApprovedValue = 'areaApprovedValue';
+  static const servicePlaceImage = 'servicePlaceImage';
+
+  /// Units deletion (حذف الوحدة): the card pill, the confirm dialog and the
+  /// removal's failure message.
+  static const deleteUnit = 'deleteUnit',
+      deleteUnitQuestion = 'deleteUnitQuestion',
+      keepUnit = 'keepUnit',
+      deleteUnitFailed = 'deleteUnitFailed';
 }

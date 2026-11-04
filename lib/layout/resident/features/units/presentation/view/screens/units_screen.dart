@@ -6,9 +6,11 @@ import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/global/widgets/state_panel.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
+import 'package:rounder_application/layout/resident/features/units/data/model/resident_home_model.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/cubit/homes_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/add_unit_screen.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/property_rating_screen.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/delete_unit_dialog.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_body.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_header.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/widget/units_title_block.dart';
@@ -62,6 +64,18 @@ class UnitsScreen extends StatelessWidget {
                       unitLabel: unitLabel,
                       onOpenUnit: () => _openPropertyRating(context),
                       onAddUnit: () => _openAddUnit(context),
+                      onDeleteUnit: (ResidentHome home) =>
+                          _deleteUnit(context, home),
+                    ),
+                    HomesDeleting(:final homes, :final deletingId) => UnitsBody(
+                      homes: homes,
+                      homeName: homeName,
+                      unitLabel: unitLabel,
+                      onOpenUnit: () => _openPropertyRating(context),
+                      onAddUnit: () => _openAddUnit(context),
+                      onDeleteUnit: (ResidentHome home) =>
+                          _deleteUnit(context, home),
+                      busyId: deletingId,
                     ),
                   },
                 ),
@@ -80,11 +94,24 @@ class UnitsScreen extends StatelessWidget {
   }
 
   Future<void> _openAddUnit(BuildContext context) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const AddUnitScreen()),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const AddUnitScreen()));
     if (!context.mounted) return;
     final homes = context.read<HomesCubit>();
     await homes.load();
+  }
+
+  /// Removes the unit behind the confirm dialog: the backend's refusal (or
+  /// offline failure) reaches the snackbar, and the row refreshes in place
+  /// without the page flashing a loading panel.
+  Future<void> _deleteUnit(BuildContext context, ResidentHome home) async {
+    final bool approved = await confirmDeleteUnit(context);
+    if (!approved || !context.mounted) return;
+    final String? failure = await context.read<HomesCubit>().deleteUnit(home);
+    if (!context.mounted || failure == null) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(failure)));
   }
 }

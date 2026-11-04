@@ -6,6 +6,7 @@ class ServiceProvider {
     required this.name,
     this.rating,
     this.price,
+    this.priceId,
     this.imageUrl,
     this.meta,
   });
@@ -14,6 +15,7 @@ class ServiceProvider {
   final String name;
   final String? rating;
   final double? price;
+  final int? priceId;
   final String? imageUrl;
   final String? meta;
 
@@ -28,6 +30,7 @@ class ServiceProvider {
           .toString(),
       rating: rating?.toString(),
       price: double.tryParse('${json['price'] ?? json['base_price'] ?? ''}'),
+      priceId: int.tryParse('${json['price_id'] ?? ''}'),
       imageUrl: json['image_url']?.toString() ?? json['logo']?.toString(),
       meta: json['meta']?.toString() ??
           json['description']?.toString(),
