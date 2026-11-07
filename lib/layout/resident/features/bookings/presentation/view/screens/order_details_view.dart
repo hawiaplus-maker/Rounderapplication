@@ -17,6 +17,7 @@ class OrderDetailsView extends StatelessWidget {
     required this.onInvoice,
     required this.onWarranty,
     required this.onCancel,
+    required this.onRate,
   });
 
   final OrderData data;
@@ -25,6 +26,7 @@ class OrderDetailsView extends StatelessWidget {
   final VoidCallback onInvoice;
   final VoidCallback onWarranty;
   final VoidCallback onCancel;
+  final VoidCallback onRate;
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +90,11 @@ class OrderDetailsView extends StatelessWidget {
                       data.titleKey.tr(),
                       style: AppTextStyles.extraBold18.copyWith(color: AppColors.petrol),
                     ),
-                    Text(
-                      data.reference,
-                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
-                    ),
+                    if (data.reference.isNotEmpty)
+                      Text(
+                        data.reference,
+                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+                      ),
                   ],
                 ),
               ],
@@ -103,10 +106,11 @@ class OrderDetailsView extends StatelessWidget {
               label: AppLocaleKey.orderDate.tr(),
               value: DateFormat.yMd(context.locale.toString()).add_jm().format(data.scheduledAt),
             ),
-            _DetailRow(
-              label: AppLocaleKey.orderAmount.tr(),
-              value: '${data.amount} ${AppLocaleKey.currencySar.tr()}',
-            ),
+            if (data.amount.isNotEmpty)
+              _DetailRow(
+                label: AppLocaleKey.orderAmount.tr(),
+                value: '${data.amount} ${AppLocaleKey.currencySar.tr()}',
+              ),
           ],
         ),
         _Panel(
@@ -134,6 +138,19 @@ class OrderDetailsView extends StatelessWidget {
             ),
           ],
         ),
+        if (data.canRate) ...[
+          FilledButton.icon(
+            onPressed: onRate,
+            icon: const Icon(Icons.star_outline),
+            label: Text(AppLocaleKey.rateService.tr()),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.orange,
+              foregroundColor: AppColors.white,
+              minimumSize: const Size.fromHeight(52),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
         // FilledButton.icon(
         //   onPressed: onTrack,
         //   icon: const Icon(Icons.location_searching_rounded),
@@ -221,8 +238,7 @@ class _DetailRow extends StatelessWidget {
           child: Text(
             value,
             textAlign: TextAlign.end,
-            style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.headingH4.copyWith(
               color: AppColors.petrol,
             ),
           ),

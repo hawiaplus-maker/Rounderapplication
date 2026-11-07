@@ -35,7 +35,7 @@ class UnionCommunityPage extends StatelessWidget {
             Text(
               AppLocaleKey.unitTitle.tr(),
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
             Text(
               AppLocaleKey.residentsJoined.tr(),

@@ -34,7 +34,7 @@ class UnionFinancesPage extends StatelessWidget {
               style: AppTextStyles.bodyMedium.copyWith(color: AppColors.white.withValues(alpha: .7)),
             ),
             Text(
-              '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+              '',
               textAlign: TextAlign.start,
               style: AppTextStyles.extraBold28.copyWith(color: AppColors.white),
             ),
@@ -44,17 +44,17 @@ class UnionFinancesPage extends StatelessWidget {
               children: [
                 _Stat(
                   labelKey: AppLocaleKey.cleaning,
-                  value: '${DisplayPlaceholder.number}',
+                  value: '',
                   dot: AppColors.petrol,
                 ),
                 _Stat(
                   labelKey: AppLocaleKey.maintenance,
-                  value: '${DisplayPlaceholder.number}',
+                  value: '',
                   dot: AppColors.orange,
                 ),
                 _Stat(
                   labelKey: AppLocaleKey.utilities,
-                  value: '${DisplayPlaceholder.number}',
+                  value: '',
                   dot: AppColors.mint,
                 ),
               ],
@@ -79,17 +79,17 @@ class UnionFinancesPage extends StatelessWidget {
             UnionLine(
               titleKey: AppLocaleKey.cleaning,
               value:
-                  '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+                  '',
             ),
             UnionLine(
               titleKey: AppLocaleKey.maintenance,
               value:
-                  '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+                  '',
             ),
             UnionLine(
               titleKey: AppLocaleKey.utilities,
               value:
-                  '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+                  '',
             ),
           ],
         ),
@@ -98,7 +98,7 @@ class UnionFinancesPage extends StatelessWidget {
             Text(
               AppLocaleKey.paymentHistory.tr(),
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
             UnionLine(
               titleKey: AppLocaleKey.cleaning,
@@ -137,7 +137,7 @@ class _Stat extends StatelessWidget {
       ),
       Text(
         value,
-        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700, color: AppColors.white),
+        style: AppTextStyles.headingH4.copyWith(color: AppColors.white),
       ),
     ],
   );

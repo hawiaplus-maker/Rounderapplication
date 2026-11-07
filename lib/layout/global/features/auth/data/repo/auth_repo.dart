@@ -28,7 +28,7 @@ class AuthRepository {
   final Box<String> tokenBox;
   Future<void> signIn(String email, String password) async => _save(
     await api.post<Map<String, dynamic>>(
-      '/auth/login',
+      EndPoints.login,
       data: {'email': email, 'password': password},
     ),
   );
@@ -40,7 +40,7 @@ class AuthRepository {
     required String locale,
   }) async => _save(
     await api.post<Map<String, dynamic>>(
-      '/auth/register',
+      EndPoints.register,
       data: {
         'name': name,
         'email': email,

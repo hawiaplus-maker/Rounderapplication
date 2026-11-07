@@ -46,8 +46,9 @@ class HomeHealth {
 
   final String title;
 
-  /// Numeric score drawn by the gauge (0..100).
-  final int percent;
+  /// Numeric score drawn by the gauge (0..100); null when the backend did not
+  /// return a score, so the gauge stays hidden.
+  final int? percent;
 
   /// Localized score text shown inside the gauge, e.g. "٨٧٪".
   final String score;

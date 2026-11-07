@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/network/api_error.dart';
 import 'package:rounder_application/layout/global/features/auth/data/model/validate_mobile_model.dart';
 import 'package:rounder_application/layout/global/features/auth/data/repo/auth_repo.dart';
 
@@ -121,7 +122,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
       emit(PhoneAuthFailure(backend));
       return;
     }
-    if (e is DioException && e.type == DioExceptionType.connectionError) {
+    if (isConnectionFailure(e)) {
       emit(PhoneAuthFailure(AppLocaleKey.connectionError.tr()));
       return;
     }

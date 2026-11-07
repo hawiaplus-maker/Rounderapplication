@@ -16,6 +16,8 @@ class OrderData {
     this.scheduledAt,
     this.locationKey, {
     this.bookingId,
+    this.statusId,
+    this.isRated = false,
     this.statusName,
     this.subServiceName,
     this.providerName,
@@ -46,10 +48,12 @@ class OrderData {
       'RD-${booking.id}',
       statusKey,
       Icons.home_repair_service_outlined,
-      booking.amount.toStringAsFixed(2),
+      booking.amount?.toStringAsFixed(2) ?? '',
       DateTime.tryParse(booking.scheduledAt) ?? DateTime.now(),
       booking.providerName ?? '',
       bookingId: booking.id,
+      statusId: booking.statusId,
+      isRated: booking.isRated,
       statusName: booking.statusName,
       subServiceName: booking.subServiceName,
       providerName: booking.providerName,
@@ -58,6 +62,13 @@ class OrderData {
       homeName: booking.homeName,
     );
   }
+
+  /// The rate-service entry: backend status id 9 on a booking that is not
+  /// rated yet, or a session preview that reached the completed state.
+  bool get canRate =>
+      !isRated &&
+      (statusId == BookingItem.completedStatusId ||
+          statusKey == AppLocaleKey.serviceComplete);
 
   static String _statusKey(String code) {
     switch (code) {
@@ -84,6 +95,8 @@ class OrderData {
   final DateTime scheduledAt;
   final String locationKey;
   final int? bookingId;
+  final int? statusId;
+  final bool isRated;
   final String? statusName;
   final String? subServiceName;
   final String? providerName;

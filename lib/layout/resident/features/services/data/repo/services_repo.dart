@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rounder_application/core/network/api_consumer.dart';
 import 'package:rounder_application/core/network/api_error.dart';
+import 'package:rounder_application/core/network/end_points.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_category_model.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_option_model.dart';
 import 'package:rounder_application/layout/resident/features/services/data/model/service_provider_model.dart';
@@ -19,7 +20,7 @@ class ServicesRepository {
   static const int subServicesPerPage = 10;
 
   Future<List<ServiceOption>> list() async {
-    final r = await api.get<Map<String, dynamic>>('/resident/services');
+    final r = await api.get<Map<String, dynamic>>(EndPoints.services);
     final data = r.data?['data'];
     if (data is! List) return [];
     return data.whereType<Map<String, dynamic>>().map(ServiceOption.fromJson).toList();
@@ -27,7 +28,7 @@ class ServicesRepository {
 
   Future<List<ServiceCategory>> categories() async {
     final r = await api.get<Map<String, dynamic>>(
-      '/resident/service-categories?sub_services_limit=$subServicesLimit',
+      '${EndPoints.getServiceCategories}?sub_services_limit=$subServicesLimit',
     );
     final data = r.data?['data'];
     if (data is! List) return [];
@@ -40,7 +41,7 @@ class ServicesRepository {
   /// full page implies more pages may follow.
   Future<ServiceSubItemPage> subServices({required int serviceId, required int page}) async {
     final r = await api.get<Map<String, dynamic>>(
-      '/resident/sub-services'
+      '${EndPoints.subServices}'
       '?page=$page&per_page=$subServicesPerPage&service_id=$serviceId',
     );
     final Map<String, dynamic> body = r.data ?? const <String, dynamic>{};
@@ -72,7 +73,7 @@ class ServicesRepository {
       if (homeId != null) 'home_id': '$homeId',
     };
     final query = Uri(queryParameters: queryParameters).query;
-    final r = await api.get<Map<String, dynamic>>('/resident/service-providers?$query');
+    final r = await api.get<Map<String, dynamic>>('${EndPoints.serviceProviders}?$query');
     final data = r.data?['data'];
     if (data is! List) return [];
     return data.whereType<Map<String, dynamic>>().map(ServiceProvider.fromJson).toList();
@@ -107,7 +108,7 @@ class ServicesRepository {
         );
       }
     }
-    final response = await api.post<Map<String, dynamic>>('/resident/bookings', data: form);
+    final response = await api.post<Map<String, dynamic>>(EndPoints.bookings, data: form);
     final Map<String, dynamic> body = response.data ?? const <String, dynamic>{};
     if (body['status'] == false) {
       throw ApiFailure(body['message']?.toString() ?? '');

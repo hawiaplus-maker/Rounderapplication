@@ -125,7 +125,7 @@ class _HomeCard extends StatelessWidget {
           ? AppLocaleKey.areaApprovedValue.tr(
               namedArgs: {'area': localizedNumber(home.area!, language)},
             )
-          : AppLocaleKey.areaNotAdded.tr(),
+          : '',
       currentBadge: AppLocaleKey.currentUnit.tr(),
       primaryLabel: AppLocaleKey.viewUnit.tr(),
       onPrimary: onOpen,

@@ -80,9 +80,9 @@ class _GiftCard extends StatelessWidget {
         ),
         title: Text(
           option.titleKey.tr(),
-          style: AppTextStyles.bodyBold15.copyWith(
-            fontWeight: FontWeight.w800,
+          style: AppTextStyles.extraBold15.copyWith(
             color: AppColors.petrol,
+            height: 24 / 15,
           ),
         ),
         subtitle: Text(option.descriptionKey.tr(), maxLines: 2, overflow: TextOverflow.ellipsis),

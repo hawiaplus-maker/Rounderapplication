@@ -106,7 +106,7 @@ class EmergencyForm extends StatelessWidget {
                     _icon(type.code),
                     color: selected ? AppColors.orange : AppColors.petrol,
                   ),
-                  title: Text(type.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  title: Text(type.name, style: AppTextStyles.bodyBold15),
                   activeColor: AppColors.orange,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
@@ -172,7 +172,7 @@ class EmergencyForm extends StatelessWidget {
               icon: const Icon(Icons.sos),
               label: Text(
                 AppLocaleKey.sendEmergency.tr(),
-                style: AppTextStyles.labelAction.copyWith(fontWeight: FontWeight.w800),
+                style: AppTextStyles.extraBold15,
               ),
             ),
           ],

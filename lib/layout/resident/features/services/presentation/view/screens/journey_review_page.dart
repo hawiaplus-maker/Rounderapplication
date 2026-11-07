@@ -30,8 +30,8 @@ class JourneyReviewPage extends StatelessWidget {
   final String providerKey;
   final String dateTimeLabel;
   final String locationLabel;
-  final String basePriceLabel;
-  final String totalLabel;
+  final String? basePriceLabel;
+  final String? totalLabel;
   final VoidCallback onSummary;
   final VoidCallback onSubmit;
 
@@ -56,8 +56,13 @@ class JourneyReviewPage extends StatelessWidget {
             JourneyKv(labelKey: providerKey, value: ""),
             JourneyKv(labelKey: "", value: dateTimeLabel),
             JourneyKv(labelKey: AppLocaleKey.orderPlace, value: locationLabel),
-            JourneyKv(labelKey: AppLocaleKey.basePrice, value: basePriceLabel),
-            JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel),
+            if (basePriceLabel != null)
+              JourneyKv(
+                labelKey: AppLocaleKey.basePrice,
+                value: basePriceLabel!,
+              ),
+            if (totalLabel != null)
+              JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel!),
           ],
         ),
         // JourneyActionButton(

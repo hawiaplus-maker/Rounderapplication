@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/model/home_view_models.dart';
@@ -31,12 +30,9 @@ class HomeUnitSelector extends StatelessWidget {
             padding: const EdgeInsetsDirectional.symmetric(horizontal: 14),
             child: Row(
               children: <Widget>[
-                const HomeSvgIcon(
-                  AppImages.homeBuilding,
-                  size: 24,
-                  color: AppColors.petrol,
-                ),
+                const HomeSvgIcon(AppImages.homeBuilding, size: 24, color: AppColors.petrol),
                 const SizedBox(width: 10),
+
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -58,12 +54,9 @@ class HomeUnitSelector extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                const HomeSvgIcon(
-                  AppImages.homeChevronDown,
-                  size: 20,
-                  color: AppColors.petrol,
-                ),
+
+                const SizedBox(width: 10),
+                const HomeSvgIcon(AppImages.homeChevronDown, size: 20, color: AppColors.petrol),
               ],
             ),
           ),

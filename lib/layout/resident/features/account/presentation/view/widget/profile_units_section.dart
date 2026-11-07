@@ -45,10 +45,7 @@ class ProfileUnitsSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          localizedNumber(
-            hasHome ? count : DisplayPlaceholder.number,
-            language,
-          ),
+          hasHome ? localizedNumber(count, language) : '',
           textAlign: TextAlign.start,
           style: AppTextStyles.extraBold27.copyWith(color: AppColors.petrol),
         ),
@@ -81,7 +78,7 @@ class ProfileUnitsSection extends StatelessWidget {
                   Text(
                     hasHome ? homeName : DisplayPlaceholder.text,
                     textAlign: TextAlign.end,
-                    style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol),
+                    style: AppTextStyles.headingH4.copyWith(color: AppColors.petrol),
                   ),
                   Text(
                     _unitLine(context, unitLabel),
@@ -97,16 +94,15 @@ class ProfileUnitsSection extends StatelessWidget {
     );
   }
 
-  /// `وحدة ١٢٠٤ • الوحدة الحالية` — the design's current-unit line, with the
-  /// placeholder when the dashboard has not returned a unit yet.
+  /// `وحدة ١٢٠٤ • الوحدة الحالية` — the design's current-unit line; empty
+  /// (hidden) while the dashboard has not returned a unit yet.
   String _unitLine(BuildContext context, String raw) {
     final String value = raw.trim();
-    final String unit = value.isEmpty
-        ? DisplayPlaceholder.text
-        : localizedNumericText(
-            value,
-            Localizations.localeOf(context).languageCode,
-          );
+    if (value.isEmpty) return '';
+    final String unit = localizedNumericText(
+      value,
+      Localizations.localeOf(context).languageCode,
+    );
     return '${AppLocaleKey.homeUnitWord.tr()} $unit • '
         '${AppLocaleKey.currentUnit.tr()}';
   }

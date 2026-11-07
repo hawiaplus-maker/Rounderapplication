@@ -18,7 +18,7 @@ class UnionLine extends StatelessWidget {
       title: Text(
         titleKey.tr(),
         textAlign: TextAlign.start,
-        style: AppTextStyles.bodyBold15.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol),
+        style: AppTextStyles.bodyBold15.copyWith(color: AppColors.petrol),
       ),
       subtitle: Text(
         value,

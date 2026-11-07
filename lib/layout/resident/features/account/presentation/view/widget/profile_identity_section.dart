@@ -29,9 +29,7 @@ class ProfileIdentitySection extends StatelessWidget {
             radius: 42,
             backgroundColor: AppColors.white.withValues(alpha: .15),
             child: Text(
-              name.isEmpty
-                  ? DisplayPlaceholder.text.substring(0, 1)
-                  : name.substring(0, 1),
+              name.isEmpty ? '' : name.substring(0, 1),
               style: AppTextStyles.displayLarge.copyWith(color: AppColors.white),
             ),
           ),

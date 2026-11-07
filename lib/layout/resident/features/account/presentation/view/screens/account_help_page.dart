@@ -77,7 +77,7 @@ class _FaqTile extends StatelessWidget {
     title: Text(
       questionKey.tr(),
       textAlign: TextAlign.start,
-      style: AppTextStyles.bodyBold15.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol),
+      style: AppTextStyles.bodyBold15.copyWith(color: AppColors.petrol),
     ),
     children: [
       Padding(

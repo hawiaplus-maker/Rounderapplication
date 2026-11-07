@@ -107,9 +107,9 @@ class UnitCard extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 6),
-          _SpecRow(value: unitNo),
-          _SpecRow(value: city),
-          _SpecRow(value: area, small: true),
+          if (unitNo.trim().isNotEmpty) _SpecRow(value: unitNo),
+          if (city.trim().isNotEmpty) _SpecRow(value: city),
+          if (area.trim().isNotEmpty) _SpecRow(value: area, small: true),
           const Divider(height: 22),
           Wrap(
             spacing: 10,

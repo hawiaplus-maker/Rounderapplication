@@ -83,7 +83,7 @@ class AccountGiftsPage extends StatelessWidget {
                     child: Text(
                       gift.$1.tr(),
                       textAlign: TextAlign.start,
-                      style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+                      style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
                     ),
                   ),
                 ],

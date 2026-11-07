@@ -7,6 +7,9 @@ The current working slice covers resident sign-up/sign-in, secure Sanctum token 
 
 This is the first delivery slice from the full Figma Resident App page. See [implementation guide](docs/IMPLEMENTATION_GUIDE.md) for what is wired and which design journeys still need implementation.
 
+## Store release
+Signing, build commands, store assets and the submission checklist live in [docs/STORE_RELEASE.md](docs/STORE_RELEASE.md).
+
 ## Architecture
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the current feature layout, preserved contracts and scope exceptions, and [validation report](docs/RESTRUCTURE_VALIDATION.md) for phase-by-phase evidence.
 

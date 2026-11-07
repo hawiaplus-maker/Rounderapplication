@@ -20,7 +20,7 @@ class JourneyPaymentPage extends StatelessWidget {
   });
 
   final VoidCallback onBack;
-  final String totalLabel;
+  final String? totalLabel;
   final VoidCallback onComplete;
   final VoidCallback onNext;
 
@@ -37,7 +37,8 @@ class JourneyPaymentPage extends StatelessWidget {
               textAlign: TextAlign.start,
               style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
-            JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel),
+            if (totalLabel != null)
+              JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel!),
             JourneyActionButton(
               labelKey: AppLocaleKey.paymentComplete,
               icon: Icons.credit_card,

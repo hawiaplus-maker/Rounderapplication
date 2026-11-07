@@ -33,44 +33,48 @@ class HomeNextServiceCard extends StatelessWidget {
             iconSize: 19,
           ),
           const SizedBox(height: 8),
-          Align(
-            alignment: AlignmentDirectional.center,
-            child: FacilityBadge(label: service.badge),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            service.remainingLabel,
-            style: HomeTextStyles.countdownRemaining,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-          ),
-          const SizedBox(height: 2),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: CountdownGauge(
-              value: service.countdown,
-              unitLabel: service.countdownUnit,
+          if (service.badge.isNotEmpty)
+            Align(
+              alignment: AlignmentDirectional.center,
+              child: FacilityBadge(label: service.badge),
             ),
-          ),
+          if (service.countdown.isNotEmpty) ...<Widget>[
+            const SizedBox(height: 8),
+            Text(
+              service.remainingLabel,
+              style: HomeTextStyles.countdownRemaining,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+            ),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: CountdownGauge(
+                value: service.countdown,
+                unitLabel: service.countdownUnit,
+              ),
+            ),
+          ],
           const Spacer(),
-          Row(
-            children: <Widget>[
-              HomeSvgIcon(
-                service.serviceIcon,
-                size: 19,
-                color: AppColors.petrol,
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  service.service,
-                  style: HomeTextStyles.serviceName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          if (service.service.isNotEmpty)
+            Row(
+              children: <Widget>[
+                HomeSvgIcon(
+                  service.serviceIcon,
+                  size: 19,
+                  color: AppColors.petrol,
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    service.service,
+                    style: HomeTextStyles.serviceName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           const SizedBox(height: 4),
           if (service.time.isNotEmpty)
             Text(

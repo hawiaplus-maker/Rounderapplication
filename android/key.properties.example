@@ -1,0 +1,16 @@
+# Copy this file to android/key.properties and fill in your own upload key.
+# Never commit the real key.properties or the .jks file: both are gitignored.
+#
+# Generate a key (run from the repository root):
+#   keytool -genkeypair -v -keystore android/app/upload-keystore.jks \
+#     -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 \
+#     -alias upload -dname "CN=Rounder, O=Futuretec, C=SA"
+#
+# Then back up android/app/upload-keystore.jks and this file in a safe place:
+# losing them means you can no longer publish updates to the same app id.
+
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=upload
+# Relative to android/app, or an absolute path.
+storeFile=upload-keystore.jks

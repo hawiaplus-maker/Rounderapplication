@@ -35,11 +35,6 @@ class JourneyAdditionalPage extends StatelessWidget {
               style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
             Text(AppLocaleKey.serviceReport.tr(), textAlign: TextAlign.start),
-            Text(
-              '0 ${AppLocaleKey.currencySar.tr()}',
-              textAlign: TextAlign.start,
-              style: AppTextStyles.extraBold21.copyWith(color: AppColors.orange),
-            ),
             TextField(
               controller: notes,
               textAlign: TextAlign.start,

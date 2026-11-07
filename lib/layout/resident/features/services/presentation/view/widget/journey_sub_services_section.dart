@@ -34,10 +34,7 @@ class JourneySubServicesSection extends StatelessWidget {
         Text(
           AppLocaleKey.issueType.tr(),
           textAlign: TextAlign.start,
-          style: AppTextStyles.bodyMedium.copyWith(
-            fontWeight: FontWeight.w800,
-            color: AppColors.petrol,
-          ),
+          style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
         ),
         Wrap(
           spacing: 8,

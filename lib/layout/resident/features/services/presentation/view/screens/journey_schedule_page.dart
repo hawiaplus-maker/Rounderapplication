@@ -63,7 +63,7 @@ class JourneySchedulePage extends StatelessWidget {
             Text(
               AppLocaleKey.whereService.tr(),
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             if (homesLoading)
@@ -134,7 +134,7 @@ class JourneySchedulePage extends StatelessWidget {
             Text(
               AppLocaleKey.whenService.tr(),
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
             const SizedBox(height: 8),
             Wrap(

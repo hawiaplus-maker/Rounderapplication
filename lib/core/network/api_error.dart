@@ -12,6 +12,22 @@ class ApiFailure implements Exception {
   String toString() => message;
 }
 
+/// True when the request never reached the backend — offline, a DNS failure,
+/// a connect/send/receive timeout or a TLS certificate problem. Callers map
+/// these to their localized "connection" message instead of a generic
+/// failure (a timeout is not a rejected credential).
+bool isConnectionFailure(Object error) {
+  if (error is! DioException) return false;
+  return switch (error.type) {
+    DioExceptionType.connectionError ||
+    DioExceptionType.connectionTimeout ||
+    DioExceptionType.sendTimeout ||
+    DioExceptionType.receiveTimeout ||
+    DioExceptionType.badCertificate => true,
+    _ => false,
+  };
+}
+
 /// The backend's own user-facing text for a failed request: the first field
 /// error of a Laravel 422, else the envelope's `message`, else an [ApiFailure]
 /// message. Null when the failure has no server text (offline, timeout), so

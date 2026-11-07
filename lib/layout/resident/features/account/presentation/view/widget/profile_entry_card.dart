@@ -48,8 +48,7 @@ class ProfileEntryCard extends StatelessWidget {
                     Text(
                       titleKey.tr(),
                       textAlign: TextAlign.end,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w800,
+                      style: AppTextStyles.extraBold16.copyWith(
                         color: AppColors.petrol,
                       ),
                     ),

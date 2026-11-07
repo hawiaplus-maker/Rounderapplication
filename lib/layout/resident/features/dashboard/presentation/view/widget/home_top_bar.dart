@@ -15,7 +15,7 @@ import 'package:rounder_application/logic/weather_logic.dart';
 
 /// Brand wordmark on the start side and the live location / weather context on
 /// the end side. The weather cubit is driven at app level; while it has no
-/// data (or failed) the section keeps its `----` placeholders.
+/// data (or failed) the labels stay hidden.
 class HomeTopBar extends StatelessWidget {
   const HomeTopBar({super.key});
 
@@ -73,7 +73,7 @@ class HomeTopBar extends StatelessWidget {
 }
 
 /// The device's city, or the localized default city when the location was
-/// unavailable; `----` until (and unless) the geocoder resolved a name.
+/// unavailable; empty (hidden) until the geocoder resolves a name.
 String _cityLabel(WeatherInfo? info) {
   if (info == null) return DisplayPlaceholder.text;
   if (info.cityFellBack) return AppLocaleKey.weatherDefaultCity.tr();

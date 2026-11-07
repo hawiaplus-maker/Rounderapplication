@@ -48,7 +48,7 @@ class UnionOverviewPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+              '',
               textAlign: TextAlign.start,
               style: AppTextStyles.extraBold28.copyWith(color: AppColors.white),
             ),
@@ -73,10 +73,7 @@ class UnionOverviewPage extends StatelessWidget {
                   const Spacer(),
                   Text(
                     AppLocaleKey.dueAmount.tr(),
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.petrol,
-                    ),
+                    style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
                   ),
                 ],
               ),
@@ -96,7 +93,7 @@ class UnionOverviewPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${DisplayPlaceholder.number} ${AppLocaleKey.currencySar.tr()}',
+                        '',
                         style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
                       ),
                       Text(
@@ -203,10 +200,7 @@ class _NavRow extends StatelessWidget {
     title: Text(
       labelKey.tr(),
       textAlign: TextAlign.start,
-      style: AppTextStyles.bodyBold15.copyWith(
-        fontWeight: FontWeight.w700,
-        color: AppColors.petrol,
-      ),
+      style: AppTextStyles.bodyBold15.copyWith(color: AppColors.petrol),
     ),
     trailing: const _ForwardChevron(),
     onTap: onTap,

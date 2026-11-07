@@ -34,25 +34,27 @@ class HomeLastVisitCard extends StatelessWidget {
             iconSize: 19,
           ),
           const SizedBox(height: 10),
-          Align(
-            alignment: AlignmentDirectional.center,
-            child: FacilityBadge(label: visit.badge),
-          ),
+          if (visit.badge.isNotEmpty)
+            Align(
+              alignment: AlignmentDirectional.center,
+              child: FacilityBadge(label: visit.badge),
+            ),
           const SizedBox(height: 10),
-          Row(
-            children: <Widget>[
-              _IconTile(icon: visit.serviceIcon),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  visit.service,
-                  style: HomeTextStyles.serviceName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          if (visit.service.isNotEmpty)
+            Row(
+              children: <Widget>[
+                _IconTile(icon: visit.serviceIcon),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    visit.service,
+                    style: HomeTextStyles.serviceName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           const SizedBox(height: 4),
           if (visit.provider.isNotEmpty)
             Text(
@@ -71,18 +73,23 @@ class HomeLastVisitCard extends StatelessWidget {
             ),
           ],
           const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text(visit.status, style: HomeTextStyles.visitStatus, maxLines: 1),
-              const SizedBox(width: 4),
-              const HomeSvgIcon(
-                AppImages.homeCheck,
-                size: 16,
-                color: AppColors.teal,
-              ),
-            ],
-          ),
+          if (visit.status.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  visit.status,
+                  style: HomeTextStyles.visitStatus,
+                  maxLines: 1,
+                ),
+                const SizedBox(width: 4),
+                const HomeSvgIcon(
+                  AppImages.homeCheck,
+                  size: 16,
+                  color: AppColors.teal,
+                ),
+              ],
+            ),
           const SizedBox(height: 10),
           HomeCardActionButton(
             label: visit.actionLabel,

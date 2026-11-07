@@ -30,7 +30,7 @@ class JourneyProvidersPage extends StatelessWidget {
   final int? subServiceId;
   final int? homeId;
   final VoidCallback onViewCompany;
-  final void Function(int id, String name, double price, int? priceId)
+  final void Function(int id, String name, double? price, int? priceId)
       onSelectProvider;
 
   @override
@@ -62,7 +62,7 @@ class _JourneyProvidersBody extends StatelessWidget {
   final VoidCallback onBack;
   final String serviceKey;
   final VoidCallback onViewCompany;
-  final void Function(int id, String name, double price, int? priceId)
+  final void Function(int id, String name, double? price, int? priceId)
       onSelectProvider;
 
   @override
@@ -76,10 +76,7 @@ class _JourneyProvidersBody extends StatelessWidget {
             Text(
               serviceKey,
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: FontWeight.w800,
-                color: AppColors.petrol,
-              ),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
           ],
         ),
@@ -119,7 +116,7 @@ class _JourneyProvidersBody extends StatelessWidget {
                         provider: p,
                         onViewCompany: onViewCompany,
                         onSelect: () =>
-                            onSelectProvider(p.id, p.name, p.price ?? 0, p.priceId),
+                            onSelectProvider(p.id, p.name, p.price, p.priceId),
                       ),
                     )
                     .toList(),

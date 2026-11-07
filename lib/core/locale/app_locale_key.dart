@@ -6,6 +6,7 @@ abstract final class AppLocaleKey {
   static const quickActions = 'quick_actions',
       bookService = 'book_service',
       emergency = 'emergency';
+  static const needToCleanApartment = 'needToCleanApartment', yesWhen = 'yesWhen';
   static const association = 'association',
       associationBalance = 'association_balance',
       propertyHealth = 'property_health';

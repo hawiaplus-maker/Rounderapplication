@@ -28,14 +28,23 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 import 'package:rounder_application/layout/resident/features/services/presentation/cubit/services_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/data/repo/homes_repo.dart';
 import 'package:rounder_application/layout/resident/features/units/data/repo/selected_home_store.dart';
-import 'package:rounder_application/layout/resident/features/units/presentation/cubit/homes_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/cubit/add_unit_cubit.dart';
+import 'package:rounder_application/layout/resident/features/units/presentation/cubit/homes_cubit.dart';
 
 import '../network/api_consumer.dart';
 import '../network/dio_consumer.dart';
+import '../network/end_points.dart';
 
 final sl = GetIt.instance;
 const tokenStorage = FlutterSecureStorage();
+final _publicAuthPaths = {
+  EndPoints.login,
+  EndPoints.register,
+  EndPoints.validateMobile,
+  EndPoints.sendOtp,
+  EndPoints.verifyOtp,
+}.map((url) => Uri.parse(url).path).toSet();
+
 void configureDependencies() {
   sl.registerLazySingleton(() => PreviewOrdersCubit());
   final dio = Dio(
@@ -46,19 +55,28 @@ void configureDependencies() {
         // backend; EndPoints' absolute auth URLs override this base.
         defaultValue: 'https://rounder-sa.com/api/v1',
       ),
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 20),
+      // Mobile data can take longer to establish the TLS connection; allow
+      // 30 seconds before treating the host as unreachable.
+      connectTimeout: const Duration(seconds: 30),
+      // A slow server response (large dashboard payloads) gets 60 seconds.
+      receiveTimeout: const Duration(seconds: 60),
       headers: {'Accept': 'application/json'},
     ),
   );
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        options.headers['Accept-Language'] = Intl.getCurrentLocale()
-            .split('_')
-            .first;
-        final token = Hive.box<String>(authBoxName).get(accessTokenKey);
-        if (token != null) options.headers['Authorization'] = 'Bearer $token';
+        options.headers['Accept-Language'] = Intl.getCurrentLocale().split('_').first;
+        if (_publicAuthPaths.contains(options.uri.path)) {
+          // These endpoints start or continue authentication and must work
+          // before a session exists (or while a previous token is stale).
+          options.headers.remove('Authorization');
+        } else {
+          final token = Hive.box<String>(authBoxName).get(accessTokenKey);
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+        }
         handler.next(options);
       },
     ),
@@ -68,7 +86,8 @@ void configureDependencies() {
   if (kDebugMode) {
     dio.interceptors.add(
       PrettyDioLogger(
-        requestHeader: true,
+        // Headers can include bearer credentials; keep them out of logs.
+        requestHeader: false,
         requestBody: true,
         responseBody: true,
         error: true,
@@ -77,9 +96,7 @@ void configureDependencies() {
     );
   }
   sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(dio));
-  sl.registerLazySingleton(
-    () => AuthRepository(sl<ApiConsumer>(), Hive.box<String>(authBoxName)),
-  );
+  sl.registerLazySingleton(() => AuthRepository(sl<ApiConsumer>(), Hive.box<String>(authBoxName)));
   sl.registerLazySingleton(() => OnboardingRepository(tokenStorage));
   sl.registerFactory(() => AuthCubit(sl<AuthRepository>()));
   // The validated-phone journey runs one instance per screen (login,register,otp).
@@ -93,21 +110,15 @@ void configureDependencies() {
   sl.registerLazySingleton(() => ProfileRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => NotificationsRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => HomesRepository(sl<ApiConsumer>()));
-  sl.registerLazySingleton(
-    () => SelectedHomeStore(Hive.box<String>(authBoxName)),
-  );
+  sl.registerLazySingleton(() => SelectedHomeStore(Hive.box<String>(authBoxName)));
   sl.registerFactory(() => ResidentDashboardCubit(sl<ResidentRepository>()));
   sl.registerLazySingleton(() => ServicesCubit(sl<ServicesRepository>()));
   sl.registerFactory(() => ServiceCatalogCubit(sl<ServicesRepository>()));
   sl.registerFactory(() => ServiceProvidersCubit(sl<ServicesRepository>()));
   sl.registerLazySingleton(() => BookingsCubit(sl<BookingsRepository>()));
   sl.registerFactory(() => ProfileCubit(sl<ProfileRepository>()));
-  sl.registerLazySingleton(
-    () => NotificationsCubit(sl<NotificationsRepository>()),
-  );
-  sl.registerFactory(
-    () => HomesCubit(sl<HomesRepository>(), sl<SelectedHomeStore>()),
-  );
+  sl.registerLazySingleton(() => NotificationsCubit(sl<NotificationsRepository>()));
+  sl.registerFactory(() => HomesCubit(sl<HomesRepository>(), sl<SelectedHomeStore>()));
   sl.registerFactory(() => AddUnitCubit(sl<HomesRepository>()));
   sl.registerLazySingleton(() => EmergencyRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => EmergencyCubit(sl<EmergencyRepository>()));

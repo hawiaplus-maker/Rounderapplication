@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart' show Locale;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rounder_application/core/network/api_consumer.dart';
+import 'package:rounder_application/core/network/end_points.dart';
 
 import 'package:rounder_application/layout/resident/features/dashboard/data/model/weather_model.dart';
 
@@ -66,7 +67,7 @@ class WeatherRepository {
     final String city = await _resolveCity(lat, lng);
 
     final response = await api.get<Map<String, dynamic>>(
-      'https://api.open-meteo.com/v1/forecast'
+      '${EndPoints.weatherForecast}'
       '?latitude=$lat&longitude=$lng'
       '&current=temperature_2m,weather_code&timezone=auto',
     );

@@ -1,5 +1,6 @@
 import 'package:rounder_application/core/network/api_consumer.dart';
 import 'package:rounder_application/core/network/api_error.dart';
+import 'package:rounder_application/core/network/end_points.dart';
 import 'package:rounder_application/layout/resident/features/bookings/data/model/booking_item_model.dart';
 
 class BookingsRepository {
@@ -8,7 +9,7 @@ class BookingsRepository {
   final ApiConsumer api;
 
   Future<List<BookingItem>> list() async {
-    final r = await api.get<Map<String, dynamic>>('/resident/bookings');
+    final r = await api.get<Map<String, dynamic>>(EndPoints.bookings);
     final body = r.data ?? const <String, dynamic>{};
     if (body['status'] == false) {
       throw ApiFailure(body['message']?.toString() ?? '');
@@ -38,7 +39,7 @@ class BookingsRepository {
   }
 
   Future<void> cancel(int id, String reason) async {
-    await api.post('/resident/bookings/$id/cancel', data: {'reason': reason});
+    await api.post(EndPoints.bookingCancel(id), data: {'reason': reason});
   }
 
   /// Rates a completed booking: the stars picked on the rating step, the
@@ -51,7 +52,7 @@ class BookingsRepository {
     required List<String> tags,
   }) async {
     final r = await api.post<Map<String, dynamic>>(
-      '/resident/bookings/$id/rating',
+      EndPoints.bookingRating(id),
       data: {'rating': rating, 'comment': comment, 'tags': tags},
     );
     final body = r.data ?? const <String, dynamic>{};

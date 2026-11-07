@@ -37,16 +37,14 @@ class OrdersUnitFilter extends StatelessWidget {
     // DropdownButton asserts exactly one item per value: a selected id that
     // no longer has an option falls back to the every-unit row instead of
     // throwing.
-    final int value = options.any((o) => o.id == selectedId)
-        ? selectedId!
-        : _allUnits;
+    final int value = options.any((o) => o.id == selectedId) ? selectedId! : _allUnits;
     return DropdownButtonFormField<int>(
       initialValue: value,
       isExpanded: true,
       // Field text sits on the glass pill, so it is white; every menu row
       // carries its own petrol style to stay readable on the white menu.
       style: AppTextStyles.bodyBold15.copyWith(color: AppColors.white),
-      dropdownColor: AppColors.white,
+      dropdownColor: AppColors.petrol,
       iconEnabledColor: AppColors.white,
       decoration: InputDecoration(
         labelText: AppLocaleKey.filterUnit.tr(),
@@ -58,11 +56,9 @@ class OrdersUnitFilter extends StatelessWidget {
         ),
         filled: true,
         // Same glass fill as the status tabs' pill right below.
-        fillColor: AppColors.mintDeep.withAlpha(30),
-        contentPadding: const EdgeInsetsDirectional.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
+        fillColor: AppColors.petrol.withAlpha(30),
+
+        contentPadding: const EdgeInsetsDirectional.symmetric(horizontal: 16, vertical: 10),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
@@ -78,7 +74,7 @@ class OrdersUnitFilter extends StatelessWidget {
           child: Text(
             AppLocaleKey.allUnits.tr(),
             textAlign: TextAlign.start,
-            style: AppTextStyles.bodyBold15.copyWith(color: AppColors.petrol),
+            style: AppTextStyles.bodyBold15.copyWith(color: AppColors.white),
           ),
         ),
         for (final option in options)
@@ -89,7 +85,7 @@ class OrdersUnitFilter extends StatelessWidget {
               textAlign: TextAlign.start,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodyBold15.copyWith(color: AppColors.petrol),
+              style: AppTextStyles.bodyBold15.copyWith(color: AppColors.white),
             ),
           ),
       ],

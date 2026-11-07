@@ -65,8 +65,7 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
       if (!mounted) return;
       final List<OrdersUnitOption> options = [
         for (final ResidentHome home in homes)
-          if (home.id != null &&
-              (home.name.trim().isNotEmpty || home.unitLabel.trim().isNotEmpty))
+          if (home.id != null && (home.name.trim().isNotEmpty || home.unitLabel.trim().isNotEmpty))
             OrdersUnitOption(
               id: home.id!,
               name: home.name.trim().isNotEmpty ? home.name : home.unitLabel,
@@ -76,8 +75,7 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
         _homeOptions = options;
         // The picked unit may be gone (removed while browsing) — back to
         // every unit instead of showing a silent empty list.
-        if (_unitFilterId != null &&
-            !options.any((o) => o.id == _unitFilterId)) {
+        if (_unitFilterId != null && !options.any((o) => o.id == _unitFilterId)) {
           _unitFilterId = null;
         }
       });
@@ -91,9 +89,9 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
   /// homes fetch failed). Session preview orders have no unit, so they stay
   /// under the every-unit default only.
   List<OrdersUnitOption> _optionsFor(List<OrderData> realOrders) {
-    final List<OrdersUnitOption> extras = _bookingUnitOptions(realOrders)
-        .where((option) => !_homeOptions.any((home) => home.id == option.id))
-        .toList();
+    final List<OrdersUnitOption> extras = _bookingUnitOptions(
+      realOrders,
+    ).where((option) => !_homeOptions.any((home) => home.id == option.id)).toList();
     return [..._homeOptions, ...extras];
   }
 
@@ -101,14 +99,10 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
   List<OrdersUnitOption> _bookingUnitOptions(List<OrderData> realOrders) {
     final Map<int, String> names = {
       for (final order in realOrders)
-        if (order.homeId != null &&
-            (order.homeName?.trim().isNotEmpty ?? false))
+        if (order.homeId != null && (order.homeName?.trim().isNotEmpty ?? false))
           order.homeId!: order.homeName!,
     };
-    return [
-      for (final entry in names.entries)
-        OrdersUnitOption(id: entry.key, name: entry.value),
-    ];
+    return [for (final entry in names.entries) OrdersUnitOption(id: entry.key, name: entry.value)];
   }
 
   @override
@@ -125,8 +119,7 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
             final options = _optionsFor(realOrders);
             // A pick whose unit left the loaded bookings falls back to "all
             // units": the dropdown cannot hold a value it has no item for.
-            final selectedUnitId =
-                options.any((o) => o.id == _unitFilterId) ? _unitFilterId : null;
+            final selectedUnitId = options.any((o) => o.id == _unitFilterId) ? _unitFilterId : null;
             // Unit pick first, then the per-tab status slice below.
             final unitOrders = selectedUnitId == null
                 ? everyOrder
@@ -140,10 +133,7 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
                     onEmergencyOrders: () => _openEmergencyOrders(context),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     child: OrdersUnitFilter(
                       // Keyed by the pick so the field never displays a unit
                       // whose row vanished from the options (same trick the
@@ -168,32 +158,35 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
                     child: bookingsState is BookingsLoading
                         ? const OrdersShimmerList()
                         : TabBarView(
-                      children: [
-                        OrdersList(orders: unitOrders, onOpen: (order) => _openDetails(context, order)),
-                        OrdersList(
-                          orders: unitOrders
-                              .where((o) => o.statusKey == AppLocaleKey.orderActive)
-                              .toList(),
-                          onOpen: (order) => _openDetails(context, order),
-                        ),
-                        OrdersList(
-                          orders: unitOrders
-                              .where((o) => o.statusKey == AppLocaleKey.orderScheduled)
-                              .toList(),
-                          onOpen: (order) => _openDetails(context, order),
-                        ),
-                        OrdersList(
-                          orders: unitOrders
-                              .where(
-                                (o) =>
-                                    o.statusKey == AppLocaleKey.serviceComplete ||
-                                    o.statusKey == AppLocaleKey.requestCancelled,
-                              )
-                              .toList(),
-                          onOpen: (order) => _openDetails(context, order),
-                        ),
-                      ],
-                    ),
+                            children: [
+                              OrdersList(
+                                orders: unitOrders,
+                                onOpen: (order) => _openDetails(context, order),
+                              ),
+                              OrdersList(
+                                orders: unitOrders
+                                    .where((o) => o.statusKey == AppLocaleKey.orderActive)
+                                    .toList(),
+                                onOpen: (order) => _openDetails(context, order),
+                              ),
+                              OrdersList(
+                                orders: unitOrders
+                                    .where((o) => o.statusKey == AppLocaleKey.orderScheduled)
+                                    .toList(),
+                                onOpen: (order) => _openDetails(context, order),
+                              ),
+                              OrdersList(
+                                orders: unitOrders
+                                    .where(
+                                      (o) =>
+                                          o.statusKey == AppLocaleKey.serviceComplete ||
+                                          o.statusKey == AppLocaleKey.requestCancelled,
+                                    )
+                                    .toList(),
+                                onOpen: (order) => _openDetails(context, order),
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
@@ -219,11 +212,9 @@ class _OrdersPrototypeBodyState extends State<_OrdersPrototypeBody> {
     final homeId =
         sl<SelectedHomeStore>().readId() ??
         (dashboardState is DashboardReady ? dashboardState.data.homeId : null);
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => EmergencyOrdersScreen(residentHomeId: homeId),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => EmergencyOrdersScreen(residentHomeId: homeId)));
   }
 
   void _openDetails(BuildContext context, OrderData order) {

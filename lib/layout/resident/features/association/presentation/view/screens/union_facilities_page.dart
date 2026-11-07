@@ -108,7 +108,7 @@ class _FacilityTile extends StatelessWidget {
         Icon(icon, color: AppColors.petrol),
         Text(
           titleKey.tr(),
-          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+          style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
         ),
         Text(
           status,

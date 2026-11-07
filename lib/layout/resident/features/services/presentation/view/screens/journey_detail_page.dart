@@ -95,8 +95,7 @@ class _JourneyDetailPageState extends State<JourneyDetailPage> {
                     children: [
                       Text(
                         AppLocaleKey.greetingAli.tr(),
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          fontWeight: FontWeight.w800,
+                        style: AppTextStyles.extraBold16.copyWith(
                           color: AppColors.petrol,
                         ),
                       ),

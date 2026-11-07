@@ -32,19 +32,23 @@ class HomeHealthCard extends StatelessWidget {
             titleStyle: HomeTextStyles.cardTitle,
           ),
           const SizedBox(height: 6),
-          SizedBox(
-            height: 73,
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: <Widget>[
-                HealthGauge(percent: health.percent),
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(top: 10),
-                  child: Text(health.score, style: HomeTextStyles.healthScore),
-                ),
-              ],
+          if (health.percent != null)
+            SizedBox(
+              height: 73,
+              child: Stack(
+                alignment: AlignmentDirectional.center,
+                children: <Widget>[
+                  HealthGauge(percent: health.percent!),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 10),
+                    child: Text(
+                      health.score,
+                      style: HomeTextStyles.healthScore,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
           Text(
             health.caption,
             style: HomeTextStyles.healthCaption,
@@ -53,26 +57,26 @@ class HomeHealthCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
-          for (final HomeHealthMetric metric in health.metrics) ...<Widget>[
-            SizedBox(
-              height: 18,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    metric.label,
-                    style: HomeTextStyles.healthLabel,
-                    maxLines: 1,
-                  ),
-                  const Spacer(),
-                  Text(
-                    metric.value,
-                    style: HomeTextStyles.healthValue,
-                    maxLines: 1,
-                  ),
-                ],
+          for (final HomeHealthMetric metric in health.metrics)
+            if (metric.value.isNotEmpty)
+              SizedBox(
+                height: 18,
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      metric.label,
+                      style: HomeTextStyles.healthLabel,
+                      maxLines: 1,
+                    ),
+                    const Spacer(),
+                    Text(
+                      metric.value,
+                      style: HomeTextStyles.healthValue,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
           const Spacer(),
           HomeCardActionButton(
             label: health.actionLabel,

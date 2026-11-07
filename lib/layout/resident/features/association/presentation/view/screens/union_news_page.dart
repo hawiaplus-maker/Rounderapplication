@@ -52,7 +52,7 @@ class UnionNewsPage extends StatelessWidget {
             Text(
               AppLocaleKey.documents.tr(),
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
             UnionLine(
               titleKey: AppLocaleKey.financialDetails,

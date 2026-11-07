@@ -65,7 +65,7 @@ class BookingTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   item.serviceName,
-                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
+                  style: AppTextStyles.headingH4,
                 ),
               ),
               Chip(label: Text(item.statusName)),
@@ -73,9 +73,10 @@ class BookingTile extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(item.scheduledAt.replaceFirst('T', ' · ')),
-          Text(
-            '${item.amount.toStringAsFixed(0)} ${AppLocaleKey.currencySar.tr()}',
-          ),
+          if (item.amount != null)
+            Text(
+              '${item.amount!.toStringAsFixed(0)} ${AppLocaleKey.currencySar.tr()}',
+            ),
           if (item.canCancel)
             Align(
               alignment: AlignmentDirectional.centerEnd,

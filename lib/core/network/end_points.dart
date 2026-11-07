@@ -68,6 +68,9 @@ class EndPoints {
   /// Cancel a booking (POST) with a `{reason}` body.
   static String bookingCancel(int id) => '$bookings/$id/cancel';
 
+  /// Rate a completed booking (POST) with `{rating, comment, tags}`.
+  static String bookingRating(int id) => '$bookings/$id/rating';
+
   /// Third-party Open-Meteo current weather (external, key-less): `latitude`,
   /// `longitude`, `current` and `timezone` query parameters.
   static const String weatherForecast =

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rounder_application/core/network/api_error.dart';
 import 'package:rounder_application/layout/global/features/auth/data/repo/auth_repo.dart';
 
 sealed class AuthState {}
@@ -19,20 +20,23 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this.repo) : super(AuthChecking());
   final AuthRepository repo;
 
-  /// The stored token is only the hint — the backend decides: `me` must
-  /// answer for the boot gate to show the resident home; no token, or any
-  /// failure (rejection, offline), falls to the login branch.
+  /// The stored token is only the hint — the backend decides. The cached
+  /// session enters the app immediately: the boot splash must not wait on a
+  /// network round-trip (a bad connection used to hold it for the whole
+  /// timeout). `me` still verifies in the background: a rejected token falls
+  /// to the login branch, while a connection failure (offline, timeout) keeps
+  /// the session so an offline launch is not dumped on the login screen.
   Future<void> restoreSession() async {
     emit(AuthChecking());
     if (!await repo.hasSession()) {
       emit(Unauthenticated());
       return;
     }
+    emit(Authenticated());
     try {
       await repo.me();
-      emit(Authenticated());
-    } catch (_) {
-      emit(Unauthenticated());
+    } catch (e) {
+      if (!isConnectionFailure(e) && !isClosed) emit(Unauthenticated());
     }
   }
 
@@ -61,8 +65,7 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       if (e is DioException && e.response?.statusCode == 422) {
         emit(AuthFailure('check_fields'));
-      } else if (e is DioException &&
-          e.type == DioExceptionType.connectionError) {
+      } else if (isConnectionFailure(e)) {
         emit(AuthFailure('connection_error'));
       } else {
         emit(AuthFailure('auth_failed'));

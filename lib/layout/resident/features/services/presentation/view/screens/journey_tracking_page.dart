@@ -48,13 +48,14 @@ class JourneyTrackingPage extends StatelessWidget {
         JourneyPanel(
           glass: true,
           children: [
-            Text(
-              '${AppLocaleKey.orderReference.tr()} • ${reference ?? '—'}',
-              textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.white.withValues(alpha: .7),
+            if (reference != null)
+              Text(
+                '${AppLocaleKey.orderReference.tr()} • $reference',
+                textAlign: TextAlign.start,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.white.withValues(alpha: .7),
+                ),
               ),
-            ),
             Text(
               statusKey.tr(),
               textAlign: TextAlign.start,

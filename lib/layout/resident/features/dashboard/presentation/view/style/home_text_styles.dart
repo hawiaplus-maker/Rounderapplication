@@ -28,9 +28,9 @@ abstract final class HomeTextStyles {
   static final TextStyle dashboardTitle = AppTextStyles.headingH2.copyWith(height: 1.4, color: AppColors.white);
   static final TextStyle dashboardMeta = AppTextStyles.captionRegular.copyWith(height: 1.4, color: AppColors.white);
 
-  // Unit selector.
-  static final TextStyle unitTitle = AppTextStyles.captionBold13.copyWith(height: 1.35, color: AppColors.petrol);
-  static final TextStyle unitSubtitle = AppTextStyles.captionRegular.copyWith(height: 1.35, color: AppColors.teal);
+  // Unit selector — two-line column, 20px lines, like Figma 148:48.
+  static final TextStyle unitTitle = AppTextStyles.captionBold13.copyWith(height: 20 / 13, color: AppColors.petrol);
+  static final TextStyle unitSubtitle = AppTextStyles.captionRegular.copyWith(height: 20 / 12, color: AppColors.teal);
 
   // Cards.
   static final TextStyle cardTitle = AppTextStyles.captionBold13.copyWith(height: 1.5, color: AppColors.petrol);

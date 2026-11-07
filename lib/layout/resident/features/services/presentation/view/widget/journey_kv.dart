@@ -18,10 +18,7 @@ class JourneyKv extends StatelessWidget {
         Flexible(
           child: Text(
             value,
-            style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: FontWeight.w700,
-              color: AppColors.petrol,
-            ),
+            style: AppTextStyles.headingH4.copyWith(color: AppColors.petrol),
           ),
         ),
 

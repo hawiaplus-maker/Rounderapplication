@@ -1,6 +1,7 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_text_styles.dart';
@@ -9,6 +10,13 @@ import 'package:rounder_application/layout/global/features/auth/presentation/vie
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_phone_entry.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_social_buttons.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/otp_action.dart';
+
+/// Social sign-in is still the approved design prototype: no OAuth SDK is
+/// wired yet, so the buttons are hidden from release builds to keep a fake
+/// success flow out of App Review. Enable once google_sign_in and
+/// sign_in_with_apple are implemented (Apple requires Sign in with Apple when
+/// Google sign-in is offered).
+const bool _socialLoginEnabled = !kReleaseMode;
 
 /// Approved frosted form (design `Login / Frosted form`): white 80% panel with
 /// a 24px backdrop blur, welcome copy, phone entry, the coral continue action,
@@ -76,8 +84,10 @@ class LoginFormCard extends StatelessWidget {
                 onPressed: onContinue,
               ),
               const SizedBox(height: 16),
-              LoginSocialButtons(onGoogle: onGoogle, onApple: onApple),
-              const SizedBox(height: 12),
+              if (_socialLoginEnabled) ...[
+                LoginSocialButtons(onGoogle: onGoogle, onApple: onApple),
+                const SizedBox(height: 12),
+              ],
               // Not const: the labels follow the active locale at runtime.
               LoginLegalLinks(),
             ],

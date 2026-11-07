@@ -144,9 +144,9 @@ class _AliArtwork extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _ChatBubble(message: AppLocaleKey.chatUserIntent.tr(), user: true),
+            _ChatBubble(message: AppLocaleKey.needToCleanApartment.tr(), user: true),
             const SizedBox(height: 28),
-            _ChatBubble(message: AppLocaleKey.chatAliReply.tr(), user: false),
+            _ChatBubble(message: AppLocaleKey.yesWhen.tr(), user: false),
           ],
         ),
       ),

@@ -53,6 +53,8 @@ class ServiceItem {
     this.discountValue,
     this.imageUrl,
     this.subServices = const <ServiceSubItem>[],
+    this.subServicesCount,
+    this.hasMore,
   });
 
   final int id;
@@ -65,6 +67,14 @@ class ServiceItem {
   final String? discountValue;
   final String? imageUrl;
   final List<ServiceSubItem> subServices;
+
+  /// Total sub-services the backend knows for the service; the inline list is
+  /// truncated to the request's `sub_services_limit` beyond it.
+  final int? subServicesCount;
+
+  /// `true` while the inline list is only the first slice of the service's
+  /// sub-services and the rest are paged on demand.
+  final bool? hasMore;
 
   factory ServiceItem.fromJson(Map<String, dynamic> json) {
     final subs = (json['sub_services'] as List?)
@@ -83,6 +93,8 @@ class ServiceItem {
       discountValue: json['discount_value']?.toString(),
       imageUrl: json['image_url']?.toString(),
       subServices: subs,
+      subServicesCount: int.tryParse('${json['sub_services_count'] ?? ''}'),
+      hasMore: json['has_more'] is bool ? json['has_more'] as bool : null,
     );
   }
 }

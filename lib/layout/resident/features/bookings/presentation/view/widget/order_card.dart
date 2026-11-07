@@ -99,18 +99,17 @@ class OrderCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Text(
-                  '${data.amount} ${AppLocaleKey.currencySar.tr()}',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.petrol,
+                if (data.amount.isNotEmpty)
+                  Text(
+                    '${data.amount} ${AppLocaleKey.currencySar.tr()}',
+                    style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
                   ),
-                ),
                 const Spacer(),
-                Text(
-                  data.reference,
-                  style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
-                ),
+                if (data.reference.isNotEmpty)
+                  Text(
+                    data.reference,
+                    style: AppTextStyles.captionRegular.copyWith(color: AppColors.muted),
+                  ),
               ],
             ),
           ],

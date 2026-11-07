@@ -16,7 +16,6 @@ class JourneyInvoicePage extends StatelessWidget {
     required this.onBack,
     required this.reference,
     required this.basePriceLabel,
-    required this.acceptedAdditional,
     required this.totalLabel,
     required this.onConfirmReceipt,
     required this.onPay,
@@ -25,9 +24,8 @@ class JourneyInvoicePage extends StatelessWidget {
 
   final VoidCallback onBack;
   final String? reference;
-  final String basePriceLabel;
-  final bool acceptedAdditional;
-  final String totalLabel;
+  final String? basePriceLabel;
+  final String? totalLabel;
   final VoidCallback onConfirmReceipt;
   final VoidCallback onPay;
   final VoidCallback onProof;
@@ -40,24 +38,25 @@ class JourneyInvoicePage extends StatelessWidget {
       children: [
         JourneyPanel(
           children: [
-            Text(
-              '${AppLocaleKey.orderReference.tr()} • ${reference ?? '—'}',
-              textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
-            ),
+            if (reference != null)
+              Text(
+                '${AppLocaleKey.orderReference.tr()} • $reference',
+                textAlign: TextAlign.start,
+                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+              ),
             Text(
               AppLocaleKey.serviceComplete.tr(),
               textAlign: TextAlign.start,
               style: AppTextStyles.extraBold20.copyWith(color: AppColors.petrol),
             ),
-            JourneyKv(labelKey: AppLocaleKey.basePrice, value: basePriceLabel),
-            if (acceptedAdditional)
+            if (basePriceLabel != null)
               JourneyKv(
-                labelKey: AppLocaleKey.addWork,
-                value: '0 ${AppLocaleKey.currencySar.tr()}',
+                labelKey: AppLocaleKey.basePrice,
+                value: basePriceLabel!,
               ),
             const Divider(),
-            JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel),
+            if (totalLabel != null)
+              JourneyKv(labelKey: AppLocaleKey.total, value: totalLabel!),
             Text(
               AppLocaleKey.warranty.tr(),
               textAlign: TextAlign.start,

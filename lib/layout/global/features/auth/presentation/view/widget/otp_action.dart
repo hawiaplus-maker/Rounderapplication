@@ -54,7 +54,7 @@ class OtpAction extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700, color: AppColors.petrol, height: labelLineHeight / labelSize),
+              style: AppTextStyles.headingH4.copyWith(color: AppColors.petrol, height: labelLineHeight / labelSize),
             ),
     );
   }

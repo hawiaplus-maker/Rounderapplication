@@ -58,19 +58,25 @@ class _HomeDashboardBodyState extends State<HomeDashboardBody> {
     _restorePickedHome();
   }
 
-  /// A pick made in an earlier session stays displayed: the stored unit (if
-  /// it still exists) takes over the selector label; on failure the
-  /// dashboard's own home keeps showing.
+  /// The displayed unit mirrors the linked-homes API like the design: a pick
+  /// made in an earlier session (if it still exists) leads, otherwise the
+  /// resident's primary home fills the selector; on failure the dashboard's
+  /// own home keeps showing.
   Future<void> _restorePickedHome() async {
     final int? stored = sl<SelectedHomeStore>().readId();
-    if (stored == null) return;
     try {
       final List<ResidentHome> homes = await sl<HomesRepository>().list();
-      final List<ResidentHome> matches = homes
-          .where((ResidentHome h) => h.id == stored)
-          .toList();
-      if (matches.isEmpty || !mounted) return;
-      setState(() => _pickedHome = matches.first);
+      if (!mounted || homes.isEmpty) return;
+      final List<ResidentHome> matches = stored == null
+          ? const <ResidentHome>[]
+          : homes.where((ResidentHome h) => h.id == stored).toList();
+      final ResidentHome displayed = matches.isEmpty
+          ? homes.firstWhere(
+              (ResidentHome h) => h.isPrimary,
+              orElse: () => homes.first,
+            )
+          : matches.first;
+      setState(() => _pickedHome = displayed);
     } catch (_) {
       /* keep the dashboard's own home on display */
     }
@@ -239,13 +245,15 @@ HomeUnit _unit(
           pickedHome.unitLabel.trim().isNotEmpty
       ? pickedHome.unitLabel
       : data.unitLabel.trim();
-  final String code =
-      '${AppLocaleKey.homeUnitWord.tr()} '
-      '${rawUnit.isEmpty ? DisplayPlaceholder.text : _formatUnitLabel(context, rawUnit)}';
+  final String code = rawUnit.isEmpty
+      ? ''
+      : '${AppLocaleKey.homeUnitWord.tr()} '
+          '${_formatUnitLabel(context, rawUnit)}';
   return HomeUnit(name: name, code: code);
 }
 
 HomeBalance _balance(BuildContext context, ResidentDashboard data) {
+  final double? balance = data.associationBalance;
   final double? periodStart = data.periodStartBalance;
   final String period = periodStart == null || periodStart <= 0
       ? ''
@@ -254,19 +262,19 @@ HomeBalance _balance(BuildContext context, ResidentDashboard data) {
             '${AppLocaleKey.currencySar.tr()}';
   return HomeBalance(
     title: AppLocaleKey.associationBalance.tr(),
-    amount: _formatNumber(context, data.associationBalance),
-    currency: AppLocaleKey.homeBalanceRemaining.tr(),
+    amount: balance == null ? '' : _formatNumber(context, balance),
+    currency: balance == null ? '' : AppLocaleKey.homeBalanceRemaining.tr(),
     period: period,
     actionLabel: AppLocaleKey.homeMore.tr(),
   );
 }
 
 HomeHealth _health(BuildContext context, ResidentDashboard data) {
-  final int percent = data.propertyHealthPercent.clamp(0, 100).toInt();
+  final int? percent = data.propertyHealthPercent?.clamp(0, 100).toInt();
   return HomeHealth(
     title: AppLocaleKey.homeHealthTitle.tr(),
     percent: percent,
-    score: _formatPercent(context, percent),
+    score: percent == null ? '' : _formatPercent(context, percent),
     caption: AppLocaleKey.homeHealthCaption.tr(),
     metrics: <HomeHealthMetric>[
       HomeHealthMetric(
@@ -305,8 +313,8 @@ HomeNextService _nextService(BuildContext context, ResidentDashboard data) {
     title: AppLocaleKey.upcomingService.tr(),
     badge: DisplayPlaceholder.text,
     remainingLabel: AppLocaleKey.homeRemaining.tr(),
-    countdown: _formatCountdown(context),
-    countdownUnit: AppLocaleKey.homeCountdownUnit.tr(),
+    countdown: '',
+    countdownUnit: '',
     service: _textOrPlaceholder(item?.title),
     serviceIcon: AppImages.homeSpray,
     time: _textOrPlaceholder(item?.subtitle),
@@ -317,12 +325,6 @@ String _textOrPlaceholder(String? value) =>
     value == null || value.trim().isEmpty
     ? DisplayPlaceholder.text
     : value.trim();
-
-/// Empty countdown, written with the app's digits: `٠٠:٠٠` / `00:00`.
-String _formatCountdown(BuildContext context) {
-  final String zero = _formatNumber(context, DisplayPlaceholder.number);
-  return '$zero$zero:$zero$zero';
-}
 
 /// Home numbers follow the app language: Arabic-Indic digits with the Arabic
 /// separators in Arabic, Latin digits and commas in English/Urdu.

@@ -52,6 +52,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 onInvoice: _openInvoice,
                 onWarranty: _openWarranty,
                 onCancel: _confirmCancel,
+                onRate: _openRating,
               ),
       ),
     ),
@@ -92,6 +93,22 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       MaterialPageRoute<void>(
         builder: (_) =>
             const Scaffold(body: SafeArea(child: AftercareFlowScreen())),
+      ),
+    );
+  }
+
+  void _openRating() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          body: SafeArea(
+            child: ServiceJourneyScreen(
+              startOnRating: true,
+              bookingId: widget.data.bookingId,
+              order: widget.data.preview,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -77,7 +77,7 @@ class _PhoneChangePanelState extends State<PhoneChangePanel> {
                       children: [
                         Text(
                           AppLocaleKey.currentPhoneUnchanged.tr(),
-                          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold, color: AppColors.white),
+                          style: AppTextStyles.headingH4.copyWith(color: AppColors.white),
                         ),
                         Text(
                           AppLocaleKey.phoneSaveHint.tr(),

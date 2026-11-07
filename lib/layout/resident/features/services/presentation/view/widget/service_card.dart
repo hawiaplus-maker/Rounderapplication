@@ -60,14 +60,16 @@ class ServiceCard extends StatelessWidget {
       ),
       title: Text(
         service.name,
-        style: AppTextStyles.bodyBold15.copyWith(fontWeight: FontWeight.w700),
+        style: AppTextStyles.bodyBold15,
       ),
       subtitle: Text(
-        '${service.categoryName}\n'
-        '${service.price.toStringAsFixed(0)} '
-        '${AppLocaleKey.currencyEgp.tr()}',
+        service.price == null
+            ? service.categoryName
+            : '${service.categoryName}\n'
+                  '${service.price!.toStringAsFixed(0)} '
+                  '${AppLocaleKey.currencyEgp.tr()}',
       ),
-      isThreeLine: true,
+      isThreeLine: service.price != null,
       trailing: IconButton(
         onPressed: () => book(context),
         icon: const Icon(Icons.add_circle_outline, color: AppColors.orange),

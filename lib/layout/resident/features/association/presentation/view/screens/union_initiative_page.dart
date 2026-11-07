@@ -59,7 +59,7 @@ class UnionInitiativePage extends StatelessWidget {
             Text(
               AppLocaleKey.initiatives.tr(),
               textAlign: TextAlign.start,
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.petrol),
+              style: AppTextStyles.extraBold16.copyWith(color: AppColors.petrol),
             ),
             UnionLine(
               titleKey: AppLocaleKey.cleaning,

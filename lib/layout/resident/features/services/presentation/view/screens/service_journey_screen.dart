@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rounder_application/core/constants/display_placeholder.dart';
 import 'package:rounder_application/core/locale/app_locale.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
@@ -50,11 +49,17 @@ class ServiceJourneyScreen extends StatefulWidget {
     super.key,
     this.startOnTracking = false,
     this.startOnInvoice = false,
+    this.startOnRating = false,
     this.order,
+    this.bookingId,
   });
 
-  final bool startOnTracking, startOnInvoice;
+  final bool startOnTracking, startOnInvoice, startOnRating;
   final PreviewOrder? order;
+
+  /// Backend booking id the rating step targets when it opens from the order
+  /// details of a completed real booking (`null` keeps prototype mode).
+  final int? bookingId;
 
   @override
   State<ServiceJourneyScreen> createState() => _ServiceJourneyScreenState();
@@ -85,6 +90,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       ? _Journey.invoice
       : widget.startOnTracking
       ? _Journey.tracking
+      : widget.startOnRating
+      ? _Journey.rating
       : _Journey.hub;
   late _Journey previous = _Journey.hub;
   String service = AppLocaleKey.plumbing, issueType = AppLocaleKey.notSure;
@@ -94,7 +101,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
   int? selectedProviderId;
   int? selectedPriceId;
   String selectedProvider = AppLocaleKey.providerOne,
-      location = AppLocaleKey.myUnit;  double basePrice = 0;
+      location = AppLocaleKey.myUnit;
+  double? basePrice;
   List<ResidentHome> homes = const [];
   int? selectedHomeId;
   bool homesLoading = true;
@@ -120,14 +128,18 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       : DateFormat.yMMMd(context.locale.toString()).format(selectedDate!);
   String get _timeLabel =>
       selectedTime?.format(context) ?? AppLocaleKey.pickTime.tr();
-  String get _amountLabel =>
-      (basePrice + (acceptedAdditional ? DisplayPlaceholder.number : 0))
-          .toStringAsFixed(2);
-  String? get _referenceLabel =>
-      orderReference == null ? null : DisplayPlaceholder.text;
+  /// The review/invoice amount; null (hidden) while no provider price exists.
+  String? get _basePriceLabel => basePrice == null
+      ? null
+      : '${basePrice!.toStringAsFixed(2)} ${AppLocaleKey.currencySar.tr()}';
+
+  /// Hidden while no reference exists — placeholders are never painted.
+  String? get _referenceLabel {
+    final String reference = orderReference?.trim() ?? '';
+    return reference.isEmpty ? null : reference;
+  }
 
   int mode = 0, stage = 0, stars = 0;
-  bool acceptedAdditional = false;
 
   /// Picked quick-feedback keys of the rating step.
   List<String> selectedRatingTags = [];
@@ -321,6 +333,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       issue.text = order.notes;
       if (order.statusKey == AppLocaleKey.serviceComplete) stage = 3;
     }
+    // A rating opened from a completed real booking's details targets that
+    // booking on send (`/resident/bookings/{id}/rating`); previews keep the
+    // prototype mode.
+    bookedBookingId ??= widget.bookingId;
     // Unit labels are localized: refetch them when the resident switches
     // language while this tab stays alive.
     _localeSubscription = appLocaleChanges.listen((_) => _loadHomes());
@@ -369,8 +385,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       sl<PreviewOrdersCubit>().update(
         orderReference!,
         AppLocaleKey.serviceComplete,
-        amount:
-            basePrice + (acceptedAdditional ? DisplayPlaceholder.number : 0),
+        amount: basePrice,
       );
     }
   }
@@ -383,18 +398,18 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       selectedService = item;
       selectedPriceId = null;
       orderReference = null;
-      acceptedAdditional = false;
       // A fresh order has nothing to rate yet: the previous booking's id and
       // its quick-feedback picks do not carry over.
       bookedBookingId = null;
       selectedRatingTags = [];
-      // Inline snapshot already includes the truncated first pages; further
-      // pages continue after the loaded count.
+      // The inline snapshot is the first slice of the service's sub-services:
+      // the catalog's own `has_more` decides whether more exist, and the
+      // fetch continues at page 1 — the id dedupe keeps the inline overlap
+      // out, so the endpoint's first page is not skipped.
       _subServices = List.of(subs);
-      _subServicesPage =
-          (subs.length / ServicesRepository.subServicesPerPage).ceil();
+      _subServicesPage = 0;
       _subServicesHasMore =
-          subs.length >= ServicesRepository.subServicesLimit;
+          item.hasMore ?? subs.length >= ServicesRepository.subServicesLimit;
     });
     go(_Journey.detail);
   }
@@ -425,7 +440,7 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     }
   }
 
-  void _selectProvider(int id, String nameKey, double price, int? priceId) {
+  void _selectProvider(int id, String nameKey, double? price, int? priceId) {
     setState(() {
       selectedProvider = nameKey;
       selectedProviderId = id;
@@ -601,9 +616,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           providerKey: selectedProvider,
           dateTimeLabel: '$_dateLabel • $_timeLabel',
           locationLabel: location.tr(),
-          basePriceLabel:
-              '${basePrice.toStringAsFixed(2)} ${AppLocaleKey.currencySar.tr()}',
-          totalLabel: '$_amountLabel ${AppLocaleKey.currencySar.tr()}',
+          basePriceLabel: _basePriceLabel,
+          totalLabel: _basePriceLabel,
           onSummary: () =>
               showJourneyPicker(context, AppLocaleKey.serviceSummary),
           onSubmit: () => _submitPreview(),
@@ -629,14 +643,8 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         _Journey.additional => JourneyAdditionalPage(
           onBack: back,
           notes: notes,
-          onApprove: () {
-            setState(() => acceptedAdditional = true);
-            back();
-          },
-          onDecline: () {
-            setState(() => acceptedAdditional = false);
-            back();
-          },
+          onApprove: back,
+          onDecline: back,
         ),
         _Journey.files => JourneyFilesPage(
           onBack: back,
@@ -648,17 +656,15 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
         _Journey.invoice => JourneyInvoicePage(
           onBack: back,
           reference: _referenceLabel,
-          basePriceLabel:
-              '${basePrice.toStringAsFixed(2)} ${AppLocaleKey.currencySar.tr()}',
-          acceptedAdditional: acceptedAdditional,
-          totalLabel: '$_amountLabel ${AppLocaleKey.currencySar.tr()}',
+          basePriceLabel: _basePriceLabel,
+          totalLabel: _basePriceLabel,
           onConfirmReceipt: () => go(_Journey.rating),
           onPay: () => go(_Journey.payment),
           onProof: () => go(_Journey.files),
         ),
         _Journey.payment => JourneyPaymentPage(
           onBack: back,
-          totalLabel: '$_amountLabel ${AppLocaleKey.currencySar.tr()}',
+          totalLabel: _basePriceLabel,
           onComplete: () => setState(() => page = _Journey.rating),
           onNext: () => go(_Journey.rating),
         ),
@@ -679,10 +685,19 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
           onBack: back,
           onFollowUp: () => go(_Journey.followup),
           // Order complete and block closed: pick the next service from a
-          // clean flow — no problem text or notes from this order remain.
+          // clean flow — no problem text or notes of a finished order remain.
           onHome: () {
             _returnToServices();
             _clearJourneyTextFields();
+            // Reached through a completed booking's details: the flow is
+            // done — land back on the orders list the details were opened
+            // from, refetching bookings so the list shows the rated state.
+            if (widget.startOnRating) {
+              sl<BookingsCubit>().load();
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+            }
           },
         ),
         _Journey.followup => JourneyFollowupPage(

@@ -13,12 +13,26 @@ class ResidentHome {
     this.area,
     this.isPrimary = false,
     this.isOwner = true,
+    this.residenceType,
+    this.residenceTypeLabel,
+    this.floorNumber,
+    this.ownershipType,
+    this.ownershipTypeLabel,
+    this.propertyCode,
   });
 
   final int? id;
   final String name, unitLabel, city, address, district;
   final double? area;
   final bool isPrimary, isOwner;
+
+  /// The flat payload's unit extras of `/resident/homes`: the residence shape
+  /// and ownership as code + localized label, the floor and the linked
+  /// property code (`HOM-…`).
+  final String? residenceType, residenceTypeLabel;
+  final int? floorNumber;
+  final String? ownershipType, ownershipTypeLabel;
+  final String? propertyCode;
 
   bool get hasArea => area != null && area! > 0;
 
@@ -29,10 +43,18 @@ class ResidentHome {
     final Object? role = j['role'] ?? j['ownership_type'] ?? j['ownership'];
     final bool? explicitOwner = _bool(j['is_owner'] ?? source['is_owner']);
     return ResidentHome(
-      id: int.tryParse('${j['id'] ?? j['home_id'] ?? source['id'] ?? ''}'),
+      id: int.tryParse(
+        '${j['id'] ?? j['home_id'] ?? j['property_id'] ?? j['resident_home_id'] ?? source['id'] ?? ''}',
+      ),
       name:
-          _text(j, const ['name', 'home_name', 'property_name', 'title']) ??
-          _text(source, const ['name', 'property_name', 'title']) ??
+          _text(j, const [
+            'custom_name',
+            'name',
+            'home_name',
+            'property_name',
+            'title',
+          ]) ??
+          _text(source, const ['custom_name', 'name', 'property_name', 'title']) ??
           '',
       unitLabel:
           _text(j, const [
@@ -59,11 +81,21 @@ class ResidentHome {
            '',
       area: _number(
         j['area'] ??
+            j['area_sqm'] ??
             j['area_m2'] ??
             j['space'] ??
             source['area'] ??
+            source['area_sqm'] ??
             source['area_m2'],
       ),
+      residenceType: _text(j, const ['residence_type']),
+      residenceTypeLabel: _text(j, const ['residence_type_label']),
+      floorNumber: int.tryParse(
+        '${j['floor_number'] ?? unit['floor_number'] ?? unit['floor'] ?? ''}',
+      ),
+      ownershipType: _text(j, const ['ownership_type']),
+      ownershipTypeLabel: _text(j, const ['ownership_type_label']),
+      propertyCode: _text(j, const ['property_code']),
       isPrimary:
           _bool(j['is_primary'] ?? j['primary'] ?? j['is_current']) ?? false,
       isOwner: explicitOwner ?? _ownerFromRole(role?.toString()),
