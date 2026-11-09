@@ -30,12 +30,17 @@ import 'package:rounder_application/core/services/services_locator.dart';
 class HomeDashboardBody extends StatefulWidget {
   const HomeDashboardBody({
     super.key,
+    this.isGuest = false,
     required this.onTalkToAli,
     required this.onMoreBalance,
     required this.onVisitDetails,
     required this.onEmergency,
     required this.onViewAssessment,
   });
+
+  /// Guest preview: the dashboard is already backed by empty data and the
+  /// signed-in home/unit endpoints must not be called.
+  final bool isGuest;
 
   final VoidCallback onTalkToAli;
   final VoidCallback onMoreBalance;
@@ -55,7 +60,7 @@ class _HomeDashboardBodyState extends State<HomeDashboardBody> {
   @override
   void initState() {
     super.initState();
-    _restorePickedHome();
+    if (!widget.isGuest) _restorePickedHome();
   }
 
   /// The displayed unit mirrors the linked-homes API like the design: a pick
@@ -89,6 +94,12 @@ class _HomeDashboardBodyState extends State<HomeDashboardBody> {
   /// newly added unit becomes the local pick, mirroring the booking
   /// journey's behavior.
   Future<void> _pickUnit() async {
+    if (widget.isGuest) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocaleKey.loginRequired.tr())),
+      );
+      return;
+    }
     List<ResidentHome> homes;
     try {
       homes = await sl<HomesRepository>().list();

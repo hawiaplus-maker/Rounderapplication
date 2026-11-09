@@ -7,7 +7,9 @@ import 'package:rounder_application/core/images/app_images.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/phone_change_cubit.dart';
+import 'package:rounder_application/logic/phone_number_logic.dart';
 
 /// Figma 636:1160 and 636:1205. Verification updates the edit draft only.
 class PhoneChangePanel extends StatefulWidget {
@@ -29,7 +31,7 @@ class _PhoneChangePanelState extends State<PhoneChangePanel> {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => PhoneChangeCubit(),
+    create: (_) => sl<PhoneChangeCubit>(),
     child: BlocConsumer<PhoneChangeCubit, PhoneChangeState>(
       listener: (_, state) {
         if (state.step == PhoneChangeStep.verified) {
@@ -115,21 +117,24 @@ class _PhoneChangePanelState extends State<PhoneChangePanel> {
                         : TextInputType.phone,
                     textDirection: TextDirection.ltr,
                     textAlign: verifying ? TextAlign.center : TextAlign.start,
-                    maxLength: verifying ? 6 : 20,
+                    maxLength: verifying ? 6 : 10,
                     inputFormatters: verifying
                         ? [
                             FilteringTextInputFormatter.allow(
                               RegExp(r'[0-9٠-٩۰-۹]'),
                             ),
                           ]
-                        : null,
+                        : [SaudiLocalMobileFormatter()],
                     autofillHints: verifying
                         ? const [AutofillHints.oneTimeCode]
                         : const [AutofillHints.telephoneNumber],
+                    onChanged: (_) => cubit.clearError(),
                     decoration: InputDecoration(
                       counterText: '',
                       errorText: state.errorKey?.tr(),
-                      hintText: verifying ? '— — — — — —' : '+966',
+                      hintText: verifying
+                          ? '— — — — — —'
+                          : AppLocaleKey.phonePlaceholder.tr(),
                       filled: true,
                       fillColor: AppColors.mint,
                       border: OutlineInputBorder(
@@ -147,34 +152,34 @@ class _PhoneChangePanelState extends State<PhoneChangePanel> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    onPressed: () => verifying
-                        ? cubit.verify(_code.text)
-                        : cubit.send(_phone.text),
-                    child: Text(
-                      (verifying
-                              ? AppLocaleKey.verifyPhone
-                              : AppLocaleKey.sendCode)
-                          .tr(),
-                    ),
+                    onPressed: state.loading
+                        ? null
+                        : () => verifying
+                            ? cubit.verify(_code.text)
+                            : cubit.send(_phone.text),
+                    child: state.loading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            (verifying
+                                    ? AppLocaleKey.verifyPhone
+                                    : AppLocaleKey.sendCode)
+                                .tr(),
+                          ),
                   ),
                   if (verifying) ...[
                     const SizedBox(height: 16),
                     FilledButton.tonal(
-                      onPressed: state.remaining == 0
-                          ? () {
+                      onPressed: state.loading
+                          ? null
+                          : () {
                               _code.clear();
                               cubit.resend();
-                            }
-                          : null,
-                      child: Text(
-                        state.remaining == 0
-                            ? AppLocaleKey.resendCode.tr()
-                            : AppLocaleKey.resendAfter.tr(
-                                namedArgs: {
-                                  'seconds': state.remaining.toString(),
-                                },
-                              ),
-                      ),
+                            },
+                      child: Text(AppLocaleKey.resendCode.tr()),
                     ),
                   ],
                 ],

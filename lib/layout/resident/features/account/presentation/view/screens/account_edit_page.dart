@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_input.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 
 /// Edit profile page: photo, name, phone, email and save action.
 class AccountEditPage extends StatelessWidget {
@@ -42,27 +42,27 @@ class AccountEditPage extends StatelessWidget {
       titleKey: AppLocaleKey.editProfile,
       onBack: onBack,
       children: [
-        const SizedBox(height: 12),
-        Center(
-          child: Column(
-            children: [
-              const CircleAvatar(
-                radius: 39,
-                backgroundColor: AppColors.mint,
-                child: Icon(
-                  Icons.person_outline,
-                  color: AppColors.petrol,
-                  size: 36,
-                ),
-              ),
-              TextButton.icon(
-                onPressed: onChangePhoto,
-                icon: const Icon(Icons.photo_camera_outlined),
-                label: Text(AppLocaleKey.changePhoto.tr()),
-              ),
-            ],
-          ),
-        ),
+        const SizedBox(height: 120),
+        // Center(
+        //   child: Column(
+        //     children: [
+        //       const CircleAvatar(
+        //         radius: 39,
+        //         backgroundColor: AppColors.mint,
+        //         child: Icon(
+        //           Icons.person_outline,
+        //           color: AppColors.petrol,
+        //           size: 36,
+        //         ),
+        //       ),
+        //       TextButton.icon(
+        //         onPressed: onChangePhoto,
+        //         icon: const Icon(Icons.photo_camera_outlined),
+        //         label: Text(AppLocaleKey.changePhoto.tr()),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         AccountPanel(
           children: [
             AccountInput(
@@ -75,10 +75,7 @@ class AccountEditPage extends StatelessWidget {
               tileColor: AppColors.white,
               contentPadding: EdgeInsets.zero,
               title: Text(AppLocaleKey.phoneNumber.tr()),
-              subtitle: Text(
-                phoneController.text,
-                textDirection: TextDirection.ltr,
-              ),
+              subtitle: Text(phoneController.text, textDirection: TextDirection.ltr),
               trailing: TextButton(
                 onPressed: onChangePhone,
                 child: Text(AppLocaleKey.changePhone.tr()),
@@ -120,10 +117,7 @@ class AccountEditPage extends StatelessWidget {
                 ? const SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.2,
-                      color: AppColors.white,
-                    ),
+                    child: CircularProgressIndicator(strokeWidth: 2.2, color: AppColors.white),
                   )
                 : Text(AppLocaleKey.saveChanges.tr()),
           ),

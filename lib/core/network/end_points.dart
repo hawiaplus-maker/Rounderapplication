@@ -4,6 +4,7 @@ class EndPoints {
   static const String register = '$baseUrl/api/v1/auth/register';
   static const String sendOtp = '$baseUrl/api/v1/auth/send-otp';
   static const String verifyOtp = '$baseUrl/api/v1/auth/verify-otp';
+  static const String social = '$baseUrl/api/v1/auth/social';
   static const String login = '$baseUrl/api/v1/auth/login';
   static const String me = '$baseUrl/api/v1/me';
   static const String logout = '$baseUrl/api/v1/auth/logout';
@@ -60,6 +61,15 @@ class EndPoints {
   static const String emergencyRequests =
       '$baseUrl/api/v1/resident/emergency-requests';
 
+  /// Resident support channels (`GET`): phone, e-mail and working hours the
+  /// contact page renders.
+  static const String supportInfo = '$baseUrl/api/v1/resident/support/info';
+
+  /// Support tickets: `POST` creates one (category, subject, message and an
+  /// optional attachment).
+  static const String supportTickets =
+      '$baseUrl/api/v1/resident/support/tickets';
+
   /// Bookings: `GET` lists them, `POST` creates one (multipart: home_id,
   /// service_id, sub_service_id, service_provider_id, price_id, scheduled_at,
   /// notes, images[]).
@@ -70,6 +80,13 @@ class EndPoints {
 
   /// Rate a completed booking (POST) with `{rating, comment, tags}`.
   static String bookingRating(int id) => '$bookings/$id/rating';
+
+  /// Resident mobile change: `PUT {mobile, otp}` verifies and persists.
+  static const String changeMobile = '$baseUrl/api/v1/resident/mobile';
+
+  /// Public legal documents served by the backend (`GET`, no auth).
+  static const String privacy = '$baseUrl/api/v1/privacy';
+  static const String terms = '$baseUrl/api/v1/terms';
 
   /// Third-party Open-Meteo current weather (external, key-less): `latitude`,
   /// `longitude`, `current` and `timezone` query parameters.

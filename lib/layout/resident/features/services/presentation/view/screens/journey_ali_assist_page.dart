@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_header.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/ali_assist_hero.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/ali_assist_panel.dart';
+import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_header.dart';
 import 'package:rounder_application/layout/resident/features/services/presentation/view/widget/journey_next_button.dart';
 
 /// Ali assisted-booking step (Figma 382:448 "علي يساعدك"): the listening
@@ -45,7 +44,7 @@ class JourneyAliAssistPage extends StatelessWidget {
         JourneyHeader(titleKey: AppLocaleKey.aliAtYourCommand, onBack: onBack),
         const SizedBox(height: 12),
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(20, 8, 20, 8),
+          padding: EdgeInsetsDirectional.fromSTEB(20, 8, 20, 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -60,10 +59,8 @@ class JourneyAliAssistPage extends StatelessWidget {
                 onPrototypeAction: onPrototypeAction,
               ),
               const SizedBox(height: 12),
-              JourneyNextButton(
-                labelKey: AppLocaleKey.prepareSummary,
-                onPressed: onPrepareSummary,
-              ),
+              JourneyNextButton(labelKey: AppLocaleKey.prepareSummary, onPressed: onPrepareSummary),
+              SizedBox(height: MediaQuery.of(context).padding.bottom + 90),
             ],
           ),
         ),

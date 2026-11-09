@@ -47,12 +47,17 @@ import 'package:rounder_application/layout/resident/features/services/presentati
 class ServiceJourneyScreen extends StatefulWidget {
   const ServiceJourneyScreen({
     super.key,
+    this.isGuest = false,
     this.startOnTracking = false,
     this.startOnInvoice = false,
     this.startOnRating = false,
     this.order,
     this.bookingId,
   });
+
+  /// Guest mode can browse the catalog but has no linked homes, so the
+  /// signed-in home fetch is skipped and booking asks for sign-in.
+  final bool isGuest;
 
   final bool startOnTracking, startOnInvoice, startOnRating;
   final PreviewOrder? order;
@@ -249,6 +254,10 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
       setState(() => scheduleError = true);
       return;
     }
+    if (widget.isGuest) {
+      _toast(AppLocaleKey.loginRequired.tr());
+      return;
+    }
     if (!homesLoading && selectedHomeId == null) {
       _promptAddHome();
       return;
@@ -339,8 +348,12 @@ class _ServiceJourneyScreenState extends State<ServiceJourneyScreen> {
     bookedBookingId ??= widget.bookingId;
     // Unit labels are localized: refetch them when the resident switches
     // language while this tab stays alive.
-    _localeSubscription = appLocaleChanges.listen((_) => _loadHomes());
-    _loadHomes();
+    if (widget.isGuest) {
+      homesLoading = false;
+    } else {
+      _localeSubscription = appLocaleChanges.listen((_) => _loadHomes());
+      _loadHomes();
+    }
   }
 
   Future<void> _loadHomes({bool force = false}) async {

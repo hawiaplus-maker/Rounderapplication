@@ -1,10 +1,18 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rounder_application/core/constants/auth_config.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
+import 'package:rounder_application/core/network/api_error.dart';
+import 'package:rounder_application/core/services/app_toast.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/layout/global/features/auth/data/model/validate_mobile_model.dart';
+import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/phone_auth_cubit.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/otp_flow_screen.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/register_screen.dart';
@@ -15,9 +23,10 @@ import 'package:rounder_application/layout/global/features/auth/presentation/vie
 import 'package:rounder_application/layout/global/features/auth/presentation/view/widget/login_hero.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/data/repo/resident_repo.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/resident_dashboard_cubit.dart';
-import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screens/resident_home_screen.dart';
 import 'package:rounder_application/layout/resident/features/dashboard/presentation/cubit/weather_cubit.dart';
+import 'package:rounder_application/layout/resident/features/dashboard/presentation/view/screens/resident_home_screen.dart';
 import 'package:rounder_application/logic/phone_number_logic.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 /// Approved login (design `00 — تسجيل الدخول • APPROVED`): brand wordmark,
 /// Ali phone hero, frosted phone-entry form with the alternate social actions
@@ -34,6 +43,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final phone = TextEditingController();
   String? _phoneError;
+  bool _socialInProgress = false;
 
   @override
   void initState() {
@@ -87,27 +97,142 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  static bool _googleInitialized = false;
+
+  Future<void> _signInWithGoogle() async {
+    if (_socialInProgress) return;
+    setState(() => _socialInProgress = true);
+    try {
+      final googleSignIn = GoogleSignIn.instance;
+      if (!_googleInitialized) {
+        // Android requires the *server* (web) client ID to return an
+        // id_token; iOS can rely on GoogleService-Info.plist instead.
+        await googleSignIn.initialize(
+          serverClientId: AuthConfig.googleServerClientId.isEmpty
+              ? null
+              : AuthConfig.googleServerClientId,
+        );
+        _googleInitialized = true;
+      }
+      final account = await googleSignIn.authenticate();
+      final idToken = account.authentication.idToken;
+      debugPrint(
+        '[social] google account=${account.email} '
+        'idToken=${idToken == null ? 'null' : '${idToken.length} chars'}',
+      );
+      if (idToken == null || idToken.isEmpty) {
+        throw Exception('missing id token');
+      }
+      if (!mounted) return;
+      await context.read<AuthCubit>().signInWithSocial(provider: 'google', idToken: idToken);
+      if (!mounted) return;
+      final state = context.read<AuthCubit>().state;
+      debugPrint('[social] backend state=${state.runtimeType}');
+      if (state is AuthFailure) {
+        _showSocialError(_socialFailureMessage(state.messageKey));
+      }
+    } catch (e) {
+      debugPrint('[social] google sign-in failed: $e');
+      if (!mounted) return;
+      _showSocialError(_socialErrorMessage(e));
+    } finally {
+      if (mounted) setState(() => _socialInProgress = false);
+    }
+  }
+
+  Future<void> _signInWithApple() async {
+    if (_socialInProgress) return;
+    setState(() => _socialInProgress = true);
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
+        webAuthenticationOptions: (Platform.isIOS || Platform.isMacOS)
+            ? null
+            : WebAuthenticationOptions(
+                clientId: AuthConfig.appleServiceId,
+                redirectUri: Uri.parse(AuthConfig.appleRedirectUri),
+              ),
+      );
+      final idToken = credential.identityToken;
+      debugPrint(
+        '[social] apple idToken='
+        '${idToken == null ? 'null' : '${idToken.length} chars'}',
+      );
+      if (idToken == null || idToken.isEmpty) {
+        throw Exception('missing id token');
+      }
+      if (!mounted) return;
+      await context.read<AuthCubit>().signInWithSocial(provider: 'apple', idToken: idToken);
+      if (!mounted) return;
+      final state = context.read<AuthCubit>().state;
+      debugPrint('[social] backend state=${state.runtimeType}');
+      if (state is AuthFailure) {
+        _showSocialError(_socialFailureMessage(state.messageKey));
+      }
+    } catch (e) {
+      debugPrint('[social] apple sign-in failed: $e');
+      if (!mounted) return;
+      _showSocialError(_socialErrorMessage(e));
+    } finally {
+      if (mounted) setState(() => _socialInProgress = false);
+    }
+  }
+
+  /// Surfaces a social sign-in failure in the form *and* as a toast, so it is
+  /// visible even when the phone form scrolled out of view.
+  void _showSocialError(String? message) {
+    if (message == null || message.isEmpty) return;
+    setState(() => _phoneError = message);
+    showApiToast(message);
+  }
+
+  String _socialFailureMessage(String key) {
+    switch (key) {
+      case 'connection_error':
+        return AppLocaleKey.connectionError.tr();
+      case 'check_fields':
+        return AppLocaleKey.checkFields.tr();
+      case 'social_unavailable':
+        return AppLocaleKey.socialUnavailable.tr();
+      default:
+        return AppLocaleKey.authFailed.tr();
+    }
+  }
+
+  String? _socialErrorMessage(Object e) {
+    if (e is GoogleSignInException) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        // Genuine user dismissal stays silent — but during development the
+        // distinction between "user closed it" and "Google refused and
+        // reported a cancellation" matters, so make it visible in debug.
+        if (kDebugMode) return 'Google sign-in canceled (debug: ${e.code.name})';
+        return null;
+      }
+      if (e.code == GoogleSignInExceptionCode.clientConfigurationError ||
+          e.code == GoogleSignInExceptionCode.providerConfigurationError) {
+        return AppLocaleKey.socialUnavailable.tr();
+      }
+      return e.description ?? AppLocaleKey.authFailed.tr();
+    }
+    if (e is SignInWithAppleAuthorizationException) {
+      if (e.code == AuthorizationErrorCode.canceled) return null;
+      return e.toString();
+    }
+    if (e is SignInWithAppleException) return null;
+    if (isConnectionFailure(e)) return AppLocaleKey.connectionError.tr();
+    return e.toString();
+  }
+
   void _push(Widget screen) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
-
-  /// The OTP result page's "متابعة" leads to the design's الرئيسية destination
-  /// (the prototype preview home).
-  void _continueToPreviewHome() {
-    Navigator.of(context).pop();
-    _browseAsGuest();
-  }
 
   void _browseAsGuest() => _push(
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>()),
-        ),
-         BlocProvider<WeatherCubit>.value(
-           value: sl<WeatherCubit>()..ensureLoaded(),
-        ),
+        BlocProvider(create: (_) => ResidentDashboardCubit.preview(sl<ResidentRepository>())),
+        BlocProvider<WeatherCubit>.value(value: sl<WeatherCubit>()..ensureLoaded()),
       ],
-      child: const ResidentHomeScreen(),
+      child: const ResidentHomeScreen(isGuest: true),
     ),
   );
 
@@ -152,26 +277,21 @@ class _LoginScreenState extends State<LoginScreen> {
                               phoneError: _phoneError,
                               inProgress: journeyState is PhoneAuthInProgress,
                               onContinue: _continueWithPhone,
-                              onGoogle: () => _push(
-                                BlocProvider(
-                                  create: (_) => sl<PhoneAuthCubit>(),
-                                  child: OtpFlowScreen(
-                                    startAtResult: true,
-                                    onContinue: _continueToPreviewHome,
-                                  ),
-                                ),
-                              ),
-                              onApple: () => _push(
-                                BlocProvider(
-                                  create: (_) => sl<PhoneAuthCubit>(),
-                                  child: OtpFlowScreen(
-                                    startAtResult: true,
-                                    onContinue: _continueToPreviewHome,
-                                  ),
+                              onGoogle: _socialInProgress ? () {} : _signInWithGoogle,
+                              onApple: _socialInProgress ? () {} : _signInWithApple,
+                            ),
+                          ),
+                          if (_socialInProgress)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
                                 ),
                               ),
                             ),
-                          ),
                           const SizedBox(height: 12),
                           LoginGuestAction(onTap: _browseAsGuest),
                         ],

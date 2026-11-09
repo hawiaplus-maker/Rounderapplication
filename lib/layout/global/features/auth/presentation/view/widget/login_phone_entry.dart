@@ -2,7 +2,6 @@ import 'dart:ui' as ui_direction show TextDirection;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/theme/app_text_styles.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
@@ -121,7 +120,7 @@ class _NumberField extends StatelessWidget {
     keyboardType: TextInputType.phone,
     textInputAction: TextInputAction.done,
     onSubmitted: (_) => onSubmitted(),
-    inputFormatters: [_SaudiLocalMobileFormatter()],
+    inputFormatters: [SaudiLocalMobileFormatter()],
     textDirection: ui_direction.TextDirection.ltr,
     textAlign: TextAlign.center,
     style: AppTextStyles.bodyMedium.copyWith(color: AppColors.petrol),
@@ -133,26 +132,4 @@ class _NumberField extends StatelessWidget {
       hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.ink.withValues(alpha: .6)),
     ),
   );
-}
-
-/// Digits-only entry that grows exactly like the journey's helper: the two
-/// accepted Saudi local shapes are the only text this field can hold —
-/// `0…` reaches 10 digits, `5…` stops at 9 and any other leading digit is
-/// rejected at the keystroke, so `0512345670` and `512345670` stay typeable
-/// as the same number from entry to submit.
-class _SaudiLocalMobileFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final digits = digitsOnly(newValue.text);
-    if (!saudiLocalMobileAllows(digits)) return oldValue;
-    return digits == newValue.text
-        ? newValue
-        : TextEditingValue(
-            text: digits,
-            selection: TextSelection.collapsed(offset: digits.length),
-          );
-  }
 }

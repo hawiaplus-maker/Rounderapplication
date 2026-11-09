@@ -3,6 +3,8 @@
 /// No widgets, no locale, no side effects — input in, stable output out.
 library;
 
+import 'package:flutter/services.dart';
+
 /// The local `05…` mobile form the backend expects (its `data.mobile`):
 ///
 /// - `0512345678` (10 digits starting `0`) passes through as-is,
@@ -28,13 +30,35 @@ bool saudiLocalMobileAllows(String digits) {
   return false;
 }
 
+/// Keeps a phone entry inside the accepted Saudi local shapes as the user
+/// types: digits only (Arabic-Indic shapes converted), `0…` up to 10 digits,
+/// `5…` up to 9, and any other leading digit rejected at the keystroke. The
+/// shared entry adapter of the phone forms, so their fields accept exactly
+/// what [normalizeSaudiLocalMobile] accepts.
+class SaudiLocalMobileFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digits = digitsOnly(newValue.text);
+    if (!saudiLocalMobileAllows(digits)) return oldValue;
+    return digits == newValue.text
+        ? newValue
+        : TextEditingValue(
+            text: digits,
+            selection: TextSelection.collapsed(offset: digits.length),
+          );
+  }
+}
+
 /// Western decimal digits only, converting the Arabic-Indic and Eastern
 /// Arabic-Indic shapes the device keyboards emit.
 String digitsOnly(String value) =>
     _westernDigits(value).replaceAll(RegExp(r'\D'), '');
 
-/// Normalizes the international phone entry the phone-change sheet accepts:
-/// Western digits, no spaces, parentheses or dashes; a leading `+` survives.
+/// Normalizes a phone-shaped value: Western digits, no spaces, parentheses or
+/// dashes; a leading `+` survives.
 String normalizePhoneDigits(String value) =>
     _westernDigits(value).replaceAll(RegExp(r'[\s()-]'), '');
 

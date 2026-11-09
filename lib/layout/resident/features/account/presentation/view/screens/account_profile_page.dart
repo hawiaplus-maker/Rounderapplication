@@ -5,7 +5,6 @@ import 'package:rounder_application/layout/global/widgets/state_panel.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/profile_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_header.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_logout_button.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/profile_entry_card.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/profile_identity_section.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/profile_menu_section.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/profile_units_section.dart';
@@ -81,12 +80,12 @@ class AccountProfilePage extends StatelessWidget {
                     );
                   },
                 ),
-                ProfileEntryCard(
-                  titleKey: AppLocaleKey.gifts,
-                  subtitleKey: AppLocaleKey.discoverGifts,
-                  icon: Icons.card_giftcard_outlined,
-                  onTap: onGifts,
-                ),
+                // ProfileEntryCard(
+                //   titleKey: AppLocaleKey.gifts,
+                //   subtitleKey: AppLocaleKey.discoverGifts,
+                //   icon: Icons.card_giftcard_outlined,
+                //   onTap: onGifts,
+                // ),
                 ProfileMenuSection(
                   onSettings: onSettings,
                   onNotifications: onNotifications,

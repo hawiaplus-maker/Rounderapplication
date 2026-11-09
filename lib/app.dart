@@ -7,6 +7,7 @@ import 'package:rounder_application/core/locale/app_locale.dart';
 import 'package:rounder_application/core/services/app_toast.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/core/widgets/update_checker.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/phone_auth_cubit.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/view/screens/login_screen.dart';
@@ -43,7 +44,7 @@ class _RounderAppState extends State<RounderApp> {
     locale: context.locale,
     supportedLocales: context.supportedLocales,
     localizationsDelegates: context.localizationDelegates,
-    home: const _BootGate(),
+    home: const UpdateChecker(child: _BootGate()),
   );
 }
 

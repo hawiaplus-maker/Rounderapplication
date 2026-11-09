@@ -42,6 +42,17 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signIn(String email, String password) async =>
       _run(() => repo.signIn(email.trim(), password));
+
+  /// Social sign-in: exchanges a provider id_token for a session. A 503 here
+  /// means the backend has no provider credentials configured — surface it as
+  /// "method unavailable" instead of a rejected-credentials message.
+  Future<void> signInWithSocial({
+    required String provider,
+    required String idToken,
+  }) async => _run(
+    () => repo.socialLogin(provider: provider, idToken: idToken),
+    serviceUnavailableKey: 'social_unavailable',
+  );
   Future<void> register({
     required String name,
     required String email,
@@ -57,7 +68,10 @@ class AuthCubit extends Cubit<AuthState> {
       locale: locale,
     ),
   );
-  Future<void> _run(Future<void> Function() action) async {
+  Future<void> _run(
+    Future<void> Function() action, {
+    String? serviceUnavailableKey,
+  }) async {
     emit(AuthChecking());
     try {
       await action();
@@ -67,6 +81,10 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthFailure('check_fields'));
       } else if (isConnectionFailure(e)) {
         emit(AuthFailure('connection_error'));
+      } else if (serviceUnavailableKey != null &&
+          e is DioException &&
+          e.response?.statusCode == 503) {
+        emit(AuthFailure(serviceUnavailableKey));
       } else {
         emit(AuthFailure('auth_failed'));
       }

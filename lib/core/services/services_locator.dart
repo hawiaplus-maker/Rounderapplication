@@ -9,9 +9,14 @@ import 'package:rounder_application/layout/global/features/auth/data/repo/auth_r
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/phone_auth_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/data/repo/notifications_repo.dart';
+import 'package:rounder_application/layout/resident/features/account/data/repo/legal_repo.dart';
 import 'package:rounder_application/layout/resident/features/account/data/repo/profile_repo.dart';
+import 'package:rounder_application/layout/resident/features/account/data/repo/support_repository.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/notifications_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/profile_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/legal_document_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/phone_change_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/support_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/data/repo/bookings_repo.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/bookings_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
@@ -43,6 +48,7 @@ final _publicAuthPaths = {
   EndPoints.validateMobile,
   EndPoints.sendOtp,
   EndPoints.verifyOtp,
+  EndPoints.social,
 }.map((url) => Uri.parse(url).path).toSet();
 
 void configureDependencies() {
@@ -66,7 +72,9 @@ void configureDependencies() {
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        options.headers['Accept-Language'] = Intl.getCurrentLocale().split('_').first;
+        options.headers['Accept-Language'] = Intl.getCurrentLocale()
+            .split('_')
+            .first;
         if (_publicAuthPaths.contains(options.uri.path)) {
           // These endpoints start or continue authentication and must work
           // before a session exists (or while a previous token is stale).
@@ -96,7 +104,9 @@ void configureDependencies() {
     );
   }
   sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(dio));
-  sl.registerLazySingleton(() => AuthRepository(sl<ApiConsumer>(), Hive.box<String>(authBoxName)));
+  sl.registerLazySingleton(
+    () => AuthRepository(sl<ApiConsumer>(), Hive.box<String>(authBoxName)),
+  );
   sl.registerLazySingleton(() => OnboardingRepository(tokenStorage));
   sl.registerFactory(() => AuthCubit(sl<AuthRepository>()));
   // The validated-phone journey runs one instance per screen (login,register,otp).
@@ -108,17 +118,29 @@ void configureDependencies() {
   sl.registerLazySingleton(() => ServicesRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => BookingsRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => ProfileRepository(sl<ApiConsumer>()));
+  sl.registerLazySingleton(() => LegalRepository(sl<ApiConsumer>()));
+  sl.registerFactory(() => LegalDocumentCubit(sl<LegalRepository>()));
   sl.registerLazySingleton(() => NotificationsRepository(sl<ApiConsumer>()));
+  sl.registerLazySingleton(() => SupportRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => HomesRepository(sl<ApiConsumer>()));
-  sl.registerLazySingleton(() => SelectedHomeStore(Hive.box<String>(authBoxName)));
+  sl.registerLazySingleton(
+    () => SelectedHomeStore(Hive.box<String>(authBoxName)),
+  );
   sl.registerFactory(() => ResidentDashboardCubit(sl<ResidentRepository>()));
   sl.registerLazySingleton(() => ServicesCubit(sl<ServicesRepository>()));
   sl.registerFactory(() => ServiceCatalogCubit(sl<ServicesRepository>()));
   sl.registerFactory(() => ServiceProvidersCubit(sl<ServicesRepository>()));
   sl.registerLazySingleton(() => BookingsCubit(sl<BookingsRepository>()));
   sl.registerFactory(() => ProfileCubit(sl<ProfileRepository>()));
-  sl.registerLazySingleton(() => NotificationsCubit(sl<NotificationsRepository>()));
-  sl.registerFactory(() => HomesCubit(sl<HomesRepository>(), sl<SelectedHomeStore>()));
+  sl.registerFactory(() => PhoneChangeCubit(sl<ProfileRepository>()));
+  sl.registerLazySingleton(
+    () => NotificationsCubit(sl<NotificationsRepository>()),
+  );
+  // Support channels are static content: one instance serves every visit.
+  sl.registerLazySingleton(() => SupportCubit(sl<SupportRepository>()));
+  sl.registerFactory(
+    () => HomesCubit(sl<HomesRepository>(), sl<SelectedHomeStore>()),
+  );
   sl.registerFactory(() => AddUnitCubit(sl<HomesRepository>()));
   sl.registerLazySingleton(() => EmergencyRepository(sl<ApiConsumer>()));
   sl.registerLazySingleton(() => EmergencyCubit(sl<EmergencyRepository>()));

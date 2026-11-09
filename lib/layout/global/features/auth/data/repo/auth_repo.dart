@@ -32,6 +32,18 @@ class AuthRepository {
       data: {'email': email, 'password': password},
     ),
   );
+
+  /// Social sign-in: exchanges a provider id_token for a session token.
+  /// `provider` is 'google' or 'apple'.
+  Future<void> socialLogin({
+    required String provider,
+    required String idToken,
+  }) async => _save(
+    await api.post<Map<String, dynamic>>(
+      EndPoints.social,
+      data: {'provider': provider, 'id_token': idToken},
+    ),
+  );
   Future<void> register({
     required String name,
     required String email,

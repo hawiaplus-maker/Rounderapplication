@@ -6,11 +6,12 @@ class PhoneChangeState {
   const PhoneChangeState({
     this.step = PhoneChangeStep.number,
     this.phone = '',
-    this.remaining = 0,
+    this.loading = false,
     this.errorKey,
   });
   final PhoneChangeStep step;
   final String phone;
-  final int remaining;
+  final bool loading;
   final String? errorKey;
 }
+

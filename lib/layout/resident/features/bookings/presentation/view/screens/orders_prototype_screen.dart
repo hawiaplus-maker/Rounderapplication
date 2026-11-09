@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
+import 'package:rounder_application/layout/global/widgets/guest_gate_view.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/bookings_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/cubit/preview_orders_cubit.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/model/order_data.dart';
@@ -22,16 +23,35 @@ import 'package:rounder_application/layout/resident/features/units/data/repo/sel
 /// Orders screen: shows both in-session preview orders and real bookings
 /// fetched from `/resident/bookings`.
 class OrdersPrototypeScreen extends StatelessWidget {
-  const OrdersPrototypeScreen({super.key});
+  const OrdersPrototypeScreen({
+    super.key,
+    this.isGuest = false,
+    this.onSignIn,
+  }) : assert(!isGuest || onSignIn != null);
+
+  /// Guest mode has no real bookings: the tab shows a sign-in gate instead of
+  /// calling the protected `/resident/bookings` endpoint.
+  final bool isGuest;
+  final VoidCallback? onSignIn;
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
-    providers: [
-      BlocProvider(create: (_) => sl<PreviewOrdersCubit>()),
-      BlocProvider<BookingsCubit>.value(value: sl<BookingsCubit>()..load()),
-    ],
-    child: const _OrdersPrototypeBody(),
-  );
+  Widget build(BuildContext context) {
+    if (isGuest) {
+      return GuestGateView(
+        titleKey: AppLocaleKey.guestOrdersTitle,
+        bodyKey: AppLocaleKey.guestOrdersBody,
+        onSignIn: onSignIn!,
+        icon: Icons.receipt_long_outlined,
+      );
+    }
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<PreviewOrdersCubit>()),
+        BlocProvider<BookingsCubit>.value(value: sl<BookingsCubit>()..load()),
+      ],
+      child: const _OrdersPrototypeBody(),
+    );
+  }
 }
 
 class _OrdersPrototypeBody extends StatefulWidget {

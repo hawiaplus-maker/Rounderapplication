@@ -40,8 +40,13 @@ abstract final class AppLocaleKey {
   static const checkFields = 'check_fields',
       connectionError = 'connection_error',
       authFailed = 'auth_failed',
+      socialUnavailable = 'social_unavailable',
       signOut = 'sign_out';
   static const signOutConfirm = 'sign_out_confirm', staySignedIn = 'stay_signed_in';
+  static const exitAppTitle = 'exit_app_title',
+      exitAppConfirm = 'exit_app_confirm',
+      exitApp = 'exit_app',
+      stayInApp = 'stay_in_app';
   static const serviceCatalog = 'service_catalog', noServices = 'no_services', bookNow = 'book_now';
   static const linkYourHome = 'link_your_home',
       linkHomeHelp = 'link_home_help',
@@ -119,6 +124,37 @@ abstract final class AppLocaleKey {
   static const linkedHomesNote = 'linked_homes_note';
   static const unitTitle = 'unit_title';
   static const contactUs = 'contact_us';
+  static const contactIntroBody = 'contact_intro_body';
+  static const contactChannelsTitle = 'contact_channels_title';
+  static const contactChat = 'contact_chat';
+  static const contactChatHours = 'contact_chat_hours';
+  static const contactCall = 'contact_call';
+  static const contactEmail = 'contact_email';
+  static const contactSupportPhone = 'contact_support_phone';
+  static const contactSupportEmail = 'contact_support_email';
+  static const contactFormTitle = 'contact_form_title';
+  static const contactCategoryOrder = 'contact_category_order';
+  static const contactCategoryPayment = 'contact_category_payment';
+  static const contactCategoryHome = 'contact_category_home';
+  static const contactCategoryOther = 'contact_category_other';
+  static const contactSubject = 'contact_subject';
+  static const contactSubjectHint = 'contact_subject_hint';
+  static const contactDescription = 'contact_description';
+  static const contactMessageHint = 'contact_message_hint';
+  static const contactAttachment = 'contact_attachment';
+  static const contactAttachmentHint = 'contact_attachment_hint';
+  static const contactSend = 'contact_send';
+  static const contactResponseNote = 'contact_response_note';
+  static const contactSuccessTitle = 'contact_success_title';
+  static const contactSuccessSubtitle = 'contact_success_subtitle';
+  static const contactThanksTitle = 'contact_thanks_title';
+  static const contactThanksBody = 'contact_thanks_body';
+  static const contactTicketReference = 'contact_ticket_reference';
+  static const contactReceivedAt = 'contact_received_at';
+  static const contactReceivedToday = 'contact_received_today';
+  static const contactNotificationNote = 'contact_notification_note';
+  static const contactBackToHelp = 'contact_back_to_help';
+  static const contactSendAnother = 'contact_send_another';
   static const orders = 'orders';
   static const unionTab = 'union_tab';
   static const unionTitle = 'union_title';
@@ -424,6 +460,10 @@ abstract final class AppLocaleKey {
       continueWithApple = 'continue_with_apple';
   static const privacyPolicy = 'privacy_policy', termsConditions = 'terms_conditions';
   static const browseNowRegisterLater = 'browse_now_register_later', emailSignIn = 'email_sign_in';
+  static const guestAccountTitle = 'guest_account_title',
+      guestAccountBody = 'guest_account_body',
+      guestOrdersTitle = 'guest_orders_title',
+      guestOrdersBody = 'guest_orders_body';
   static const localPhoneInvalid = 'local_phone_invalid',
       registerIntro = 'register_intro',
       otpSendFailed = 'otp_send_failed';

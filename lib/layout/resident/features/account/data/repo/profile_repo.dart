@@ -35,6 +35,30 @@ class ProfileRepository {
     }
   }
 
+  /// Sends an OTP to the new mobile number (reuses the auth send-otp endpoint).
+  Future<void> sendChangeMobileOtp(String mobile) async {
+    final response = await api.post<Map<String, dynamic>>(
+      EndPoints.sendOtp,
+      data: {'mobile': mobile},
+    );
+    final body = response.data;
+    if (body != null && body['status'] == false) {
+      throw ApiFailure(body['message']?.toString() ?? '');
+    }
+  }
+
+  /// Verifies the OTP and persists the new mobile number.
+  Future<void> changeMobile({required String mobile, required String otp}) async {
+    final response = await api.put<Map<String, dynamic>>(
+      EndPoints.changeMobile,
+      data: {'mobile': mobile, 'otp': otp},
+    );
+    final body = response.data;
+    if (body != null && body['status'] == false) {
+      throw ApiFailure(body['message']?.toString() ?? '');
+    }
+  }
+
   /// Persists the resident's preferred language on the backend. Other
   /// endpoints (services, bookings, ...) answer in this language, so it must
   /// be updated before refetching data after a language switch.

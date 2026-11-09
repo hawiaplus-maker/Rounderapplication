@@ -45,6 +45,7 @@ Add these repository secrets for `.github/workflows/android-apk.yml`:
 | `ANDROID_STORE_PASSWORD` | value of `storePassword` in `key.properties` |
 | `ANDROID_KEY_PASSWORD` | value of `keyPassword` in `key.properties` |
 | `ANDROID_KEY_ALIAS` | `upload` |
+| `GOOGLE_SERVER_CLIENT_ID` | Web OAuth client ID used for Google sign-in (optional) |
 
 The workflow builds a signed **AAB** and uploads it with the Dart symbols. If the
 secrets are absent it still builds, but with debug signing — that artifact is
@@ -57,12 +58,20 @@ flutter pub get
 
 # Google Play (upload this file)
 flutter build appbundle --release \
-  --obfuscate --split-debug-info=build/symbols/android
+  --obfuscate --split-debug-info=build/symbols/android \
+  --dart-define=GOOGLE_SERVER_CLIENT_ID="$GOOGLE_SERVER_CLIENT_ID"
 
 # App Store (requires Xcode signing with team KRHLXHF25D)
 flutter build ipa --release \
-  --obfuscate --split-debug-info=build/symbols/ios
+  --obfuscate --split-debug-info=build/symbols/ios \
+  --dart-define=GOOGLE_SERVER_CLIENT_ID="$GOOGLE_SERVER_CLIENT_ID"
 ```
+
+`GOOGLE_SERVER_CLIENT_ID` is the **Web** OAuth client ID from Google Cloud
+Console (see “Social sign-in” below). It already defaults to the “Rounder Web”
+client (`628249143147-…`) in `lib/core/constants/auth_config.dart`; pass the flag
+only when building against a different Google project. An empty/unknown value
+makes the Google button show “This sign-in method is not available right now.”
 
 Outputs:
 
@@ -73,6 +82,42 @@ Keep `build/symbols/android` and `build/symbols/ios`: they are required to
 symbolicate obfuscated crash reports. Bump the build number in `pubspec.yaml`
 (e.g. `1.0.1+7`) for every store upload; both stores reject a reused build
 number.
+
+## Social sign-in
+
+The login screen calls `POST /api/v1/auth/social` with
+`{"provider": "google"|"apple", "id_token": "<provider token>"}`. The backend
+must answer like the other auth endpoints (`data.token`) so the app can cache
+the session.
+
+### Google
+
+1. Google Cloud Console → **Credentials** → create **OAuth 2.0 Client ID**:
+   - Type **Android**, package `com.futuretec.rounderapp.sa`, plus the SHA-1 of
+     the release key (`keytool -list -v -keystore android/app/upload-keystore.jks`)
+     and of the debug key for local testing.
+   - Type **Web application** — this ID is the `serverClientId` that makes
+     Android return an `id_token`.
+2. Pass it at build/run time:
+   ```bash
+   flutter run --dart-define=GOOGLE_SERVER_CLIENT_ID=xxxx.apps.googleusercontent.com
+   ```
+3. iOS: enable the Google URL scheme in `ios/Runner/Info.plist` (or add
+   `GoogleService-Info.plist`). Without it the iOS button reports the same
+   “not available” message.
+
+### Apple
+
+1. Apple Developer → the app identifier → enable **Sign in with Apple**; add the
+   capability in Xcode (iOS).
+2. Android uses the web flow: create a **Services ID**, register the redirect URI
+   and pass both values:
+   ```bash
+   flutter build appbundle --release \
+     --dart-define=APPLE_SERVICE_ID=sa.rounder.app \
+     --dart-define=APPLE_REDIRECT_URI=https://rounder-sa.com/api/v1/auth/apple/callback
+   ```
+   The backend must expose that callback and redirect back into the app.
 
 ## Store assets
 

@@ -80,6 +80,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "csslib",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/csslib-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "dio",
       "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/dio-5.11.1",
       "packageUri": "lib/",
@@ -314,6 +320,42 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "google_identity_services_web",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/google_identity_services_web-0.3.3+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "google_sign_in",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/google_sign_in-7.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "google_sign_in_android",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/google_sign_in_android-7.2.18",
+      "packageUri": "lib/",
+      "languageVersion": "3.12"
+    },
+    {
+      "name": "google_sign_in_ios",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/google_sign_in_ios-6.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.13"
+    },
+    {
+      "name": "google_sign_in_platform_interface",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/google_sign_in_platform_interface-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "google_sign_in_web",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/google_sign_in_web-1.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
       "name": "hive",
       "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/hive-2.2.3",
       "packageUri": "lib/",
@@ -330,6 +372,12 @@
       "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/hooks-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.10"
+    },
+    {
+      "name": "html",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/html-0.15.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
     },
     {
       "name": "http",
@@ -494,10 +542,28 @@
       "languageVersion": "3.10"
     },
     {
+      "name": "os_detect",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/os_detect-2.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
       "name": "package_config",
       "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/package_config-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.11"
+    },
+    {
+      "name": "package_info_plus",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/package_info_plus-10.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
     },
     {
       "name": "path",
@@ -638,6 +704,24 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "sign_in_with_apple",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_platform_interface",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/sign_in_with_apple_platform_interface-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_web",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/sign_in_with_apple_web-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/m3/Development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -682,6 +766,12 @@
     {
       "name": "typed_data",
       "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/typed_data-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "upgrader",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/upgrader-13.7.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -762,6 +852,12 @@
       "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/vector_math-2.4.3",
       "packageUri": "lib/",
       "languageVersion": "3.10"
+    },
+    {
+      "name": "version",
+      "rootUri": "file:///Users/m3/.pub-cache/hosted/pub.dev/version-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "vm_service",

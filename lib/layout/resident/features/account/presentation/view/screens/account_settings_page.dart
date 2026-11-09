@@ -16,6 +16,7 @@ class AccountSettingsPage extends StatelessWidget {
     required this.onOffersChanged,
     required this.onEditProfile,
     required this.onPrivacy,
+    required this.onTerms,
     required this.onLogout,
     required this.onLanguage,
   });
@@ -27,6 +28,8 @@ class AccountSettingsPage extends StatelessWidget {
   final ValueChanged<bool> onOffersChanged;
   final VoidCallback onEditProfile;
   final VoidCallback onPrivacy;
+
+  final VoidCallback onTerms;
 
   /// Ends the session: the account flow confirms, calls the logout API and
   /// clears the cached token before the boot gate reveals the login screen.
@@ -97,6 +100,12 @@ class AccountSettingsPage extends StatelessWidget {
               labelKey: AppLocaleKey.privacy,
               icon: Icons.shield_outlined,
               onTap: onPrivacy,
+            ),
+            const SizedBox(height: 9),
+            AccountActionButton(
+              labelKey: AppLocaleKey.termsConditions,
+              icon: Icons.gavel_outlined,
+              onTap: onTerms,
             ),
           ],
         ),

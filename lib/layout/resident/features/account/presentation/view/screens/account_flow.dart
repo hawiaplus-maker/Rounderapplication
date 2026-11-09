@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounder_application/core/locale/app_locale.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
-import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/core/services/services_locator.dart';
+import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/resident/features/account/data/model/resident_profile_model.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/cubit/notifications_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/data/model/support_ticket_model.dart';
 import 'package:rounder_application/layout/resident/features/account/data/repo/profile_repo.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/notifications_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/profile_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/support_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_contact_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_contact_success_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_edit_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_gifts_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_help_page.dart';
@@ -18,6 +22,8 @@ import 'package:rounder_application/layout/resident/features/account/presentatio
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_privacy_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_profile_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_settings_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/legal_document_cubit.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/legal_document_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/discard_profile_dialog.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/phone_change_panel.dart';
@@ -26,15 +32,31 @@ import 'package:rounder_application/layout/resident/features/dashboard/presentat
 import 'package:rounder_application/layout/resident/features/onboarding/presentation/view/screens/resident_welcome_flow.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/cubit/homes_cubit.dart';
 import 'package:rounder_application/layout/resident/features/units/presentation/view/screens/units_screen.dart';
+import 'package:rounder_application/logic/contact_ticket_logic.dart';
 import 'package:rounder_application/logic/email_logic.dart';
 
 /// Resident account screens. The identity comes from the profile endpoint and
 /// the notifications from their feed; the remaining preference toggles stay
 /// local because the backend exposes no endpoint for them yet.
 class AccountFlow extends StatefulWidget {
-  const AccountFlow({super.key, this.homeName = '', this.unitLabel = ''});
+  const AccountFlow({
+    super.key,
+    this.homeName = '',
+    this.unitLabel = '',
+    this.active = true,
+    required this.onRootBack,
+  });
 
   final String homeName, unitLabel;
+
+  /// Whether this tab owns the back gesture. The home shell keeps every tab
+  /// alive in an [IndexedStack], so a hidden account flow must not claim the
+  /// back press of the visible tab.
+  final bool active;
+
+  /// Called when back is pressed on the account profile: the shell switches to
+  /// the home tab instead of closing the app.
+  final VoidCallback onRootBack;
 
   @override
   State<AccountFlow> createState() => _AccountFlowState();
@@ -47,6 +69,8 @@ enum _Page {
   notifications,
   privacy,
   help,
+  contact,
+  contactSuccess,
   gifts,
   phone,
 }
@@ -60,6 +84,11 @@ class _AccountFlowState extends State<AccountFlow> {
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
 
+  /// The contact form is validated locally and submitted to the support
+  /// endpoint; the success page shows the reference the backend assigns.
+  String _contactReference = '';
+  DateTime? _contactSubmittedAt;
+
   @override
   void dispose() {
     nameController.dispose();
@@ -72,8 +101,11 @@ class _AccountFlowState extends State<AccountFlow> {
 
   /// Shared instance loaded once: calling `load()` from `build` would refetch
   /// on every rebuild (including each locale change).
-  final NotificationsCubit _notificationsCubit =
-      sl<NotificationsCubit>()..load();
+  final NotificationsCubit _notificationsCubit = sl<NotificationsCubit>()
+    ..load();
+
+  /// Loaded lazily by the contact page, reused on every visit.
+  final SupportCubit _supportCubit = sl<SupportCubit>();
 
   void open(_Page value) => setState(() => page = value);
 
@@ -99,6 +131,10 @@ class _AccountFlowState extends State<AccountFlow> {
       open(_Page.edit);
       return;
     }
+    if (page == _Page.contact || page == _Page.contactSuccess) {
+      open(_Page.help);
+      return;
+    }
     if (page == _Page.edit && _dirty()) {
       if (!await confirmDiscardProfile(context) || !mounted) return;
       _fillControllers(_profile());
@@ -111,90 +147,113 @@ class _AccountFlowState extends State<AccountFlow> {
     providers: [
       BlocProvider<ProfileCubit>.value(value: _profileCubit),
       BlocProvider<NotificationsCubit>.value(value: _notificationsCubit),
+      BlocProvider<SupportCubit>.value(value: _supportCubit),
       BlocProvider(create: (_) => sl<HomesCubit>()..load()),
     ],
     child: PopScope(
-      canPop: page == _Page.profile,
+      canPop: !widget.active,
       onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) goBack();
+        if (didPop || !widget.active) return;
+        if (page == _Page.profile) {
+          widget.onRootBack();
+          return;
+        }
+        goBack();
       },
-      child: BrandGradientBackdrop.deep(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 180),
-          child: switch (page) {
-            _Page.profile => AccountProfilePage(
-              homeName: widget.homeName,
-              unitLabel: widget.unitLabel,
-              onEdit: _editProfile,
-              onGifts: () => open(_Page.gifts),
-              onUnits: _openUnits,
-              onSettings: () => open(_Page.settings),
-              onNotifications: () => open(_Page.notifications),
-              onPrivacy: () => open(_Page.privacy),
-              onHelp: () => open(_Page.help),
-              onLogout: _signOut,
-            ),
-            _Page.edit => BlocBuilder<ProfileCubit, ProfileState>(
-              builder: (context, state) => AccountEditPage(
-                onBack: goBack,
-                nameController: nameController,
-                phoneController: phoneController,
-                emailController: emailController,
-                saving: state is ProfileReady && state.saving,
-                error: state is ProfileReady ? state.error : '',
-                onChangePhoto: _comingSoon,
-                onChangePhone: () => open(_Page.phone),
-                onSave: _saveProfile,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+        ),
+        child: BrandGradientBackdrop.deep(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            child: switch (page) {
+              _Page.profile => AccountProfilePage(
+                homeName: widget.homeName,
+                unitLabel: widget.unitLabel,
+                onEdit: _editProfile,
+                onGifts: () => open(_Page.gifts),
+                onUnits: _openUnits,
+                onSettings: () => open(_Page.settings),
+                onNotifications: () => open(_Page.notifications),
+                onPrivacy: () => _openLegal('privacy'),
+                onHelp: () => open(_Page.help),
+                onLogout: _signOut,
               ),
-            ),
-            _Page.settings => AccountSettingsPage(
-              onBack: goBack,
-              orderUpdates: orderUpdates,
-              offers: offers,
-              onOrderUpdatesChanged: (value) =>
-                  setState(() => orderUpdates = value),
-              onOffersChanged: (value) => setState(() => offers = value),
-              onEditProfile: () => open(_Page.edit),
-              onPrivacy: () => open(_Page.privacy),
-              onLogout: _signOut,
-              onLanguage: _changeLanguage,
-            ),
-            _Page.notifications => AccountNotificationsPage(
-              onBack: goBack,
-              onPreferences: () => open(_Page.settings),
-            ),
-            _Page.privacy => AccountPrivacyPage(
-              onBack: goBack,
-              addressUse: addressUse,
-              requestContact: requestContact,
-              onAddressUseChanged: (value) =>
-                  setState(() => addressUse = value),
-              onRequestContactChanged: (value) =>
-                  setState(() => requestContact = value),
-              onCommunicationPrefs: () => open(_Page.settings),
-              onReviewData: () => open(_Page.edit),
-            ),
-            _Page.help => AccountHelpPage(
-              onBack: goBack,
-              onContactUs: _comingSoon,
-            ),
-            _Page.gifts => AccountGiftsPage(
-              onBack: goBack,
-              onDiscoverGifts: _openWelcomeFlow,
-            ),
-            _Page.phone => AccountSubPage(
-              titleKey: AppLocaleKey.changePhone,
-              onBack: goBack,
-              children: [
-                PhoneChangePanel(
-                  onVerified: (value) {
-                    phoneController.text = value;
-                    open(_Page.edit);
-                  },
+              _Page.edit => BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, state) => AccountEditPage(
+                  onBack: goBack,
+                  nameController: nameController,
+                  phoneController: phoneController,
+                  emailController: emailController,
+                  saving: state is ProfileReady && state.saving,
+                  error: state is ProfileReady ? state.error : '',
+                  onChangePhoto: _comingSoon,
+                  onChangePhone: () => open(_Page.phone),
+                  onSave: _saveProfile,
                 ),
-              ],
-            ),
-          },
+              ),
+              _Page.settings => AccountSettingsPage(
+                onBack: goBack,
+                orderUpdates: orderUpdates,
+                offers: offers,
+                onOrderUpdatesChanged: (value) =>
+                    setState(() => orderUpdates = value),
+                onOffersChanged: (value) => setState(() => offers = value),
+                onEditProfile: () => open(_Page.edit),
+                onPrivacy: () => _openLegal('privacy'),
+                onTerms: () => _openLegal('terms'),
+                onLogout: _signOut,
+                onLanguage: _changeLanguage,
+              ),
+              _Page.notifications => AccountNotificationsPage(
+                onBack: goBack,
+                onPreferences: () => open(_Page.settings),
+              ),
+              _Page.privacy => AccountPrivacyPage(
+                onBack: goBack,
+                addressUse: addressUse,
+                requestContact: requestContact,
+                onAddressUseChanged: (value) =>
+                    setState(() => addressUse = value),
+                onRequestContactChanged: (value) =>
+                    setState(() => requestContact = value),
+                onCommunicationPrefs: () => open(_Page.settings),
+                onReviewData: () => open(_Page.edit),
+              ),
+              _Page.help => AccountHelpPage(
+                onBack: goBack,
+                onContactUs: () => open(_Page.contact),
+              ),
+              _Page.contact => AccountContactPage(
+                onBack: goBack,
+                onSubmitted: _submitContact,
+              ),
+              _Page.contactSuccess => AccountContactSuccessPage(
+                onBack: goBack,
+                reference: _contactReference,
+                submittedAt: _contactSubmittedAt ?? DateTime.now(),
+                onBackToHelp: () => open(_Page.help),
+                onSendAnother: () => open(_Page.contact),
+              ),
+              _Page.gifts => AccountGiftsPage(
+                onBack: goBack,
+                onDiscoverGifts: _openWelcomeFlow,
+              ),
+              _Page.phone => AccountSubPage(
+                titleKey: AppLocaleKey.changePhone,
+                onBack: goBack,
+                children: [
+                  PhoneChangePanel(
+                    onVerified: (value) {
+                      phoneController.text = value;
+                      open(_Page.edit);
+                    },
+                  ),
+                ],
+              ),
+            },
+          ),
         ),
       ),
     ),
@@ -203,6 +262,20 @@ class _AccountFlowState extends State<AccountFlow> {
   void _editProfile() {
     _fillControllers(_profile());
     open(_Page.edit);
+  }
+
+  /// The support endpoint accepted the ticket: the success page shows its
+  /// reference and reception time (the local reference is only a fallback for
+  /// a response without a reference).
+  void _submitContact(SupportTicket ticket) {
+    final DateTime submittedAt = ticket.createdAt ?? DateTime.now();
+    setState(() {
+      _contactSubmittedAt = submittedAt;
+      _contactReference = ticket.reference.isNotEmpty
+          ? ticket.reference
+          : contactTicketReference(submittedAt);
+      page = _Page.contactSuccess;
+    });
   }
 
   /// Saves through the profile endpoint; the server's message is surfaced by
@@ -235,6 +308,17 @@ class _AccountFlowState extends State<AccountFlow> {
           dashboard: dashboard,
           homeName: widget.homeName,
           unitLabel: widget.unitLabel,
+        ),
+      ),
+    );
+  }
+
+  void _openLegal(String slug) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => BlocProvider(
+          create: (_) => sl<LegalDocumentCubit>(),
+          child: LegalDocumentPage(slug: slug),
         ),
       ),
     );
