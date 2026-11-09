@@ -681,5 +681,6 @@
   "deleteUnitQuestion": "هل تريد حذف هذه الوحدة؟",
   "keepUnit": "الإبقاء على الوحدة",
   "deleteUnitFailed": "تعذّر حذف هذه الوحدة",
-  "servicePlaceImage": "صورة مكان الخدمة"
+  "servicePlaceImage": "صورة مكان الخدمة",
+  "serviceProvider": "مقدم الخدمة"
 }

@@ -35,6 +35,7 @@ class ResidentHomeScreen extends StatefulWidget {
 
 class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
   int _tab = 0;
+  final Set<int> _loadedTabs = {0};
 
   void _openEmergency() {
     final dashboardState = context.read<ResidentDashboardCubit>().state;
@@ -77,39 +78,56 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
       HomeDashboardBody(
         key: ValueKey<String>('home-$localeCode'),
         isGuest: widget.isGuest,
-        onTalkToAli: () => setState(() => _tab = 1),
-        onMoreBalance: () => setState(() => _tab = 3),
-        onVisitDetails: () => setState(() => _tab = 3),
+        onTalkToAli: () {
+          _loadedTabs.add(1);
+          setState(() => _tab = 1);
+        },
+        onMoreBalance: () {
+          _loadedTabs.add(3);
+          setState(() => _tab = 3);
+        },
+        onVisitDetails: () {
+          _loadedTabs.add(3);
+          setState(() => _tab = 3);
+        },
         onEmergency: _openEmergency,
         onViewAssessment: _openPropertyRating,
       ),
-      ServiceJourneyScreen(
-        key: ValueKey<String>('services-$localeCode'),
-        isGuest: widget.isGuest,
-      ),
-      OrdersPrototypeScreen(
-        key: ValueKey<String>('orders-$localeCode'),
-        isGuest: widget.isGuest,
-        onSignIn: _backToLogin,
-      ),
-      UnionScreen(key: ValueKey<String>('union-$localeCode')),
+      _loadedTabs.contains(1)
+          ? ServiceJourneyScreen(
+              key: ValueKey<String>('services-$localeCode'),
+              isGuest: widget.isGuest,
+            )
+          : const SizedBox.shrink(),
+      _loadedTabs.contains(2)
+          ? OrdersPrototypeScreen(
+              key: ValueKey<String>('orders-$localeCode'),
+              isGuest: widget.isGuest,
+              onSignIn: _backToLogin,
+            )
+          : const SizedBox.shrink(),
+      _loadedTabs.contains(3)
+          ? UnionScreen(key: ValueKey<String>('union-$localeCode'))
+          : const SizedBox.shrink(),
       // The account tab keeps its state: the language is switched from its
       // settings page, so the resident stays where the switch happened.
-      widget.isGuest
-          ? BrandGradientBackdrop.deep(
-              child: GuestGateView(
-                titleKey: AppLocaleKey.guestAccountTitle,
-                bodyKey: AppLocaleKey.guestAccountBody,
-                onSignIn: _backToLogin,
-                icon: Icons.person_outline_rounded,
-              ),
-            )
-          : AccountFlow(
-              homeName: homeName,
-              unitLabel: unitLabel,
-              active: _tab == 4,
-              onRootBack: () => setState(() => _tab = 0),
-            ),
+      _loadedTabs.contains(4)
+          ? (widget.isGuest
+              ? BrandGradientBackdrop.deep(
+                  child: GuestGateView(
+                    titleKey: AppLocaleKey.guestAccountTitle,
+                    bodyKey: AppLocaleKey.guestAccountBody,
+                    onSignIn: _backToLogin,
+                    icon: Icons.person_outline_rounded,
+                  ),
+                )
+              : AccountFlow(
+                  homeName: homeName,
+                  unitLabel: unitLabel,
+                  active: _tab == 4,
+                  onRootBack: () => setState(() => _tab = 0),
+                ))
+          : const SizedBox.shrink(),
     ];
 
     final Widget shell = AnnotatedRegion<SystemUiOverlayStyle>(
@@ -139,7 +157,10 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
                 constraints: const BoxConstraints(maxWidth: HomeSizes.maxContentWidth),
                 child: ResidentDock(
                   selectedIndex: _tab,
-                  onSelected: (index) => setState(() => _tab = index),
+                  onSelected: (index) => setState(() {
+                    _loadedTabs.add(index);
+                    _tab = index;
+                  }),
                 ),
               ),
             ),

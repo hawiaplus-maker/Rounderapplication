@@ -101,8 +101,7 @@ class _AccountFlowState extends State<AccountFlow> {
 
   /// Shared instance loaded once: calling `load()` from `build` would refetch
   /// on every rebuild (including each locale change).
-  final NotificationsCubit _notificationsCubit = sl<NotificationsCubit>()
-    ..load();
+  final NotificationsCubit _notificationsCubit = sl<NotificationsCubit>();
 
   /// Loaded lazily by the contact page, reused on every visit.
   final SupportCubit _supportCubit = sl<SupportCubit>();

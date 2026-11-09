@@ -551,6 +551,7 @@ abstract final class AppLocaleKey {
   static const completeLater = 'completeLater';
   static const areaApprovedValue = 'areaApprovedValue';
   static const servicePlaceImage = 'servicePlaceImage';
+  static const serviceProvider = 'serviceProvider';
 
   /// Units deletion (حذف الوحدة): the card pill, the confirm dialog and the
   /// removal's failure message.

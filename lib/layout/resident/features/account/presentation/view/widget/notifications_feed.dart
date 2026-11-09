@@ -8,17 +8,11 @@ import 'package:rounder_application/layout/resident/features/account/data/model/
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/notifications_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/notification_card.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/notification_filters.dart';
-import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/notifications_summary.dart';
 
 /// The loaded feed: summary, filters, the visible cards and the preferences
 /// entry. Opening a card (or its action) acknowledges it as read.
 class NotificationsFeed extends StatelessWidget {
-  const NotificationsFeed({
-    super.key,
-    required this.state,
-    required this.onPreferences,
-  });
+  const NotificationsFeed({super.key, required this.state, required this.onPreferences});
 
   final NotificationsReady state;
   final VoidCallback onPreferences;
@@ -29,22 +23,23 @@ class NotificationsFeed extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        NotificationsSummary(
-          actionCount: state.actionCount,
-          unreadCount: state.unreadCount,
-          busy: state.busy,
-          onReadAll: cubit.markAllRead,
+        // NotificationsSummary(
+        //   actionCount: state.actionCount,
+        //   unreadCount: state.unreadCount,
+        //   busy: state.busy,
+        //   onReadAll: cubit.markAllRead,
+        // ),
+        // NotificationFilters(filter: state.filter, onChanged: cubit.filterBy),
+        const SizedBox(height: 12),
+        Text(
+          AppLocaleKey.notifications.tr(),
+          textAlign: TextAlign.start,
+          style: AppTextStyles.headingBold22.copyWith(color: AppColors.white),
         ),
-        NotificationFilters(filter: state.filter, onChanged: cubit.filterBy),
         const SizedBox(height: 12),
         if (state.visible.isEmpty)
           AccountPanel(
-            children: [
-              Text(
-                AppLocaleKey.emptyNotifications.tr(),
-                textAlign: TextAlign.center,
-              ),
-            ],
+            children: [Text(AppLocaleKey.emptyNotifications.tr(), textAlign: TextAlign.center)],
           )
         else
           for (final NotificationItem item in state.visible)
@@ -61,11 +56,8 @@ class NotificationsFeed extends StatelessWidget {
             style: AppTextStyles.captionRegular.copyWith(color: AppColors.emergency),
           ),
         ],
-        const SizedBox(height: 8),
-        TextButton(
-          onPressed: onPreferences,
-          child: Text(AppLocaleKey.communicationPrefs.tr()),
-        ),
+        const SizedBox(height: 80),
+        //   TextButton(onPressed: onPreferences, child: Text(AppLocaleKey.communicationPrefs.tr())),
       ],
     );
   }

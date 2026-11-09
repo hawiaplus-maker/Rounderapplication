@@ -101,7 +101,7 @@ class OrderDetailsView extends StatelessWidget {
             ),
             const Divider(height: 24),
             _DetailRow(label: AppLocaleKey.orderStatus.tr(), value: data.statusKey.tr()),
-            _DetailRow(label: AppLocaleKey.orderPlace.tr(), value: data.locationKey.tr()),
+            _DetailRow(label: AppLocaleKey.serviceProvider.tr(), value: data.locationKey.tr()),
             _DetailRow(
               label: AppLocaleKey.orderDate.tr(),
               value: DateFormat.yMd(context.locale.toString()).add_jm().format(data.scheduledAt),
@@ -234,20 +234,18 @@ class _DetailRow extends StatelessWidget {
     padding: const EdgeInsets.symmetric(vertical: 7),
     child: Row(
       children: [
-        Expanded(
-          child: Text(
-            value,
-            textAlign: TextAlign.end,
-            style: AppTextStyles.headingH4.copyWith(
-              color: AppColors.petrol,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
         Text(
           label,
           textAlign: TextAlign.start,
           style: AppTextStyles.bodyMedium.copyWith(color: AppColors.muted),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: AppTextStyles.headingH4.copyWith(color: AppColors.petrol),
+          ),
         ),
       ],
     ),

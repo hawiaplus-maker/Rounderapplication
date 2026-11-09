@@ -662,5 +662,6 @@
   "deleteUnitQuestion": "کیا آپ اس وحدے کو حذف کرنا چاہتے ہیں؟",
   "keepUnit": "وحدہ محفوظ رکھیں",
   "deleteUnitFailed": "اس وحدے کو حذف نہیں کیا جا سکا",
-  "servicePlaceImage": "سروس کا مقام کی تصویر"
+  "servicePlaceImage": "سروس کا مقام کی تصویر",
+  "serviceProvider": "سروس فراہم کنندہ"
 }

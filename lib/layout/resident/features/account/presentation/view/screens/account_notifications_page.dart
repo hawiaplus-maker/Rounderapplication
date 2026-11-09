@@ -7,7 +7,7 @@ import 'package:rounder_application/layout/global/widgets/state_panel.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/notifications_feed.dart';
 
 /// Notifications page: the API feed with its filters, counts and read actions.
-class AccountNotificationsPage extends StatelessWidget {
+class AccountNotificationsPage extends StatefulWidget {
   const AccountNotificationsPage({
     super.key,
     required this.onBack,
@@ -17,10 +17,25 @@ class AccountNotificationsPage extends StatelessWidget {
   final VoidCallback onBack, onPreferences;
 
   @override
+  State<AccountNotificationsPage> createState() => _AccountNotificationsPageState();
+}
+
+class _AccountNotificationsPageState extends State<AccountNotificationsPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<NotificationsCubit>().load();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AccountSubPage(
       titleKey: AppLocaleKey.notifications,
-      onBack: onBack,
+      onBack: widget.onBack,
       children: [
         BlocBuilder<NotificationsCubit, NotificationsState>(
           builder: (context, state) => switch (state) {
@@ -34,7 +49,7 @@ class AccountNotificationsPage extends StatelessWidget {
             ),
             NotificationsReady() => NotificationsFeed(
               state: state,
-              onPreferences: onPreferences,
+              onPreferences: widget.onPreferences,
             ),
           },
         ),
