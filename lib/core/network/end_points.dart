@@ -9,6 +9,10 @@ class EndPoints {
   static const String me = '$baseUrl/api/v1/me';
   static const String logout = '$baseUrl/api/v1/auth/logout';
 
+  /// Permanently deletes the signed-in resident's account (`DELETE`); the
+  /// session ends with it, so the app clears its cached token afterwards.
+  static const String deleteAccount = '$baseUrl/api/v1/resident/account';
+
   /// Resident account: `GET` reads the profile, `PUT` updates it — the
   /// backend exposes no POST on this route.
   static const String profile = '$baseUrl/api/v1/resident/profile';
@@ -38,8 +42,7 @@ class EndPoints {
   /// Resident dashboard summary (GET) — the home screen payload.
   static const String dashboard = '$baseUrl/api/v1/resident/dashboard';
 
-  static const String getServiceCategories =
-      '$baseUrl/api/v1/resident/service-categories';
+  static const String getServiceCategories = '$baseUrl/api/v1/resident/service-categories';
 
   /// Bookable services catalog (GET).
   static const String services = '$baseUrl/api/v1/resident/services';
@@ -50,16 +53,13 @@ class EndPoints {
 
   /// Service providers (GET) — filtered by `service_id`, `sub_service` and
   /// `home_id` query parameters.
-  static const String serviceProviders =
-      '$baseUrl/api/v1/resident/service-providers';
+  static const String serviceProviders = '$baseUrl/api/v1/resident/service-providers';
 
   /// Emergency types: `GET` lists the available emergency categories.
-  static const String emergencyTypes =
-      '$baseUrl/api/v1/resident/emergency-types';
+  static const String emergencyTypes = '$baseUrl/api/v1/resident/emergency-types';
 
   /// Emergency requests: `GET` lists requests and `POST` creates one.
-  static const String emergencyRequests =
-      '$baseUrl/api/v1/resident/emergency-requests';
+  static const String emergencyRequests = '$baseUrl/api/v1/resident/emergency-requests';
 
   /// Resident support channels (`GET`): phone, e-mail and working hours the
   /// contact page renders.
@@ -67,8 +67,7 @@ class EndPoints {
 
   /// Support tickets: `POST` creates one (category, subject, message and an
   /// optional attachment).
-  static const String supportTickets =
-      '$baseUrl/api/v1/resident/support/tickets';
+  static const String supportTickets = '$baseUrl/api/v1/resident/support/tickets';
 
   /// Bookings: `GET` lists them, `POST` creates one (multipart: home_id,
   /// service_id, sub_service_id, service_provider_id, price_id, scheduled_at,
@@ -90,6 +89,5 @@ class EndPoints {
 
   /// Third-party Open-Meteo current weather (external, key-less): `latitude`,
   /// `longitude`, `current` and `timezone` query parameters.
-  static const String weatherForecast =
-      'https://api.open-meteo.com/v1/forecast';
+  static const String weatherForecast = 'https://api.open-meteo.com/v1/forecast';
 }

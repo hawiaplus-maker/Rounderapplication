@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rounder_application/core/locale/app_locale_key.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_action_button.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_delete_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_logout_button.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/account_panel.dart';
 
@@ -19,6 +20,8 @@ class AccountSettingsPage extends StatelessWidget {
     required this.onTerms,
     required this.onLogout,
     required this.onLanguage,
+    required this.onDeleteAccount,
+    required this.deletingAccount,
   });
 
   final VoidCallback onBack;
@@ -37,6 +40,14 @@ class AccountSettingsPage extends StatelessWidget {
 
   /// Opens the language picker so the user can switch the app locale.
   final VoidCallback onLanguage;
+
+  /// Permanently deletes the account: the flow confirms, calls the deletion
+  /// endpoint and clears the session.
+  final VoidCallback onDeleteAccount;
+
+  /// Whether the deletion request is in flight: the delete button spins and
+  /// stays inert until the answer arrives.
+  final bool deletingAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +122,11 @@ class AccountSettingsPage extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         AccountLogoutButton(onPressed: onLogout),
+        const SizedBox(height: 12),
+        AccountDeleteButton(
+          onPressed: onDeleteAccount,
+          deleting: deletingAccount,
+        ),
       ],
     );
   }

@@ -559,4 +559,11 @@ abstract final class AppLocaleKey {
       deleteUnitQuestion = 'deleteUnitQuestion',
       keepUnit = 'keepUnit',
       deleteUnitFailed = 'deleteUnitFailed';
+
+  /// Account deletion (حذف الحساب): the settings action, its confirm dialog
+  /// and the failure message.
+  static const deleteAccount = 'deleteAccount',
+      deleteAccountQuestion = 'deleteAccountQuestion',
+      keepAccount = 'keepAccount',
+      deleteAccountFailed = 'deleteAccountFailed';
 }

@@ -662,6 +662,10 @@
   "deleteUnitQuestion": "کیا آپ اس وحدے کو حذف کرنا چاہتے ہیں؟",
   "keepUnit": "وحدہ محفوظ رکھیں",
   "deleteUnitFailed": "اس وحدے کو حذف نہیں کیا جا سکا",
+  "deleteAccount": "اکاؤنٹ حذف کریں",
+  "deleteAccountQuestion": "آپ کا اکاؤنٹ اور تمام ڈیٹا مستقل طور پر حذف ہو جائے گا۔ اس عمل کو واپس نہیں کیا جا سکتا۔",
+  "keepAccount": "اکاؤنٹ برقرار رکھیں",
+  "deleteAccountFailed": "آپ کا اکاؤنٹ حذف نہیں ہو سکا",
   "servicePlaceImage": "سروس کا مقام کی تصویر",
   "serviceProvider": "سروس فراہم کنندہ"
 }

@@ -18,8 +18,11 @@ class ProfileCubit extends LocaleAwareCubit<ProfileState> {
   Future<void> load() async {
     emit(const ProfileLoading());
     try {
-      emit(ProfileReady(await repo.get()));
+      final ResidentProfile profile = await repo.get();
+      if (isClosed) return;
+      emit(ProfileReady(profile));
     } catch (error) {
+      if (isClosed) return;
       emit(
         ProfileFailure(
           apiErrorMessage(error) ?? AppLocaleKey.profileLoadFailed.tr(),
@@ -56,6 +59,18 @@ class ProfileCubit extends LocaleAwareCubit<ProfileState> {
         ),
       );
       return false;
+    }
+  }
+
+  /// Permanently deletes the account. Returns the failure message for the
+  /// settings snackbar, or null when the server accepted the deletion (the
+  /// caller then clears the session).
+  Future<String?> deleteAccount() async {
+    try {
+      await repo.deleteAccount();
+      return null;
+    } catch (error) {
+      return apiErrorMessage(error) ?? AppLocaleKey.deleteAccountFailed.tr();
     }
   }
 

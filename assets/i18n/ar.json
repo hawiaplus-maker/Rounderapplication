@@ -681,6 +681,10 @@
   "deleteUnitQuestion": "هل تريد حذف هذه الوحدة؟",
   "keepUnit": "الإبقاء على الوحدة",
   "deleteUnitFailed": "تعذّر حذف هذه الوحدة",
+  "deleteAccount": "حذف الحساب",
+  "deleteAccountQuestion": "سيتم حذف حسابك وجميع بياناتك نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
+  "keepAccount": "الإبقاء على الحساب",
+  "deleteAccountFailed": "تعذّر حذف حسابك",
   "servicePlaceImage": "صورة مكان الخدمة",
   "serviceProvider": "مقدم الخدمة"
 }

@@ -63,6 +63,11 @@ class _OtpFlowScreenState extends State<OtpFlowScreen> {
     if (can != _canVerify) setState(() => _canVerify = can);
   }
 
+  /// The code keyboard must not survive the success step: the result page and
+  /// the resident home it reveals have no text field, so drop the focus and
+  /// let the system hide the keyboard.
+  void _hideKeyboard() => FocusManager.instance.primaryFocus?.unfocus();
+
   @override
   void initState() {
     super.initState();
@@ -98,6 +103,7 @@ class _OtpFlowScreenState extends State<OtpFlowScreen> {
     }
     final validated = widget.validated;
     if (validated == null) {
+      _hideKeyboard();
       setState(() => _page = _Page.result);
       return;
     }
@@ -112,6 +118,9 @@ class _OtpFlowScreenState extends State<OtpFlowScreen> {
   /// verified journey pops to the root so the boot gate swaps to the
   /// resident home (the session was marked on verify success).
   void _continueFromResult() {
+    // The home revealed below has no focused field; make sure no keyboard
+    // from the previous step is still attached to the window.
+    _hideKeyboard();
     final onContinue = widget.onContinue;
     if (onContinue != null) {
       onContinue();
@@ -170,6 +179,9 @@ class _OtpFlowScreenState extends State<OtpFlowScreen> {
             }
           case PhoneOtpVerified():
             if (mounted) {
+              // The code field's keyboard must not follow the resident into
+              // the result page (and the home it continues to).
+              _hideKeyboard();
               // verify-otp cached the session token — the session is live,
               // so the gate under this route is ready to show the home.
               context.read<AuthCubit>().markAuthenticated();

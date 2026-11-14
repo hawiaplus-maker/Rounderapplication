@@ -35,6 +35,19 @@ class ProfileRepository {
     }
   }
 
+  /// Permanently deletes the signed-in account. The backend revokes the
+  /// session with the deletion, so the caller clears the cached token after
+  /// this returns.
+  Future<void> deleteAccount() async {
+    final response = await api.delete<Map<String, dynamic>>(
+      EndPoints.deleteAccount,
+    );
+    final Map<String, dynamic>? body = response.data;
+    if (body != null && body['status'] == false) {
+      throw ApiFailure(body['message']?.toString() ?? '');
+    }
+  }
+
   /// Sends an OTP to the new mobile number (reuses the auth send-otp endpoint).
   Future<void> sendChangeMobileOtp(String mobile) async {
     final response = await api.post<Map<String, dynamic>>(

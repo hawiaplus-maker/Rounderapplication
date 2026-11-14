@@ -1,7 +1,7 @@
 name: rounder_application
 description: Rounder resident application.
 publish_to: none
-version: 1.0.8+14
+version: 1.0.12+18
 environment:
   sdk: ">=3.9.0 <4.0.0"
 dependencies:

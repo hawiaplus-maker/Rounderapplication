@@ -146,8 +146,8 @@ dart run flutter_launcher_icons
    rating, target audience, ads declaration, news declaration.
 4. Add the store listing: name `Rounder`, short/full description, screenshots,
    feature graphic, 512 icon.
-5. Add a **data deletion** request URL and an in-app deletion path (see
-   blockers below).
+5. Add a **data deletion** request URL (the in-app deletion path is in
+   Settings — see blockers below).
 6. Roll out to production only after the internal test passes on a real device.
 
 ## App Store checklist
@@ -171,10 +171,10 @@ dart run flutter_launcher_icons
 These are product/backend items, not build configuration. Both stores may reject
 the build while they are open:
 
-- **Account deletion is missing.** The app allows registration/login but has no
-  delete-account endpoint or screen. App Store Guideline 5.1.1(v) requires
-  in-app account deletion; Google Play requires both an in-app path and a web
-  deletion URL. Add the backend endpoint + screen before submitting.
+- **Account deletion web URL is missing.** The in-app path now lives in
+  Settings → Delete account (`DELETE /resident/account`), covering App Store
+  Guideline 5.1.1(v); Google Play still requires a hosted web data-deletion
+  URL for the store listing.
 - **Privacy policy and terms labels are not tappable.** `LoginLegalLinks` renders
   plain text and there are no policy URLs. Both stores require a hosted privacy
   policy; App Review may also expect the link to open.

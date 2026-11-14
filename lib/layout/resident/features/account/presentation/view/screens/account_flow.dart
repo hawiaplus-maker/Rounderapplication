@@ -25,6 +25,7 @@ import 'package:rounder_application/layout/resident/features/account/presentatio
 import 'package:rounder_application/layout/resident/features/account/presentation/cubit/legal_document_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/legal_document_page.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_sub_page.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/delete_account_dialog.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/discard_profile_dialog.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/phone_change_panel.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/widget/sign_out_dialog.dart';
@@ -44,10 +45,15 @@ class AccountFlow extends StatefulWidget {
     this.homeName = '',
     this.unitLabel = '',
     this.active = true,
+    required this.profileCubit,
     required this.onRootBack,
   });
 
   final String homeName, unitLabel;
+
+  /// The account identity, loaded by the shell when the signed-in home opens
+  /// and shared here so tapping the account tab never refetches it.
+  final ProfileCubit profileCubit;
 
   /// Whether this tab owns the back gesture. The home shell keeps every tab
   /// alive in an [IndexedStack], so a hidden account flow must not claim the
@@ -80,6 +86,7 @@ class _AccountFlowState extends State<AccountFlow> {
   bool orderUpdates = true, offers = false, addressUse = true;
   bool requestContact = true;
   bool _signingOut = false;
+  bool _deletingAccount = false;
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
@@ -97,8 +104,6 @@ class _AccountFlowState extends State<AccountFlow> {
     super.dispose();
   }
 
-  final ProfileCubit _profileCubit = sl<ProfileCubit>()..load();
-
   /// Shared instance loaded once: calling `load()` from `build` would refetch
   /// on every rebuild (including each locale change).
   final NotificationsCubit _notificationsCubit = sl<NotificationsCubit>();
@@ -109,7 +114,7 @@ class _AccountFlowState extends State<AccountFlow> {
   void open(_Page value) => setState(() => page = value);
 
   ResidentProfile _profile() {
-    final ProfileState state = _profileCubit.state;
+    final ProfileState state = widget.profileCubit.state;
     return state is ProfileReady ? state.profile : const ResidentProfile();
   }
 
@@ -144,7 +149,7 @@ class _AccountFlowState extends State<AccountFlow> {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
     providers: [
-      BlocProvider<ProfileCubit>.value(value: _profileCubit),
+      BlocProvider<ProfileCubit>.value(value: widget.profileCubit),
       BlocProvider<NotificationsCubit>.value(value: _notificationsCubit),
       BlocProvider<SupportCubit>.value(value: _supportCubit),
       BlocProvider(create: (_) => sl<HomesCubit>()..load()),
@@ -204,6 +209,8 @@ class _AccountFlowState extends State<AccountFlow> {
                 onTerms: () => _openLegal('terms'),
                 onLogout: _signOut,
                 onLanguage: _changeLanguage,
+                onDeleteAccount: _deleteAccount,
+                deletingAccount: _deletingAccount,
               ),
               _Page.notifications => AccountNotificationsPage(
                 onBack: goBack,
@@ -290,7 +297,7 @@ class _AccountFlowState extends State<AccountFlow> {
       _toast(AppLocaleKey.emailInvalid.tr());
       return;
     }
-    final bool saved = await _profileCubit.save(
+    final bool saved = await widget.profileCubit.save(
       name: name,
       email: email,
       locale: context.locale.languageCode,
@@ -386,6 +393,35 @@ class _AccountFlowState extends State<AccountFlow> {
     await context.read<AuthCubit>().signOut();
     if (!mounted) return;
     setState(() => _signingOut = false);
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  /// Permanently deletes the account: confirm, call the deletion endpoint,
+  /// then end the session. The sign-out that follows is the auth repository's
+  /// offline-safe local clear — the deleted account's token is already
+  /// invalid, so the logout answer is ignored.
+  ///
+  /// It reads [AccountFlow.profileCubit] directly, not `context.read`: that
+  /// provider lives inside this widget's `build`, so this State's context is
+  /// above it.
+  Future<void> _deleteAccount() async {
+    if (_deletingAccount) return;
+    if (!await confirmDeleteAccount(context) || !mounted) return;
+    setState(() => _deletingAccount = true);
+    String? failure;
+    try {
+      failure = await widget.profileCubit.deleteAccount();
+    } catch (_) {
+      failure = AppLocaleKey.deleteAccountFailed.tr();
+    }
+    if (!mounted) return;
+    setState(() => _deletingAccount = false);
+    if (failure != null) {
+      _toast(failure);
+      return;
+    }
+    await context.read<AuthCubit>().signOut();
+    if (!mounted) return;
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 

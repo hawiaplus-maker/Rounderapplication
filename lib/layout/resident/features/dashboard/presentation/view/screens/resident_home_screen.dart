@@ -7,6 +7,7 @@ import 'package:rounder_application/core/services/services_locator.dart';
 import 'package:rounder_application/core/theme/app_theme.dart';
 import 'package:rounder_application/layout/global/widgets/brand_gradient_backdrop.dart';
 import 'package:rounder_application/layout/global/widgets/guest_gate_view.dart';
+import 'package:rounder_application/layout/resident/features/account/presentation/cubit/profile_cubit.dart';
 import 'package:rounder_application/layout/resident/features/account/presentation/view/screens/account_flow.dart';
 import 'package:rounder_application/layout/resident/features/association/presentation/view/screens/union_screen.dart';
 import 'package:rounder_application/layout/resident/features/bookings/presentation/view/screens/orders_prototype_screen.dart';
@@ -36,6 +37,25 @@ class ResidentHomeScreen extends StatefulWidget {
 class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
   int _tab = 0;
   final Set<int> _loadedTabs = {0};
+
+  /// The account identity is fetched once when the signed-in home opens, so
+  /// opening the account tab only reveals it instead of refetching it on
+  /// every tap. Guest mode has no session to fetch.
+  ProfileCubit? _profileCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.isGuest) {
+      _profileCubit = sl<ProfileCubit>()..load();
+    }
+  }
+
+  @override
+  void dispose() {
+    _profileCubit?.close();
+    super.dispose();
+  }
 
   void _openEmergency() {
     final dashboardState = context.read<ResidentDashboardCubit>().state;
@@ -125,6 +145,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
                   homeName: homeName,
                   unitLabel: unitLabel,
                   active: _tab == 4,
+                  profileCubit: _profileCubit!,
                   onRootBack: () => setState(() => _tab = 0),
                 ))
           : const SizedBox.shrink(),
